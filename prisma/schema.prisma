@@ -1,0 +1,200 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  price       Int      // en céntimos (euros * 100)
+  originalPrice Int?   // precio original tachado
+  images      String   // JSON array de URLs
+  category    String?
+  series      String?  // anime/serie
+  character   String?  // personaje
+  manufacturer String? // Bandai, Good Smile, etc.
+  scale       String?  // 1/7, 1/8, etc.
+  releaseDate DateTime? // fecha lanzamiento
+  stock       Int      @default(0)
+  reserved    Int      @default(0) // unidades reservadas
+  status      String   @default("AVAILABLE")
+  isFeatured  Boolean  @default(false)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  orderItems  OrderItem[]
+  requests    FigureRequest[]
+
+  @@index([status])
+  @@index([category])
+  @@index([series])
+}
+
+model Order {
+  id                String   @id @default(cuid())
+  email             String
+  customerName      String
+  phone             String?
+  address           String
+  city              String
+  postalCode        String
+  country           String @default("ES")
+  subtotal          Int      // en céntimos
+  shippingCost      Int      @default(0)
+  total             Int      // en céntimos
+  status            String   @default("PENDING")
+  paymentStatus     String   @default("UNPAID")
+  stripeSessionId   String?  @unique
+  stripePaymentIntentId String? @unique
+  trackingNumber    String?
+  trackingUrl       String?
+  notes             String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  items             OrderItem[]
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id        String @id @default(cuid())
+  orderId   String
+  order     Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Int    // precio en céntimos al momento de la compra
+  createdAt DateTime @default(now())
+
+  @@unique([orderId, productId])
+}
+
+model User {
+  id                      String    @id @default(cuid())
+  email                   String    @unique
+  passwordHash            String
+  name                    String?
+  role                    String    @default("user")
+  address                 String?
+  city                    String?
+  postalCode              String?
+  country                 String?   @default("ES")
+  emailVerified           Boolean   @default(false)
+  emailVerificationCode   String?
+  emailVerificationExpires DateTime?
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+  vintedAccount           VintedAccount?
+}
+
+model FigureRequest {
+  id           String   @id @default(cuid())
+  email        String
+  name         String
+  figureName   String?
+  images       String?  // JSON array of image URLs
+  series       String?
+  character    String?
+  manufacturer String?
+  scale        String?
+  budgetMin    Int?
+  budgetMax    Int?
+  notes        String?
+  status       String   @default("PENDING")
+  productId    String?
+  product      Product? @relation(fields: [productId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
+}
+
+model VintedAccount {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  username          String
+  encryptedPassword String?
+  rating            Float    @default(0)
+  totalSales        Int      @default(0)
+  positiveFeedback  Int      @default(0)
+  neutralFeedback   Int      @default(0)
+  negativeFeedback  Int      @default(0)
+  lastSync          DateTime?
+  isConnected       Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  orders            VintedOrder[]
+  reviews           VintedReview[]
+  listings          VintedListing[]
+
+  @@index([userId])
+}
+
+model VintedOrder {
+  id                String   @id @default(cuid())
+  vintedAccountId   String
+  vintedAccount     VintedAccount @relation(fields: [vintedAccountId], references: [id], onDelete: Cascade)
+  vintedOrderId     String   @unique
+  buyerUsername     String
+  itemTitle         String
+  itemPrice         Int      // in cents
+  status            String   // pending, shipped, delivered, cancelled
+  orderDate         DateTime
+  shippedDate       DateTime?
+  deliveredDate     DateTime?
+  trackingNumber    String?
+  trackingUrl       String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([vintedAccountId])
+  @@index([status])
+  @@index([orderDate])
+}
+
+model VintedReview {
+  id                String   @id @default(cuid())
+  vintedAccountId   String
+  vintedAccount     VintedAccount @relation(fields: [vintedAccountId], references: [id], onDelete: Cascade)
+  vintedReviewId    String   @unique
+  buyerUsername     String
+  rating            Int      // 1-5
+  comment           String?
+  orderId           String?
+  reviewDate        DateTime
+  createdAt         DateTime @default(now())
+
+  @@index([vintedAccountId])
+  @@index([reviewDate])
+}
+
+model VintedListing {
+  id                String   @id @default(cuid())
+  vintedAccountId   String
+  vintedAccount     VintedAccount @relation(fields: [vintedAccountId], references: [id], onDelete: Cascade)
+  vintedListingId   String   @unique
+  title             String
+  description       String?
+  price             Int      // in cents
+  status            String   // active, sold, inactive
+  size              String?
+  brand             String?
+  category          String?
+  images            String   // JSON array
+  listingUrl        String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([vintedAccountId])
+  @@index([status])
+}
