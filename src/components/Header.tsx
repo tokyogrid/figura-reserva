@@ -52,19 +52,19 @@ export function Header() {
         </div>
 
         <nav className="space-y-4">
-          <Link href="/catalog" className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+          <Link href="/catalog" onClick={() => setMobileMenuOpen(false)} className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
             Catalog
           </Link>
-          <Link href="/request" className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+          <Link href="/request" onClick={() => setMobileMenuOpen(false)} className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
             Request Figure
           </Link>
-          <Link href="/vinted" className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+          <Link href="/vinted" onClick={() => setMobileMenuOpen(false)} className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
             Our Vinted
           </Link>
-          <Link href="/how-it-works" className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+          <Link href="/how-it-works" onClick={() => setMobileMenuOpen(false)} className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
             How It Works
           </Link>
-          <Link href="/contact" className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-3">
+          <Link href="/contact" onClick={() => setMobileMenuOpen(false)} className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-3">
             <Mail className="h-5 w-5" />
             Contact Support
           </Link>
