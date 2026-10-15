@@ -8,6 +8,7 @@ import { CartDrawer } from "@/components/CartDrawer"
 import { ToasterProvider } from "@/components/ui/Toaster"
 import { CSRFInit } from "@/components/CSRFInit"
 import { siteConfig } from "@/lib/site-config"
+import { Analytics } from "@vercel/analytics/next"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 
@@ -45,6 +46,7 @@ export default function RootLayout({
             </ToasterProvider>
           </AuthProvider>
         </CartProvider>
+        <Analytics />
       </body>
     </html>
   )
