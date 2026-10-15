@@ -176,7 +176,7 @@ export function Header() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div id="mobile-menu" className="md:hidden fixed inset-0 z-50 bg-white dark:bg-gray-950 p-4 overflow-y-auto">
+          <div id="mobile-menu" className="md:hidden fixed inset-0 z-60 bg-white dark:bg-gray-950 p-4 overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <Link href="/" className="flex items-center gap-2 font-bold text-xl text-gray-900 dark:text-white">
                 <Image
