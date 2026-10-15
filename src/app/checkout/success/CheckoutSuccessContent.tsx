@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/Badge"
 import { formatPrice, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from "@/lib/utils"
 import { CheckCircle, Truck, Mail, Clock, Package, Sparkles, ArrowRight } from "lucide-react"
 import { siteConfig } from "@/lib/site-config"
+import { useCart } from "@/lib/cart-context"
 
 interface Order {
   id: string
@@ -32,8 +33,14 @@ interface Props {
 
 export function CheckoutSuccessContent({ order }: Props) {
   const [mounted, setMounted] = useState(false)
+  const { clearCart } = useCart()
 
   useEffect(() => setMounted(true), [])
+  useEffect(() => {
+    if (mounted && order) {
+      clearCart()
+    }
+  }, [mounted, order, clearCart])
 
   if (!mounted) return null
 

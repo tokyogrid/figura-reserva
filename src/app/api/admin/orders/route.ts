@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getSessionFromRequest } from "@/lib/auth"
+import { getAdminSessionFromRequest } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 
 export async function GET(request: NextRequest) {
-  const session = await getSessionFromRequest(request)
-  if (!session || session.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+  const session = await getAdminSessionFromRequest(request)
+  console.log("[Admin Orders] Session:", session ? { email: session.email, role: session.role } : "null")
+  
+  if (!session) return NextResponse.json({ error: "Forbidden - no session" }, { status: 403 })
 
   const { searchParams } = new URL(request.url)
   const search = searchParams.get("search") || ""
@@ -19,15 +21,4 @@ export async function GET(request: NextRequest) {
 
   const orders = await prisma.order.findMany({ where, orderBy: { createdAt: "desc" }, take: limit, include: { items: { include: { product: true } } } })
   return NextResponse.json({ orders })
-}
-
-export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const session = await getSessionFromRequest(request)
-  if (!session || session.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 })
-  const { id } = await params
-  try {
-    const { status, trackingNumber, trackingUrl } = await request.json()
-    const updated = await prisma.order.update({ where: { id }, data: { status, trackingNumber, trackingUrl } })
-    return NextResponse.json({ order: updated })
-  } catch { return NextResponse.json({ error: "Error" }, { status: 500 }) }
 }

@@ -15,10 +15,10 @@ interface Discount {
   type: "percentage" | "fixed"
   value: number
   minOrder: number
-  usageLimit: number
+  usageLimit: number | null
   usedCount: number
   startsAt: string
-  expiresAt: string
+  expiresAt: string | null
   isActive: boolean
   createdAt: string
 }
@@ -164,18 +164,19 @@ export default function DiscountsPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead>
-                  <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-left text-sm font-medium text-gray-500 dark:text-gray-400">
-                    <th className="p-4">Code</th>
-                    <th className="p-4">Type</th>
-                    <th className="p-4 text-right">Value</th>
-                    <th className="p-4 text-right">Min Order</th>
-                    <th className="p-4 text-center">Usage</th>
-                    <th className="p-4 text-center">Expires</th>
-                    <th className="p-4 text-center">Status</th>
-                    <th className="p-4 text-right">Actions</th>
-                  </tr>
-                </thead>
+<thead>
+                    <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-left text-sm font-medium text-gray-500 dark:text-gray-400">
+                      <th className="p-4">Code</th>
+                      <th className="p-4">Type</th>
+                      <th className="p-4 text-right">Value</th>
+                      <th className="p-4 text-right">Min Order</th>
+                      <th className="p-4 text-center">Usage</th>
+                      <th className="p-4 text-center">Remaining</th>
+                      <th className="p-4 text-center">Expires</th>
+                      <th className="p-4 text-center">Status</th>
+                      <th className="p-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                   {discounts.map(discount => (
                     <tr key={discount.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50">
@@ -199,9 +200,24 @@ export default function DiscountsPage() {
                         {discount.minOrder > 0 ? formatPrice(discount.minOrder) : "No minimum"}
                       </td>
                       <td className="p-4 text-center">
-                        <span className={`font-medium ${discount.usedCount >= discount.usageLimit && discount.usageLimit > 0 ? "text-red-600" : "text-gray-900 dark:text-white"}`}>
-                          {discount.usedCount} / {discount.usageLimit || "∞"}
-                        </span>
+                        {discount.usageLimit !== null ? (
+                          <>
+                            <span className={`font-medium ${discount.usedCount >= discount.usageLimit && discount.usageLimit > 0 ? "text-red-600" : "text-gray-900 dark:text-white"}`}>
+                              {discount.usedCount} / {discount.usageLimit}
+                            </span>
+                          </>
+                        ) : (
+                          <span className="text-gray-600 dark:text-gray-400">∞ / ∞</span>
+                        )}
+                      </td>
+                      <td className="p-4 text-center">
+                        {discount.usageLimit !== null ? (
+                          <span className={`font-medium ${discount.usageLimit - discount.usedCount <= 0 ? "text-red-600" : "text-green-600"}`}>
+                            {Math.max(0, discount.usageLimit - discount.usedCount)}
+                          </span>
+                        ) : (
+                          <span className="text-green-600">∞</span>
+                        )}
                       </td>
                       <td className="p-4 text-center text-sm text-gray-600 dark:text-gray-400">
                         {discount.expiresAt ? new Date(discount.expiresAt).toLocaleDateString() : "Never"}

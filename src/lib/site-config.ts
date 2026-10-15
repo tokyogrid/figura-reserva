@@ -236,11 +236,11 @@ export const siteConfig = {
       title: "How would you like to receive your figure?",
       direct: {
         label: "Ship to My Address",
-        description: "We ship directly to your address via certified mail with tracking",
+        description: "We auto-fill your saved address from your account",
       },
       vinted: {
-        label: "Sell on My Vinted",
-        description: "We list on your Vinted account, handle sale & shipping. You get paid directly.",
+        label: "Other Address",
+        description: "Enter a different shipping address manually",
       },
     },
   },

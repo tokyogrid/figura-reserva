@@ -33,31 +33,51 @@ export function slugify(text: string): string {
 }
 
 export const ORDER_STATUS_LABELS: Record<string, string> = {
-  PENDING: "Pendiente",
-  CONFIRMED: "Confirmado",
-  PURCHASING: "Comprando en Japón",
-  SHIPPED: "Enviado",
-  DELIVERED: "Entregado",
-  CANCELLED: "Cancelado",
-  REFUNDED: "Reembolsado",
+  PENDING: "Pending",
+  CONFIRMED: "Confirmed",
+  PURCHASING_IN_JAPAN: "Purchasing in Japan",
+  AVAILABLE_ON_VINTED: "Available on Vinted",
+  SHIPPED: "Shipped",
+  DELIVERED: "Delivered",
+  CANCELLED: "Cancelled",
+  REFUNDED: "Refunded",
 }
 
 export const ORDER_STATUS_COLORS: Record<string, string> = {
   PENDING: "bg-yellow-100 text-yellow-800",
   CONFIRMED: "bg-blue-100 text-blue-800",
-  PURCHASING: "bg-purple-100 text-purple-800",
+  PURCHASING_IN_JAPAN: "bg-purple-100 text-purple-800",
+  AVAILABLE_ON_VINTED: "bg-pink-100 text-pink-800",
   SHIPPED: "bg-indigo-100 text-indigo-800",
   DELIVERED: "bg-green-100 text-green-800",
   CANCELLED: "bg-red-100 text-red-800",
   REFUNDED: "bg-gray-100 text-gray-800",
 }
 
+export const VINTED_ORDER_STATUS_LABELS: Record<string, string> = {
+  PENDING: "Pending",
+  CONFIRMED: "Confirmed",
+  PURCHASING_IN_JAPAN: "Purchasing in Japan",
+  AVAILABLE_ON_VINTED: "Available on Vinted",
+  CANCELLED: "Cancelled",
+  REFUNDED: "Refunded",
+}
+
+export const VINTED_ORDER_STATUS_COLORS: Record<string, string> = {
+  PENDING: "bg-yellow-100 text-yellow-800",
+  CONFIRMED: "bg-blue-100 text-blue-800",
+  PURCHASING_IN_JAPAN: "bg-purple-100 text-purple-800",
+  AVAILABLE_ON_VINTED: "bg-pink-100 text-pink-800",
+  CANCELLED: "bg-red-100 text-red-800",
+  REFUNDED: "bg-gray-100 text-gray-800",
+}
+
 export const PAYMENT_STATUS_LABELS: Record<string, string> = {
-  UNPAID: "No pagado",
-  PAID: "Pagado",
-  PARTIAL: "Parcial",
-  REFUNDED: "Reembolsado",
-  FAILED: "Fallido",
+  UNPAID: "Unpaid",
+  PAID: "Paid",
+  PARTIAL: "Partial",
+  REFUNDED: "Refunded",
+  FAILED: "Failed",
 }
 
 export const REQUEST_STATUS_LABELS: Record<string, string> = {

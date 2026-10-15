@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -26,6 +26,8 @@ model Product {
   status      String   @default("AVAILABLE")
   isFeatured  Boolean  @default(false)
   sortOrder   Int      @default(0)
+  isHidden    Boolean  @default(false) // ocultar del catálogo
+  isUnpurchasable Boolean @default(false) // no se puede comprar
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   orderItems  OrderItem[]
@@ -55,6 +57,8 @@ model Order {
   trackingNumber    String?
   trackingUrl       String?
   notes             String?
+  vintedCode        String?  @unique
+  isVintedOrder     Boolean  @default(false) // pedido tipo vinted
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   items             OrderItem[]
@@ -72,6 +76,7 @@ model OrderItem {
   product   Product @relation(fields: [productId], references: [id])
   quantity  Int
   price     Int    // precio en céntimos al momento de la compra
+  isVinted  Boolean @default(false)
   createdAt DateTime @default(now())
 
   @@unique([orderId, productId])
@@ -93,6 +98,7 @@ model User {
   createdAt               DateTime  @default(now())
   updatedAt               DateTime  @updatedAt
   vintedAccount           VintedAccount?
+  discountUsages          DiscountUsage[]
 }
 
 model FigureRequest {
@@ -197,4 +203,51 @@ model VintedListing {
 
   @@index([vintedAccountId])
   @@index([status])
+}
+
+model Discount {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  type        String   // "percentage" | "fixed"
+  value       Int      // percentage (0-100) or fixed amount in cents
+  minOrder    Int      @default(0) // minimum order amount in cents
+  usageLimit  Int?     // maximum number of uses (null = unlimited)
+  usedCount   Int      @default(0)
+  startsAt    DateTime @default(now())
+  expiresAt   DateTime?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  usages      DiscountUsage[]
+
+  @@index([code])
+  @@index([isActive])
+}
+
+model DiscountUsage {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  discountId String
+  discount  Discount @relation(fields: [discountId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, discountId])
+  @@index([userId])
+  @@index([discountId])
+}
+
+model SupportTicket {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  status    String   @default("OPEN")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
 }

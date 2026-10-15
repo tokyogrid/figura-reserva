@@ -1,15 +1,16 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useCart } from "@/lib/cart-context"
+import { useAuth } from "@/lib/AuthContext"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { Badge } from "@/components/ui/Badge"
 import { useToast } from "@/components/ui/Toaster"
 import { formatPrice, cn } from "@/lib/utils"
-import { Truck, Shield, CreditCard, Loader2, MapPin, Mail, Phone, User } from "lucide-react"
+import { Truck, Shield, CreditCard, Loader2, MapPin, Mail, Phone, User, Home, Package } from "lucide-react"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/RadioGroup"
 import { Label } from "@/components/ui/Label"
 import { loadStripe } from "@stripe/stripe-js"
@@ -19,14 +20,26 @@ import { useCSRF } from "@/hooks/useCSRF"
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
 export default function CheckoutPage() {
-  const { items, totalPrice, clearCart } = useCart()
+  const { items, totalPrice, discount, clearCart } = useCart()
+  const { user, loading: authLoading } = useAuth()
   const router = useRouter()
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
-  const [purchaseOption, setPurchaseOption] = useState<"direct" | "vinted">("direct")
+  const [purchaseOption, setPurchaseOption] = useState<"direct" | "other">("direct")
   const [step, setStep] = useState("form")
-  const shippingCost = totalPrice > 0 && totalPrice < 10000 ? 499 : 0
-  const total = totalPrice + shippingCost
+  
+  // Shipping: 5€ for orders under 100€, free above
+  const shippingCost = totalPrice > 0 && totalPrice < 10000 ? 500 : 0
+  const freeShippingThreshold = 10000
+  const remainingForFreeShipping = Math.max(0, freeShippingThreshold - totalPrice)
+  
+  // Calculate discount amount (discount.value is percentage * 100 in DB, e.g., 15% = 1500)
+  const discountAmount = discount ? (discount.type === "percentage" 
+    ? Math.round(totalPrice * (discount.value / 100) / 100)  // e.g., 10000 * 1500 / 10000 = 1500 cents = €15
+    : Math.min(discount.value, totalPrice)) : 0
+  
+  const subtotal = totalPrice
+  const total = subtotal - discountAmount + shippingCost
 
   const [formData, setFormData] = useState({
     customerName: "",
@@ -37,21 +50,48 @@ export default function CheckoutPage() {
     postalCode: "",
     country: "ES",
     notes: "",
+    discountCode: discount?.code || "",
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
+
+  // Auto-fill form when user selects "direct" (Ship to My Address)
+  useEffect(() => {
+    if (purchaseOption === "direct" && user) {
+      setFormData((prev) => ({
+        ...prev,
+        customerName: user.name || "",
+        email: user.email || "",
+        address: user.address || "",
+        city: user.city || "",
+        postalCode: user.postalCode || "",
+        country: user.country || "ES",
+      }))
+    }
+  }, [purchaseOption, user])
+
+  // Auto-fill discount from cart
+  useEffect(() => {
+    if (discount?.code) {
+      setFormData((prev) => ({
+        ...prev,
+        discountCode: discount.code,
+      }))
+    }
+  }, [discount])
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
     if (!formData.customerName.trim()) newErrors.customerName = "Full name required"
     if (!formData.email.trim()) newErrors.email = "Email required"
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = "Invalid email"
-    if (purchaseOption === "direct") {
-      if (!formData.address.trim()) newErrors.address = "Address required"
-      if (!formData.city.trim()) newErrors.city = "City required"
-      if (!formData.postalCode.trim()) newErrors.postalCode = "Postal code required"
-      else if (!/^\d{5}$/.test(formData.postalCode)) newErrors.postalCode = "Invalid postal code (5 digits)"
-    }
+    
+    // Address validation for both options now
+    if (!formData.address.trim()) newErrors.address = "Address required"
+    if (!formData.city.trim()) newErrors.city = "City required"
+    if (!formData.postalCode.trim()) newErrors.postalCode = "Postal code required"
+    else if (!/^\d{5}$/.test(formData.postalCode)) newErrors.postalCode = "Invalid postal code (5 digits)"
+    
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -64,9 +104,17 @@ export default function CheckoutPage() {
 
     setLoading(true)
     try {
+      const { discountCode, ...formDataWithoutDiscount } = formData
       const res = await fetchWithCSRF("/api/checkout", {
         method: "POST",
-        body: JSON.stringify({ items, shippingCost, total, purchaseOption, ...formData }),
+        body: JSON.stringify({ 
+          items, 
+          shippingCost, 
+          total, 
+          purchaseOption, 
+          discountCode: formData.discountCode, 
+          ...formDataWithoutDiscount 
+        }),
       })
 
       const data = await res.json()
@@ -81,6 +129,29 @@ export default function CheckoutPage() {
       toast({ type: "error", title: "Error", message: error.message })
       setLoading(false)
     }
+  }
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
+      </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center py-12">
+        <div className="container max-w-md text-center p-8">
+          <User className="h-16 w-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Please Sign In</h1>
+          <p className="text-gray-600 dark:text-gray-300 mb-6">You must be logged in to proceed to checkout.</p>
+          <Button variant="primary" className="w-full" onClick={() => router.push("/login?callbackUrl=/checkout")}>
+            Sign In to Continue
+          </Button>
+        </div>
+      </div>
+    )
   }
 
   if (items.length === 0) {
@@ -132,18 +203,24 @@ export default function CheckoutPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <RadioGroup onValueChange={(v) => setPurchaseOption(v as "direct" | "vinted")} value={purchaseOption} className="space-y-3">
+                <RadioGroup onValueChange={(v) => setPurchaseOption(v as "direct" | "other")} value={purchaseOption} className="space-y-3">
                   <div className="flex items-center space-x-3">
                     <RadioGroupItem value="direct" className="h-4 w-4" id="direct" />
                     <Label htmlFor="direct" className="flex flex-col cursor-pointer">
-                      <span className="font-medium text-gray-900 dark:text-white">{siteConfig.checkout.purchaseOptions.direct.label}</span>
+                      <span className="font-medium text-gray-900 dark:text-white flex items-center gap-2">
+                        <Home className="h-4 w-4" aria-hidden="true" />
+                        {siteConfig.checkout.purchaseOptions.direct.label}
+                      </span>
                       <span className="text-sm text-gray-500 dark:text-gray-400">{siteConfig.checkout.purchaseOptions.direct.description}</span>
                     </Label>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <RadioGroupItem value="vinted" className="h-4 w-4" id="vinted" />
-                    <Label htmlFor="vinted" className="flex flex-col cursor-pointer">
-                      <span className="font-medium text-gray-900 dark:text-white">{siteConfig.checkout.purchaseOptions.vinted.label}</span>
+                    <RadioGroupItem value="other" className="h-4 w-4" id="other" />
+                    <Label htmlFor="other" className="flex flex-col cursor-pointer">
+                      <span className="font-medium text-gray-900 dark:text-white flex items-center gap-2">
+                        <Package className="h-4 w-4" aria-hidden="true" />
+                        {siteConfig.checkout.purchaseOptions.vinted.label}
+                      </span>
                       <span className="text-sm text-gray-500 dark:text-gray-400">{siteConfig.checkout.purchaseOptions.vinted.description}</span>
                     </Label>
                   </div>
@@ -190,47 +267,43 @@ export default function CheckoutPage() {
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     placeholder="+34 600 000 000"
                   />
-                  {purchaseOption === "direct" && (
-                    <>
-                      <Input
-                        label={siteConfig.checkout.address + " " + siteConfig.common.required}
-                        id="address"
-                        value={formData.address}
-                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                        error={errors.address}
-                        placeholder="123 Main St, Apt 4B"
-                        required
-                      />
-                      <div className="grid sm:grid-cols-3 gap-4">
-                        <Input
-                          label={siteConfig.checkout.city + " " + siteConfig.common.required}
-                          id="city"
-                          value={formData.city}
-                          onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                          error={errors.city}
-                          placeholder="Madrid"
-                          required
-                        />
-                        <Input
-                          label={siteConfig.checkout.postalCode + " " + siteConfig.common.required}
-                          id="postalCode"
-                          value={formData.postalCode}
-                          onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
-                          error={errors.postalCode}
-                          placeholder="28001"
-                          required
-                          maxLength={5}
-                        />
-                        <Input
-                          label={siteConfig.checkout.country}
-                          id="country"
-                          value={formData.country}
-                          onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                          disabled
-                        />
-                      </div>
-                    </>
-                  )}
+                  <Input
+                    label={siteConfig.checkout.address + " " + siteConfig.common.required}
+                    id="address"
+                    value={formData.address}
+                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                    error={errors.address}
+                    placeholder="123 Main St, Apt 4B"
+                    required
+                  />
+                  <div className="grid sm:grid-cols-3 gap-4">
+                    <Input
+                      label={siteConfig.checkout.city + " " + siteConfig.common.required}
+                      id="city"
+                      value={formData.city}
+                      onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                      error={errors.city}
+                      placeholder="Madrid"
+                      required
+                    />
+                    <Input
+                      label={siteConfig.checkout.postalCode + " " + siteConfig.common.required}
+                      id="postalCode"
+                      value={formData.postalCode}
+                      onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
+                      error={errors.postalCode}
+                      placeholder="28001"
+                      required
+                      maxLength={5}
+                    />
+                    <Input
+                      label={siteConfig.checkout.country}
+                      id="country"
+                      value={formData.country}
+                      onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                      disabled
+                    />
+                  </div>
                   <div>
                     <label htmlFor="notes" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                       {siteConfig.checkout.notes + " " + siteConfig.common.optional}
@@ -243,6 +316,39 @@ export default function CheckoutPage() {
                       rows={3}
                       className="w-full px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-y"
                     />
+                  </div>
+
+                  {/* Discount Code */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-2">
+                      <span>Discount Code</span>
+                      {discount && (
+                        <Badge variant="success" className="text-xs">
+                          {discount.type === "percentage" ? `${discount.value / 100}%` : `${formatPrice(discount.value)}`} applied
+                        </Badge>
+                      )}
+                    </label>
+                    <div className="relative">
+                      <Input
+                        type="text"
+                        id="discountCode"
+                        value={formData.discountCode || ""}
+                        onChange={(e) => setFormData({ ...formData, discountCode: e.target.value.toUpperCase() })}
+                        placeholder="DISCOUNT20"
+                        className="w-full px-3 py-2 pl-10 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        disabled={!!discount}
+                      />
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h10M7 17h10m-10-5v10M7 7l10 10" />
+                        </svg>
+                      </span>
+                    </div>
+                    {discount && (
+                      <p className="mt-2 text-sm text-green-600 dark:text-green-400 flex items-center gap-1">
+                        Discount <strong>{discount.code}</strong> applied - {discount.type === "percentage" ? `${discount.value / 100}%` : formatPrice(discount.value)} off products
+                      </p>
+                    )}
                   </div>
 
                   <Button
@@ -310,8 +416,21 @@ export default function CheckoutPage() {
                 <div className="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-3">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600 dark:text-gray-400">{siteConfig.checkout.subtotal} ({items.reduce((s, i) => s + i.quantity, 0)} {siteConfig.checkout.items})</span>
-                    <span className="font-medium text-gray-900 dark:text-white">{formatPrice(totalPrice)}</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{formatPrice(subtotal)}</span>
                   </div>
+                  
+                  {discount && (
+                    <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
+                      <span className="flex items-center gap-1">
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h10M7 17h10m-10-5v10M7 7l10 10" />
+                        </svg>
+                        Discount ({discount.code})
+                      </span>
+                      <span className="font-medium">- {formatPrice(discountAmount)}</span>
+                    </div>
+                  )}
+                  
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600 dark:text-gray-400 flex items-center gap-2">
                       <Truck className="h-4 w-4" aria-hidden="true" />
@@ -325,9 +444,9 @@ export default function CheckoutPage() {
                       )}
                     </span>
                   </div>
-                  {totalPrice > 0 && totalPrice < 10000 && (
+                  {subtotal > 0 && subtotal < freeShippingThreshold && (
                     <p className="text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 p-2 rounded">
-                      {siteConfig.checkout.addForFreeShipping.replace('{amount}', formatPrice(10000 - totalPrice))}
+                      {siteConfig.checkout.addForFreeShipping.replace('{amount}', formatPrice(freeShippingThreshold - subtotal))}
                     </p>
                   )}
                   <div className="flex justify-between text-lg font-bold border-t border-gray-200 dark:border-gray-700 pt-3">

@@ -40,9 +40,15 @@ export default function AdminProductsPage() {
       if (statusFilter) params.set("status", statusFilter)
       params.set("admin", "true")
       const res = await fetch(`/api/admin/products?${params}`, { credentials: "include" })
+      if (!res.ok) {
+        if (res.status === 403) console.error("Admin products: 403 Forbidden - check admin login")
+        else console.error("Admin products: API error", res.status)
+        setProducts([])
+        return
+      }
       const data = await res.json()
       setProducts(data.products || [])
-    } catch (e) { console.error(e) } finally { setLoading(false) }
+    } catch (e) { console.error("Admin products fetch error:", e) } finally { setLoading(false) }
   }
 
   const handleDelete = async (id: string) => {

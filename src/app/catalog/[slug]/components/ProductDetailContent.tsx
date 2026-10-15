@@ -1,0 +1,337 @@
+"use client"
+
+import Image from "next/image"
+import { Button } from "@/components/ui/Button"
+import { Badge } from "@/components/ui/Badge"
+import { Card, CardContent } from "@/components/ui/Card"
+import { formatPrice, cn } from "@/lib/utils"
+import { sanitizeHtml } from "@/lib/sanitize"
+import { Truck, Shield, RotateCcw, Package, Check, Zap } from "lucide-react"
+
+interface Product {
+  id: string
+  name: string
+  slug: string
+  description: string | null
+  price: number
+  originalPrice: number | null
+  images: string
+  category: string | null
+  series: string | null
+  character: string | null
+  manufacturer: string | null
+  scale: string | null
+  releaseDate: string | null
+  stock: number
+  reserved: number
+  status: string
+  isFeatured: boolean
+}
+
+interface ProductDetailContentProps {
+  product: Product
+  images: string[]
+  selectedImage: number
+  setSelectedImage: (index: number) => void
+  quantity: number
+  setQuantity: (qty: number) => void
+  addItem: (item: { productId: string; name: string; price: number; image: string; slug: string }) => void
+}
+
+function handleAddToCart(
+  inStock: boolean,
+  images: string[],
+  product: Product,
+  addItem: (item: { productId: string; name: string; price: number; image: string; slug: string }) => void
+) {
+  if (!inStock) return
+  addItem({
+    productId: product.id,
+    name: product.name,
+    price: product.price,
+    image: images[0] || "",
+    slug: product.slug,
+  })
+}
+
+export const ProductDetailContent = ({
+  product,
+  images,
+  selectedImage,
+  setSelectedImage,
+  quantity,
+  setQuantity,
+  addItem,
+}: ProductDetailContentProps) => {
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      <div className="container py-8">
+        <nav className="mb-6 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400" aria-label="Navigation">
+          <a href="/" className="hover:text-blue-600 dark:hover:text-blue-400">Home</a>
+          <span>/</span>
+          <a href="/catalog" className="hover:text-blue-600 dark:hover:text-blue-400">Catalog</a>
+          <span>/</span>
+          <span className="text-gray-900 dark:text-white truncate max-w-[200px]">{product.name}</span>
+        </nav>
+
+        <div className="grid lg:grid-cols-2 gap-8">
+          <div className="space-y-4">
+            <div className="relative aspect-square rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800">
+              {images[selectedImage] ? (
+                <Image
+                  src={images[selectedImage]}
+                  alt={product.name}
+                  width={800}
+                  height={800}
+                  className="object-contain"
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-gray-400">
+                  <Package className="h-24 w-24" aria-hidden="true" />
+                </div>
+              )}
+              {!(product.stock - product.reserved > 0) && (
+                <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                  <Badge variant="danger" className="text-xl px-6 py-3">Out of Stock - Pre-order Available</Badge>
+                </div>
+              )}
+              {product.isFeatured && (
+                <Badge className="absolute top-4 left-4" variant="warning">
+                  ⭐ Featured
+                </Badge>
+              )}
+            </div>
+
+            {images.length > 1 && (
+              <div className="flex gap-2 overflow-x-auto pb-2">
+                {images.map((image, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedImage(index)}
+                    className={cn(
+                      "relative h-20 w-20 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-colors",
+                      index === selectedImage
+                        ? "border-blue-500"
+                        : "border-transparent hover:border-gray-300 dark:hover:border-gray-600"
+                    )}
+                    aria-label={`View image ${index + 1}`}
+                    aria-current={index === selectedImage ? "true" : "false"}
+                  >
+                    <Image
+                      src={image}
+                      alt={`${product.name} - vista ${index + 1}`}
+                      width={80}
+                      height={80}
+                      className="object-contain"
+                      sizes="80px"
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div>
+              {product.series && (
+                <p className="text-sm text-blue-600 dark:text-blue-400 font-medium mb-1">{product.series}</p>
+              )}
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{product.name}</h1>
+              
+              <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                {product.originalPrice && product.originalPrice > product.price && (
+                  <span className="line-through">{formatPrice(product.originalPrice)}</span>
+                )}
+                <span className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {formatPrice(product.price)}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {(product.stock - product.reserved > 0) && (product.stock - product.reserved) < 5 && (
+                <Badge variant="warning" className="gap-1">
+                  <Package className="h-3 w-3" aria-hidden="true" />
+                  Only {product.stock - product.reserved} left
+                </Badge>
+              )}
+              {!(product.stock - product.reserved > 0) && (
+                <Badge variant="danger" className="gap-1">
+                  <Package className="h-3 w-3" aria-hidden="true" />
+                  Out of Stock - Pre-order Available
+                </Badge>
+              )}
+              {product.status === "PRE_ORDER" && (
+                <Badge variant="info">Pre-order</Badge>
+              )}
+              {product.status === "LOW_STOCK" && product.stock - product.reserved > 0 && (
+                <Badge variant="warning">Low stock</Badge>
+              )}
+            </div>
+
+            {product.description && (
+              <div className="prose prose-gray dark:prose-invert max-w-none">
+                <p className="text-gray-600 dark:text-gray-300 whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: sanitizeHtml(product.description) }} />
+              </div>
+            )}
+
+            {(() => {
+              const specsArray = [
+                { label: "Series", value: product.series },
+                { label: "Character", value: product.character },
+                { label: "Manufacturer", value: product.manufacturer },
+                { label: "Scale", value: product.scale },
+                { label: "Category", value: product.category },
+                { label: "Release", value: product.releaseDate ? new Date(product.releaseDate).toLocaleDateString("en-US") : null },
+              ]
+              const specs = specsArray.filter((s) => s.value !== null)
+              if (specs.length === 0) return null
+              return (
+                <Card>
+                  <CardContent className="p-6">
+                    <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Especificaciones</h3>
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      {specs.map((spec) => (
+                        <div key={spec.label} className="flex items-start gap-3">
+                          <Package className="h-5 w-5 text-gray-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <div>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">{spec.label}</p>
+                            <p className="text-sm font-medium text-gray-900 dark:text-white">{spec.value}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )
+            })()}
+
+            <Card className="border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20">
+              <CardContent className="p-6">
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Quantity
+                    </label>
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                        disabled={quantity <= 1 || product.stock - product.reserved <= 0}
+                        className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        aria-label="Decrease quantity"
+                      >
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" /></svg>
+                      </button>
+                      <input
+                        id="quantity"
+                        type="number"
+                        value={quantity}
+                        onChange={(e) => setQuantity(Math.min(Math.min(product.stock - product.reserved > 0 ? product.stock - product.reserved : 0, 5), Math.max(1, parseInt(e.target.value) || 1)))}
+                        min={1}
+                        max={Math.min(product.stock - product.reserved > 0 ? product.stock - product.reserved : 0, 5)}
+                        className="w-20 text-center border border-gray-300 dark:border-gray-600 rounded-lg py-2 px-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        disabled={product.stock - product.reserved <= 0}
+                      />
+                      <button
+                        onClick={() => setQuantity(Math.min(Math.min(product.stock - product.reserved > 0 ? product.stock - product.reserved : 0, 5), quantity + 1))}
+                        disabled={quantity >= Math.min(product.stock - product.reserved > 0 ? product.stock - product.reserved : 0, 5) || product.stock - product.reserved <= 0}
+                        className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        aria-label="Increase quantity"
+                      >
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                      </button>
+                    </div>
+                    {(() => {
+                      const maxQty = Math.min(product.stock - product.reserved > 0 ? product.stock - product.reserved : 0, 5)
+                      return maxQty > 0 && maxQty < 5 && product.stock - product.reserved > 0 ? (
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Max {maxQty} unit{maxQty !== 1 ? "s" : ""} available</p>
+                      ) : null
+                    })()}
+                    {!(product.stock - product.reserved > 0) && (
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Out of stock - Pre-order available</p>
+                    )}
+                  </div>
+
+                <div className="space-y-3">
+                  {product.stock - product.reserved > 0 ? (
+                    <>
+                      <Button
+                        onClick={() => handleAddToCart(product.stock - product.reserved > 0, images, product, addItem)}
+                        className="w-full h-12 text-lg"
+                        variant="primary"
+                      >
+                        <Zap className="h-4 w-4" aria-hidden="true" />
+                        Buy Now - Fast Shipping (1-3 days)
+                      </Button>
+                      <Button
+                        onClick={() => handleAddToCart(product.stock - product.reserved > 0, images, product, addItem)}
+                        className="w-full h-12 text-lg"
+                        variant="secondary"
+                      >
+                        Reserve now
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        onClick={() => handleAddToCart(product.stock - product.reserved > 0, images, product, addItem)}
+                        className="w-full h-12 text-lg"
+                        variant="primary"
+                      >
+                        <Truck className="h-4 w-4" aria-hidden="true" />
+                        Pre-order (15-25 days)
+                      </Button>
+                      <Button
+                        onClick={() => handleAddToCart(product.stock - product.reserved > 0, images, product, addItem)}
+                        className="w-full h-12 text-lg"
+                        variant="secondary"
+                      >
+                        <Package className="h-4 w-4" aria-hidden="true" />
+                        Buy via Vinted
+                      </Button>
+                    </>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-center gap-6 text-sm text-gray-600 dark:text-gray-400 pt-4 border-t border-blue-200 dark:border-blue-800">
+                  <div className="flex items-center gap-2">
+                    <Truck className="h-4 w-4" aria-hidden="true" />
+                    <span>Shipping 4.99€ (free >100€)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Shield className="h-4 w-4" aria-hidden="true" />
+                    <span>Secure Stripe payment</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                    <span>14-day returns</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="grid grid-cols-3 gap-4 text-center">
+            <div className="p-4">
+              <Check className="h-8 w-8 text-green-500 mx-auto mb-2" aria-hidden="true" />
+              <p className="text-sm font-medium text-gray-900 dark:text-white">Authentic</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Bought from official JP stores</p>
+            </div>
+            <div className="p-4">
+              <Shield className="h-8 w-8 text-blue-500 mx-auto mb-2" aria-hidden="true" />
+              <p className="text-sm font-medium text-gray-900 dark:text-white">Secure</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Refund if we can't get the figure</p>
+            </div>
+            <div className="p-4">
+              <Truck className="h-8 w-8 text-purple-500 mx-auto mb-2" aria-hidden="true" />
+              <p className="text-sm font-medium text-gray-900 dark:text-white">Fast</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Shipped 24-48h after receipt</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+})

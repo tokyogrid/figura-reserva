@@ -98,3 +98,141 @@
 .animate-slide-out {
   animation: slide-out 0.3s ease-in;
 }
+
+/* Custom animations for page transitions and UI elements */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-fade-in { animation: fadeIn 0.3s ease-out; }
+.animate-fade-out { animation: fadeOut 0.3s ease-in; }
+.animate-slide-up { animation: slideUp 0.4s ease-out; }
+.animate-slide-down { animation: slideDown 0.3s ease-in; }
+.animate-shimmer { animation: shimmer 2s infinite; }
+.animate-float { animation: float 3s ease-in-out infinite; }
+.animate-bounce-subtle { animation: bounce 1s ease-in-out infinite; }
+.animate-spin { animation: spin 1s linear infinite; }
+
+/* Stagger animation delays */
+.animation-delay-100 { animation-delay: 100ms; }
+.animation-delay-200 { animation-delay: 200ms; }
+.animation-delay-300 { animation-delay: 300ms; }
+.animation-delay-400 { animation-delay: 400ms; }
+.animation-delay-500 { animation-delay: 500ms; }
+
+/* Stagger children */
+.stagger-children > * {
+  animation: slideUp 0.4s ease-out both;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 100ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 200ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 300ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 400ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 500ms; }
+.stagger-children > *:nth-child(7) { animation-delay: 600ms; }
+.stagger-children > *:nth-child(8) { animation-delay: 700ms; }
+
+/* Shimmer effect for skeleton loading */
+.skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+  background: #e5e7eb;
+}
+.skeleton-shimmer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: shimmer 2s infinite;
+}
+
+/* Page transition classes */
+.page-enter {
+  animation: slideUp 0.4s ease-out;
+}
+.page-exit {
+  animation: slideDown 0.3s ease-in;
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.3s;
+}
+.card-hover:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+.card-hover-scale {
+  transition: all 0.3s;
+}
+.card-hover-scale:hover {
+  transform: scale(1.02);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Button animations */
+.btn-hover {
+  transition: all 0.2s;
+}
+.btn-hover:hover {
+  transform: scale(1.05);
+}
+.btn-hover:active {
+  transform: scale(0.95);
+}
+
+.btn-loading {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shimmer effect for skeleton loading */
+.skeleton-shimmer {
+  @apply relative overflow-hidden bg-gray-200 dark:bg-gray-700;
+}
+.skeleton-shimmer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: shimmer 2s infinite;
+}

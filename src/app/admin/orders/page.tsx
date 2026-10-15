@@ -24,11 +24,14 @@ interface Order {
   paymentStatus: string
   stripeSessionId: string | null
   notes: string | null
+  isVintedOrder: boolean
+  vintedCode: string | null
   createdAt: string
   updatedAt: string
   items: Array<{
     quantity: number
     price: number
+    isVinted: boolean
     product: {
       name: string
       images: string
@@ -40,7 +43,8 @@ interface Order {
 const ORDER_STATUS_LABELS: Record<string, string> = {
   PENDING: "Pending",
   CONFIRMED: "Confirmed",
-  PURCHASING: "Purchasing",
+  PURCHASING_IN_JAPAN: "Purchasing in Japan",
+  AVAILABLE_ON_VINTED: "Available on Vinted",
   SHIPPED: "Shipped",
   DELIVERED: "Delivered",
   CANCELLED: "Cancelled",
@@ -50,9 +54,28 @@ const ORDER_STATUS_LABELS: Record<string, string> = {
 const ORDER_STATUS_COLORS: Record<string, string> = {
   PENDING: "bg-yellow-100 text-yellow-800",
   CONFIRMED: "bg-blue-100 text-blue-800",
-  PURCHASING: "bg-purple-100 text-purple-800",
+  PURCHASING_IN_JAPAN: "bg-purple-100 text-purple-800",
+  AVAILABLE_ON_VINTED: "bg-pink-100 text-pink-800",
   SHIPPED: "bg-indigo-100 text-indigo-800",
   DELIVERED: "bg-green-100 text-green-800",
+  CANCELLED: "bg-red-100 text-red-800",
+  REFUNDED: "bg-gray-100 text-gray-800",
+}
+
+const VINTED_ORDER_STATUS_LABELS: Record<string, string> = {
+  PENDING: "Pending",
+  CONFIRMED: "Confirmed",
+  PURCHASING_IN_JAPAN: "Purchasing in Japan",
+  AVAILABLE_ON_VINTED: "Available on Vinted",
+  CANCELLED: "Cancelled",
+  REFUNDED: "Refunded",
+}
+
+const VINTED_ORDER_STATUS_COLORS: Record<string, string> = {
+  PENDING: "bg-yellow-100 text-yellow-800",
+  CONFIRMED: "bg-blue-100 text-blue-800",
+  PURCHASING_IN_JAPAN: "bg-purple-100 text-purple-800",
+  AVAILABLE_ON_VINTED: "bg-pink-100 text-pink-800",
   CANCELLED: "bg-red-100 text-red-800",
   REFUNDED: "bg-gray-100 text-gray-800",
 }
@@ -65,14 +88,37 @@ const PAYMENT_STATUS_LABELS: Record<string, string> = {
   FAILED: "Failed",
 }
 
-const statusOptions = [
-  { value: "PENDING", label: "Pending" },
-  { value: "CONFIRMED", label: "Confirmed" },
-  { value: "PURCHASING", label: "Purchasing" },
-  { value: "SHIPPED", label: "Shipped" },
-  { value: "DELIVERED", label: "Delivered" },
-  { value: "CANCELLED", label: "Cancelled" },
-  { value: "REFUNDED", label: "Refunded" },
+const VINTED_STATUS_FLOW = ["CONFIRMED", "PURCHASING_IN_JAPAN", "AVAILABLE_ON_VINTED"]
+
+const VINTED_STATUS_OPTIONS = [
+  { value: "PENDING", label: "pending" },
+  { value: "CONFIRMED", label: "confirmed" },
+  { value: "PURCHASING_IN_JAPAN", label: "purchasing in japan" },
+  { value: "AVAILABLE_ON_VINTED", label: "available on vinted" },
+  { value: "CANCELLED", label: "cancelled" },
+  { value: "REFUNDED", label: "refunded" },
+]
+
+const REGULAR_STATUS_OPTIONS = [
+  { value: "PENDING", label: "pending" },
+  { value: "CONFIRMED", label: "confirmed" },
+  { value: "PURCHASING_IN_JAPAN", label: "purchasing in japan" },
+  { value: "AVAILABLE_ON_VINTED", label: "available on vinted" },
+  { value: "SHIPPED", label: "shipped" },
+  { value: "DELIVERED", label: "delivered" },
+  { value: "CANCELLED", label: "cancelled" },
+  { value: "REFUNDED", label: "refunded" },
+]
+
+const FILTER_STATUS_OPTIONS = [
+  { value: "PENDING", label: "pending" },
+  { value: "CONFIRMED", label: "confirmed" },
+  { value: "PURCHASING_IN_JAPAN", label: "purchasing in japan" },
+  { value: "AVAILABLE_ON_VINTED", label: "available on vinted" },
+  { value: "SHIPPED", label: "shipped" },
+  { value: "DELIVERED", label: "delivered" },
+  { value: "CANCELLED", label: "cancelled" },
+  { value: "REFUNDED", label: "refunded" },
 ]
 
 export default function AdminOrdersPage() {
@@ -109,6 +155,19 @@ export default function AdminOrdersPage() {
     } catch { alert("Error") } finally { setUpdating(null) }
   }
 
+  const updateVintedStatus = async (orderId: string, currentStatus: string) => {
+    const vintedFlow = ["CONFIRMED", "PURCHASING_IN_JAPAN", "AVAILABLE_ON_VINTED"]
+    const currentIndex = vintedFlow.indexOf(currentStatus)
+    const nextStatus = vintedFlow[currentIndex + 1]
+    if (!nextStatus) return
+    setUpdating(orderId)
+    try {
+      const res = await fetch(`/api/admin/orders/${orderId}/vinted-status`, { method: "PATCH", headers: { "Content-Type": "application/json" }, credentials: "include", body: JSON.stringify({ status: nextStatus }) })
+      if (!res.ok) throw new Error("Failed")
+      fetchOrders()
+    } catch { alert("Error") } finally { setUpdating(null) }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -136,7 +195,7 @@ export default function AdminOrdersPage() {
             </div>
             <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800">
               <option value="">All Status</option>
-              {statusOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+              {FILTER_STATUS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
             <select value={paymentFilter} onChange={e => setPaymentFilter(e.target.value)} className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800">
               <option value="">All Payments</option>
@@ -210,15 +269,28 @@ export default function AdminOrdersPage() {
                         value={order.status}
                         onChange={e => updateStatus(order.id, e.target.value)}
                         disabled={updating === order.id}
-                        className={`px-2 py-1 rounded text-xs font-medium border ${ORDER_STATUS_COLORS[order.status] || "bg-gray-100 text-gray-800"}`}
+                        className={`px-2 py-1 rounded text-xs font-medium border ${order.isVintedOrder ? VINTED_ORDER_STATUS_COLORS[order.status] : ORDER_STATUS_COLORS[order.status] || "bg-gray-100 text-gray-800"}`}
                       >
-                        {statusOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                        {(order.isVintedOrder ? VINTED_STATUS_OPTIONS : REGULAR_STATUS_OPTIONS).map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                       </select>
                     </td>
                     <td className="p-4 text-center">
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${order.paymentStatus === "PAID" ? "bg-green-100 text-green-800" : order.paymentStatus === "FAILED" ? "bg-red-100 text-red-800" : "bg-gray-100 text-gray-800"}`}>
-                        {order.paymentStatus === "PAID" ? "Paid" : order.paymentStatus === "FAILED" ? "Failed" : order.paymentStatus}
-                      </span>
+                      {(() => {
+                        const status = order.paymentStatus as keyof typeof PAYMENT_STATUS_LABELS
+                        const label = PAYMENT_STATUS_LABELS[status] || order.paymentStatus
+                        const colors: Record<string, string> = {
+                          PAID: "bg-green-100 text-green-800",
+                          FAILED: "bg-red-100 text-red-800",
+                          UNPAID: "bg-yellow-100 text-yellow-800",
+                          PARTIAL: "bg-blue-100 text-blue-800",
+                          REFUNDED: "bg-purple-100 text-purple-800",
+                        }
+                        return (
+                          <span className={`px-2 py-1 rounded text-xs font-medium ${colors[status] || "bg-gray-100 text-gray-800"}`}>
+                            {label}
+                          </span>
+                        )
+                      })()}
                     </td>
                     <td className="p-4 hidden lg:table-cell text-sm text-gray-500 dark:text-gray-400">
                       {new Date(order.createdAt).toLocaleDateString()}
@@ -228,10 +300,14 @@ export default function AdminOrdersPage() {
                         <a href={`/admin/orders/${order.id}`} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" title="View">
                           <svg className="h-4 w-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                         </a>
-                        {order.paymentStatus === "PAID" && order.status !== "SHIPPED" && order.status !== "DELIVERED" && (
-                          <button onClick={() => updateStatus(order.id, "SHIPPED")} className="flex items-center gap-1 px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        {order.isVintedOrder && VINTED_STATUS_FLOW.includes(order.status) && (
+                          <button
+                            onClick={() => updateVintedStatus(order.id, order.status)}
+                            disabled={updating === order.id}
+                            className="flex items-center gap-1 px-3 py-1.5 border border-pink-300 dark:border-pink-600 rounded-lg text-sm font-medium text-pink-700 dark:text-pink-300 hover:bg-pink-50 dark:hover:bg-pink-900/30 transition-colors"
+                          >
                             <Truck className="h-3.5 w-3.5" />
-                            Mark Shipped
+                            Next Step
                           </button>
                         )}
                       </div>

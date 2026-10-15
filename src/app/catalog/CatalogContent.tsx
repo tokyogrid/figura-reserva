@@ -1,14 +1,16 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
+import Link from "next/link"
 import { ProductCard, ProductCardSkeleton } from "./ProductCard"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { Select } from "@/components/ui/Input"
 import { Badge } from "@/components/ui/Badge"
-import { Filter, X, Package, ChevronDown } from "lucide-react"
+import { Filter, X, Package, ChevronDown, Search, RotateCcw } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { siteConfig } from "@/lib/site-config"
+import { fadeInUp, staggerContainer, staggerItem, cardEntrance, animationClasses } from "@/lib/animations"
 
 interface Product {
   id: string
@@ -27,6 +29,8 @@ interface Product {
   reserved: number
   status: string
   isFeatured: boolean
+  isHidden: boolean
+  isUnpurchasable: boolean
 }
 
 export function CatalogContent() {
@@ -40,35 +44,132 @@ export function CatalogContent() {
   const [categories, setCategories] = useState<string[]>([])
   const [seriesList, setSeriesList] = useState<string[]>([])
   const [showFilters, setShowFilters] = useState(false)
+  const [appliedSeries, setAppliedSeries] = useState("")
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const searchTimeoutRef = useRef<NodeJS.Timeout>()
+  const initializedRef = useRef(false)
+  const abortControllerRef = useRef<AbortController | null>(null)
 
-  useEffect(() => {
-    fetchProducts()
-  }, [])
+  const fetchProducts = useCallback(async (params: {
+    search?: string
+    category?: string
+    series?: string
+    inStockOnly?: boolean
+    sort?: string
+    page?: number
+  }) => {
+    // Abort any in-flight request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort()
+    }
+    const controller = new AbortController()
+    abortControllerRef.current = controller
 
-  const fetchProducts = async () => {
     try {
-      const params = new URLSearchParams()
-      if (search) params.set("search", search)
-      if (category) params.set("category", category)
-      if (series) params.set("series", series)
-      if (inStockOnly) params.set("inStock", "true")
-      params.set("sort", sort)
+      setLoading(true)
+      const p = new URLSearchParams()
+      if (params.search !== undefined) p.set("search", params.search)
+      if (params.category !== undefined) p.set("category", params.category)
+      if (params.series !== undefined) p.set("series", params.series)
+      if (params.inStockOnly !== undefined && params.inStockOnly) p.set("inStock", "true")
+      if (params.sort !== undefined) p.set("sort", params.sort)
+      if (params.page !== undefined) p.set("page", String(params.page))
 
-      const res = await fetch(`/api/products?${params}`)
+      const res = await fetch(`/api/products?${p}`, { signal: controller.signal })
       const data = await res.json()
-      setProducts(data.products)
-      setCategories(data.categories)
-      setSeriesList(data.series)
+      
+      // Ignore if this request was aborted
+      if (controller.signal.aborted) return
+      
+      setProducts(data.products || [])
+      setCategories(data.categories || [])
+      setSeriesList(data.series || [])
+      setTotalPages(data.totalPages || 1)
+      if (params.series !== undefined) {
+        setAppliedSeries(params.series)
+      }
     } catch (error) {
+      // Ignore abort errors
+      if (error instanceof Error && error.name === "AbortError") return
       console.error("Error fetching products:", error)
     } finally {
-      setLoading(false)
+      if (!controller.signal.aborted) {
+        setLoading(false)
+      }
     }
+  }, [])
+
+  // Initialize from URL params on mount
+  useEffect(() => {
+    if (initializedRef.current) return
+    initializedRef.current = true
+    
+    const urlParams = new URLSearchParams(window.location.search)
+    const initialSearch = urlParams.get("search") || ""
+    const initialCategory = urlParams.get("category") || ""
+    const initialSeries = urlParams.get("series") || ""
+    const initialInStock = urlParams.get("inStock") === "true"
+    const initialSort = urlParams.get("sort") || "featured"
+    const initialPage = parseInt(urlParams.get("page") || "1")
+    
+    if (initialSearch || initialCategory || initialSeries || initialInStock || initialSort !== "featured") {
+      setSearch(initialSearch)
+      setCategory(initialCategory)
+      setSeries(initialSeries)
+      setInStockOnly(initialInStock)
+      setSort(initialSort)
+      setPage(initialPage)
+      fetchProducts({ search: initialSearch, category: initialCategory, series: initialSeries, inStockOnly: initialInStock, sort: initialSort, page: initialPage })
+    } else {
+      fetchProducts({ page: initialPage })
+    }
+  }, [fetchProducts])
+
+  // Auto-fetch when filters change (reset to page 1)
+  useEffect(() => {
+    if (initializedRef.current) {
+      setPage(1)
+      fetchProducts({ search, category, series, inStockOnly, sort, page: 1 })
+    }
+  }, [search, category, series, inStockOnly, sort, fetchProducts])
+
+  const handleSearchChange = (value: string) => {
+    setSearch(value)
+    if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current)
+    searchTimeoutRef.current = setTimeout(() => {
+      fetchProducts({ search: value, category, series, inStockOnly, sort })
+    }, 300)
   }
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    fetchProducts()
+  const handleCategoryChange = (value: string) => {
+    setCategory(value)
+    fetchProducts({ search, category: value, series, inStockOnly, sort })
+  }
+
+  const handleSeriesChange = (value: string) => {
+    setSeries(value)
+    fetchProducts({ search, category, series: value, inStockOnly, sort })
+  }
+
+  const handleInStockChange = (checked: boolean) => {
+    setInStockOnly(checked)
+    fetchProducts({ search, category, series, inStockOnly: checked, sort })
+  }
+
+  const handleSortChange = (value: string) => {
+    setSort(value)
+    fetchProducts({ search, category, series, inStockOnly, sort: value })
+  }
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage < 1 || newPage > totalPages) return
+    setPage(newPage)
+    fetchProducts({ search, category, series, inStockOnly, sort, page: newPage })
+    // Update URL
+    const params = new URLSearchParams(window.location.search)
+    params.set("page", String(newPage))
+    window.history.replaceState({}, "", `${window.location.pathname}?${params}`)
   }
 
   const clearFilters = () => {
@@ -76,10 +177,24 @@ export function CatalogContent() {
     setCategory("")
     setSeries("")
     setInStockOnly(false)
-    fetchProducts()
+    setSort("featured")
+    setAppliedSeries("")
+    fetchProducts({})
+    window.history.replaceState({}, "", window.location.pathname)
   }
 
   const hasFilters = search || category || series || inStockOnly
+
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current)
+      if (abortControllerRef.current) abortControllerRef.current.abort()
+    }
+  }, [])
+
+  const showNoResults = !loading && products.length === 0
+  const showNoResultsForSeries = showNoResults && appliedSeries
+  const showNoResultsForSearch = showNoResults && (search || category || inStockOnly)
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
@@ -93,19 +208,20 @@ export function CatalogContent() {
 
         {/* Filters */}
         <div className={cn("space-y-4 transition-all duration-300", showFilters ? "" : "hidden md:block")}>
-          <form onSubmit={handleSearch} className="space-y-4 md:grid md:grid-cols-5 md:gap-4 md:items-end">
-            <div className="md:col-span-2">
+          <form className="space-y-4 md:grid md:grid-cols-5 md:gap-4 md:items-end">
+            <div className="md:col-span-2 relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" aria-hidden="true" />
               <Input
                 placeholder={siteConfig.catalog.searchPlaceholder}
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full"
+                onChange={(e) => handleSearchChange(e.target.value)}
+                className="w-full pl-10"
               />
             </div>
             <div>
               <Select
                 value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                onChange={(e) => handleCategoryChange(e.target.value)}
                 options={[{ value: "", label: siteConfig.catalog.categoryPlaceholder }, ...categories.map((c) => ({ value: c, label: c }))]}
                 placeholder={siteConfig.catalog.categoryPlaceholder}
               />
@@ -113,7 +229,7 @@ export function CatalogContent() {
             <div>
               <Select
                 value={series}
-                onChange={(e) => setSeries(e.target.value)}
+                onChange={(e) => handleSeriesChange(e.target.value)}
                 options={[{ value: "", label: siteConfig.catalog.seriesPlaceholder }, ...seriesList.map((s) => ({ value: s, label: s }))]}
                 placeholder={siteConfig.catalog.seriesPlaceholder}
               />
@@ -123,14 +239,14 @@ export function CatalogContent() {
                 <input
                   type="checkbox"
                   checked={inStockOnly}
-                  onChange={(e) => setInStockOnly(e.target.checked)}
+                  onChange={(e) => handleInStockChange(e.target.checked)}
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">{siteConfig.catalog.inStockOnly}</span>
               </label>
               <Select
                 value={sort}
-                onChange={(e) => setSort(e.target.value)}
+                onChange={(e) => handleSortChange(e.target.value)}
                 options={siteConfig.catalog.sortOptions}
                 placeholder="Sort"
               />
@@ -144,7 +260,7 @@ export function CatalogContent() {
                   Search: "{search}"
                   <button
                     type="button"
-                    onClick={() => { setSearch(""); fetchProducts(); }}
+                    onClick={() => { setSearch(""); fetchProducts({ search: "", category, series, inStockOnly, sort }); }}
                     className="ml-1 hover:text-red-600"
                     aria-label="Clear search"
                   >
@@ -157,7 +273,7 @@ export function CatalogContent() {
                   Category: {category}
                   <button
                     type="button"
-                    onClick={() => { setCategory(""); fetchProducts(); }}
+                    onClick={() => { setCategory(""); fetchProducts({ search, category: "", series, inStockOnly, sort }); }}
                     className="ml-1 hover:text-red-600"
                     aria-label="Clear category"
                   >
@@ -170,7 +286,7 @@ export function CatalogContent() {
                   Series: {series}
                   <button
                     type="button"
-                    onClick={() => { setSeries(""); fetchProducts(); }}
+                    onClick={() => { setSeries(""); fetchProducts({ search, category, series: "", inStockOnly, sort }); }}
                     className="ml-1 hover:text-red-600"
                     aria-label="Clear series"
                   >
@@ -179,7 +295,7 @@ export function CatalogContent() {
                 </Badge>
               )}
               {inStockOnly && (
-                <Badge variant="outline" className="gap-1" onClick={() => { setInStockOnly(false); fetchProducts(); }}>
+                <Badge variant="outline" className="gap-1" onClick={() => { setInStockOnly(false); fetchProducts({ search, category, series, inStockOnly: false, sort }); }}>
                   {siteConfig.catalog.inStockOnly} <X className="h-3 w-3 ml-1" aria-hidden="true" />
                 </Badge>
               )}
@@ -197,7 +313,7 @@ export function CatalogContent() {
             onClick={() => setShowFilters(!showFilters)}
           >
             <Filter className="h-4 w-4" aria-hidden="true" />
-            Filters {hasFilters && <span className="text-blue-600">({Object.values({search,category,series,inStockOnly}).filter(Boolean).length})</span>}
+            Filters {hasFilters && <span className="text-blue-600">({Object.values({search, category, series, inStockOnly}).filter(Boolean).length})</span>}
             <ChevronDown className={cn("h-4 w-4 transition-transform", showFilters && "rotate-180")} aria-hidden="true" />
           </Button>
         </div>
@@ -215,6 +331,42 @@ export function CatalogContent() {
               <ProductCardSkeleton key={i} />
             ))}
           </div>
+        ) : showNoResultsForSeries ? (
+          <div className="text-center py-16">
+            <Package className="h-16 w-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" aria-hidden="true" />
+            <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">No figures found for "{appliedSeries}"</h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">We don't have any figures from this series in our catalog yet.</p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Button variant="outline" onClick={clearFilters} className="gap-2">
+                <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                Clear Filter
+              </Button>
+              <Link href="/request" className="w-full sm:w-auto">
+                <Button variant="primary" className="gap-2 w-full sm:w-auto" size="lg">
+                  <Search className="h-4 w-4" aria-hidden="true" />
+                  Request Figure
+                </Button>
+              </Link>
+            </div>
+          </div>
+        ) : showNoResultsForSearch ? (
+          <div className="text-center py-16">
+            <Package className="h-16 w-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" aria-hidden="true" />
+            <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">No figures match your search</h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">We couldn't find any figures matching "{search || category || (inStockOnly ? 'in stock only' : '')}".</p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Button variant="outline" onClick={clearFilters} className="gap-2">
+                <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                Clear Filters
+              </Button>
+              <Link href="/request" className="w-full sm:w-auto">
+                <Button variant="primary" className="gap-2 w-full sm:w-auto" size="lg">
+                  <Search className="h-4 w-4" aria-hidden="true" />
+                  Request Figure
+                </Button>
+              </Link>
+            </div>
+          </div>
         ) : products.length === 0 ? (
           <div className="text-center py-16">
             <Package className="h-16 w-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" aria-hidden="true" />
@@ -223,12 +375,56 @@ export function CatalogContent() {
             <Button variant="outline" onClick={clearFilters}>{siteConfig.catalog.clearFilters}</Button>
           </div>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" style={staggerContainer}>
+            {products.filter(p => !p.isHidden).map((product, index) => (
+              <div key={product.id} style={staggerItem}>
+                <ProductCard product={product} />
+              </div>
             ))}
           </div>
         )}
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <nav className="mt-8 flex items-center justify-center gap-2" aria-label="Pagination">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handlePageChange(page - 1)}
+              disabled={page === 1}
+              aria-label="Previous page"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </Button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+              <Button
+                key={p}
+                variant={page === p ? "primary" : "outline"}
+                size="sm"
+                onClick={() => handlePageChange(p)}
+                aria-label={`Page ${p}`}
+                aria-current={page === p ? "page" : undefined}
+              >
+                {p}
+              </Button>
+            ))}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handlePageChange(page + 1)}
+              disabled={page === totalPages}
+              aria-label="Next page"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Button>
+          </nav>
+        )}
+        <p className="mt-4 text-center text-sm text-gray-500 dark:text-gray-400">
+          Page {page} of {totalPages} &mdash; {products.length} of {products.length > 0 ? (page === totalPages ? totalPages * 20 - (totalPages * 20 - products.length) : products.length) : 0} figures
+        </p>
       </div>
     </div>
   )

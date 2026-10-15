@@ -1,18 +1,17 @@
 "use client"
 
 import { useState, Suspense } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { useToast } from "@/components/ui/Toaster"
 import { useAuth } from "@/lib/AuthContext"
-import { Sparkles, Lock, Loader2, Eye, EyeOff } from "lucide-react"
+import { Sparkles, Lock, Loader2, Eye, EyeOff, HelpCircle, Mail } from "lucide-react"
 
 function LoginForm() {
   const router = useRouter()
-  const searchParams = useSearchParams()
   const { toast } = useToast()
   const { login: authLogin } = useAuth()
   const [loading, setLoading] = useState(false)
@@ -20,8 +19,6 @@ function LoginForm() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [showPassword, setShowPassword] = useState(false)
-
-  const callbackUrl = searchParams.get("callbackUrl") || "/"
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -32,7 +29,7 @@ function LoginForm() {
       await authLogin(email, password)
 
       toast({ type: "success", title: "Welcome back!" })
-      router.push(callbackUrl)
+      router.push("/")
       router.refresh()
     } catch (error: any) {
       // Check if verification is required
@@ -106,6 +103,22 @@ function LoginForm() {
                 </button>
               </div>
             </div>
+            <div className="flex justify-end gap-4">
+              <Link
+                href="/contact"
+                className="text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+              >
+                <HelpCircle className="h-4 w-4" aria-hidden="true" />
+                Forgot password?
+              </Link>
+              <Link
+                href="/contact"
+                className="text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+              >
+                <Mail className="h-4 w-4" aria-hidden="true" />
+                Contact Support
+              </Link>
+            </div>
             <Button type="submit" disabled={loading} loading={loading} className="w-full h-12" variant="primary">
               <Loader2 className="h-4 w-4" aria-hidden="true" />
               Sign in
@@ -113,7 +126,7 @@ function LoginForm() {
             <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-6">
               Don't have an account?{" "}
               <Link
-                href={`/register?callbackUrl=${encodeURIComponent(callbackUrl)}`}
+                href="/register"
                 className="text-blue-600 dark:text-blue-400 cursor-pointer underline"
               >
                 Create account

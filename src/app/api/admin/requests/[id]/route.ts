@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getSessionFromRequest } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { sendRequestStatusUpdateEmail } from "@/lib/email"
 
 export async function GET(
   request: NextRequest,
@@ -39,10 +40,38 @@ export async function PATCH(
     const { id } = await params
     const { status, productId } = await request.json()
 
+    // Get current request to check for status change
+    const currentRequest = await prisma.figureRequest.findUnique({
+      where: { id },
+    })
+
+    if (!currentRequest) {
+      return NextResponse.json({ error: "Request not found" }, { status: 404 })
+    }
+
+    const oldStatus = currentRequest.status
+
     const updated = await prisma.figureRequest.update({
       where: { id },
       data: { status, productId: productId || null },
     })
+
+    // Send email notification if status changed
+    if (oldStatus !== status) {
+      try {
+        await sendRequestStatusUpdateEmail({
+          email: updated.email,
+          name: updated.name,
+          requestId: updated.id,
+          oldStatus,
+          newStatus: status,
+          figureName: updated.figureName || undefined,
+          series: updated.series || undefined,
+        })
+      } catch (emailError) {
+        console.error("Failed to send request status update email:", emailError)
+      }
+    }
 
     return NextResponse.json({ request: updated })
   } catch (error) {

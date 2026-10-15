@@ -68,7 +68,7 @@ const digits = pasted.split("")
       if (!res.ok) throw new Error(data.error || "Invalid code")
 
       toast({ type: "success", title: "Email verified!" })
-      router.push("/")
+      router.push("/login")
       router.refresh()
     } catch (error: any) {
       setError(error.message)

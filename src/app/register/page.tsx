@@ -44,7 +44,7 @@ function RegisterForm() {
       if (!res.ok) throw new Error(data.error || "Invalid credentials")
 
       toast({ type: "success", title: "Account created! Check your email for verification code." })
-      router.push(`/request`)
+      router.push(`/verify?email=${encodeURIComponent(email)}`)
       router.refresh()
     } catch (error: any) {
       setError(error.message)

@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/Button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { Badge } from "@/components/ui/Badge"
 import { useToast } from "@/components/ui/Toaster"
-import { Package, ArrowLeft, Search, Filter, ChevronDown } from "lucide-react"
+import { Package, ArrowLeft, Search, Filter, ChevronDown, CheckCircle2 } from "lucide-react"
 import Link from "next/link"
-import { formatPrice, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS, cn } from "@/lib/utils"
+import { formatPrice, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS, VINTED_ORDER_STATUS_LABELS, VINTED_ORDER_STATUS_COLORS } from "@/lib/utils"
 import { siteConfig } from "@/lib/site-config"
 
 interface Order {
@@ -19,6 +19,7 @@ interface Order {
   paymentStatus: string
   total: number
   createdAt: string
+  isVintedOrder: boolean
   items: Array<{
     quantity: number
     price: number
@@ -66,10 +67,12 @@ export default function AccountOrdersPage() {
     { value: "", label: "All" },
     { value: "PENDING", label: "Pending" },
     { value: "CONFIRMED", label: "Confirmed" },
-    { value: "PROCESSING", label: "Processing" },
+    { value: "PURCHASING_IN_JAPAN", label: "Purchasing in Japan" },
+    { value: "AVAILABLE_ON_VINTED", label: "Available on Vinted" },
     { value: "SHIPPED", label: "Shipped" },
     { value: "DELIVERED", label: "Delivered" },
     { value: "CANCELLED", label: "Cancelled" },
+    { value: "REFUNDED", label: "Refunded" },
   ]
 
   if (loading) {
@@ -172,8 +175,13 @@ export default function AccountOrdersPage() {
                           {formatPrice(order.total)}
                         </td>
                         <td className="p-4 text-center">
-                          <Badge className={ORDER_STATUS_COLORS[order.status] || "bg-gray-100 text-gray-800"}>
-                            {ORDER_STATUS_LABELS[order.status] || order.status}
+                          <Badge className={order.isVintedOrder ? (VINTED_ORDER_STATUS_COLORS[order.status] || "bg-gray-100 text-gray-800") : (ORDER_STATUS_COLORS[order.status] || "bg-gray-100 text-gray-800")}>
+                            <span className="flex items-center justify-center gap-1.5">
+                              {(!order.isVintedOrder && order.status === "DELIVERED") && (
+                                <CheckCircle2 className="h-3.5 w-3.5 text-current" aria-hidden="true" />
+                              )}
+                              {order.isVintedOrder ? (VINTED_ORDER_STATUS_LABELS[order.status] || order.status) : (ORDER_STATUS_LABELS[order.status] || order.status)}
+                            </span>
                           </Badge>
                         </td>
                         <td className="p-4 text-sm text-gray-500 dark:text-gray-400">

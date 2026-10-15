@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/Badge"
 import { formatPrice } from "@/lib/utils"
 import { Truck, Mail, User, MapPin, Phone, CreditCard, Clock, CheckCircle, Package, Sparkles, ArrowRight } from "lucide-react"
 import { siteConfig } from "@/lib/site-config"
-import { ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from "@/lib/utils"
+import { ORDER_STATUS_LABELS, ORDER_STATUS_COLORS, VINTED_ORDER_STATUS_LABELS, VINTED_ORDER_STATUS_COLORS } from "@/lib/utils"
 
 interface Order {
   id: string
@@ -26,6 +26,7 @@ interface Order {
   paymentStatus: string
   stripeSessionId: string | null
   notes: string | null
+  isVintedOrder: boolean
   createdAt: string
   updatedAt: string
   items: Array<{
@@ -48,31 +49,52 @@ interface Props {
 const statusOrder = [
   "PENDING",
   "CONFIRMED",
-  "PURCHASING",
+  "PURCHASING_IN_JAPAN",
   "SHIPPED",
   "DELIVERED",
+]
+
+const vintedStatusOrder = [
+  "PENDING",
+  "CONFIRMED",
+  "PURCHASING_IN_JAPAN",
+  "AVAILABLE_ON_VINTED",
 ]
 
 const statusIcons = {
   PENDING: Clock,
   CONFIRMED: CheckCircle,
-  PURCHASING: Sparkles,
+  PURCHASING_IN_JAPAN: Sparkles,
   SHIPPED: Truck,
   DELIVERED: CheckCircle,
+  AVAILABLE_ON_VINTED: Package,
 }
 
 const statusDescriptions: Record<string, string> = {
   PENDING: "Waiting for payment confirmation",
   CONFIRMED: "Payment confirmed, preparing purchase in Japan",
-  PURCHASING: "Buying figure from Japanese stores",
+  PURCHASING_IN_JAPAN: "Buying figure from Japanese stores",
   SHIPPED: "Figure received in Spain and shipped to you",
   DELIVERED: "Order delivered! Enjoy your figure",
+  AVAILABLE_ON_VINTED: "Figure listed on Vinted, ready for you to complete purchase",
+}
+
+const vintedStatusDescriptions: Record<string, string> = {
+  PENDING: "Waiting for payment confirmation",
+  CONFIRMED: "Payment confirmed, preparing purchase in Japan",
+  PURCHASING_IN_JAPAN: "Buying figure from Japanese stores",
+  AVAILABLE_ON_VINTED: "Figure listed on Vinted, ready for you to complete purchase",
 }
 
 export function OrderTrackingContent({ order }: Props) {
-  const currentStatusIndex = statusOrder.indexOf(order.status)
-  const isDelivered = order.status === "DELIVERED"
+  const isVinted = order.isVintedOrder
+  const currentStatusOrder = isVinted ? vintedStatusOrder : statusOrder
+  const currentStatusDescriptions = isVinted ? vintedStatusDescriptions : statusDescriptions
+  const currentStatusLabels = isVinted ? VINTED_ORDER_STATUS_LABELS : ORDER_STATUS_LABELS
+  const currentStatusColors = isVinted ? VINTED_ORDER_STATUS_COLORS : ORDER_STATUS_COLORS
+  const currentStatusIndex = currentStatusOrder.indexOf(order.status)
   const isCancelled = order.status === "CANCELLED" || order.status === "REFUNDED"
+  const isFinalCompleted = !isVinted && order.status === "DELIVERED" || isVinted && order.status === "AVAILABLE_ON_VINTED"
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 py-12">
@@ -86,6 +108,9 @@ export function OrderTrackingContent({ order }: Props) {
           <div className="text-center">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Order Tracking</h1>
             <p className="text-gray-600 dark:text-gray-300">Order <strong>#{order.id.slice(0, 8)}</strong> • {new Date(order.createdAt).toLocaleDateString()}</p>
+            {isVinted && (
+              <p className="text-sm text-purple-600 dark:text-purple-400 mt-1">Vinted Order - You will complete the purchase on Vinted</p>
+            )}
           </div>
         </div>
 
@@ -94,18 +119,18 @@ export function OrderTrackingContent({ order }: Props) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Truck className="h-5 w-5" aria-hidden="true" />
-              Shipping Status
+              {isVinted ? "Vinted Purchase Status" : "Shipping Status"}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="relative">
               <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700" />
               <div className="space-y-8">
-                {statusOrder.map((status, index) => {
+                {currentStatusOrder.map((status, index) => {
                   const Icon = statusIcons[status as keyof typeof statusIcons]
                   const isActive = index <= currentStatusIndex
-                  const isCurrent = index === currentStatusIndex && !isCancelled && !isDelivered
-                  const isCompleted = index < currentStatusIndex
+                  const isCurrent = index === currentStatusIndex && !isCancelled && !isFinalCompleted
+                  const isCompleted = index < currentStatusIndex || (isFinalCompleted && index === currentStatusIndex)
 
                   return (
                     <div key={status} className="relative flex items-start gap-4">
@@ -122,14 +147,14 @@ export function OrderTrackingContent({ order }: Props) {
                       <div className="flex-1 pt-1">
                         <div className="flex items-center gap-2">
                           <h3 className={`font-semibold ${isActive ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400"}`}>
-                            {ORDER_STATUS_LABELS[status] || status}
+                            {currentStatusLabels[status] || status}
                           </h3>
                           {isCurrent && (
                             <Badge variant="info" className="text-xs">Current</Badge>
                           )}
                         </div>
                         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                          {statusDescriptions[status] || status}
+                          {currentStatusDescriptions[status] || status}
                         </p>
                       </div>
                     </div>
@@ -138,7 +163,7 @@ export function OrderTrackingContent({ order }: Props) {
               </div>
             </div>
 
-            {order.status === "SHIPPED" && (
+            {!isVinted && order.status === "SHIPPED" && (
               <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
                 <h4 className="font-medium text-blue-800 dark:text-blue-300 mb-2 flex items-center gap-2">
                   <Truck className="h-4 w-4" aria-hidden="true" />

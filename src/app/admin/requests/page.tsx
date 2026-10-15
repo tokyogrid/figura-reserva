@@ -43,9 +43,15 @@ export default function AdminRequestsPage() {
       if (statusFilter) params.set("status", statusFilter)
       params.set("limit", "50")
       const res = await fetch(`/api/admin/requests?${params}`, { credentials: "include" })
+      if (!res.ok) {
+        if (res.status === 403) console.error("Admin requests: 403 Forbidden - check admin login")
+        else console.error("Admin requests: API error", res.status)
+        setRequests([])
+        return
+      }
       const data = await res.json()
       setRequests(data.requests || [])
-    } catch (e) { console.error(e) } finally { setLoading(false) }
+    } catch (e) { console.error("Admin requests fetch error:", e) } finally { setLoading(false) }
   }
 
   const updateStatus = async (requestId: string, newStatus: string) => {

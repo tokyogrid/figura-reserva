@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getSessionFromRequest } from "@/lib/auth"
+import { getSessionFromRequest, getAdminSessionFromRequest } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 
 export async function GET(request: NextRequest) {
-  const session = await getSessionFromRequest(request)
-  if (!session || session.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+  const cookieHeader = request.headers.get("cookie")
+  console.log("[Admin Products] Cookie header:", cookieHeader ? "present" : "missing")
+  
+  const session = await getAdminSessionFromRequest(request)
+  console.log("[Admin Products] Session:", session ? { email: session.email, role: session.role } : "null")
+  
+  if (!session) return NextResponse.json({ error: "Forbidden - no session" }, { status: 403 })
 
   const { searchParams } = new URL(request.url)
   const search = searchParams.get("search") || ""
@@ -25,8 +30,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const session = await getSessionFromRequest(request)
-  if (!session || session.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+  const session = await getAdminSessionFromRequest(request)
+  if (!session) return NextResponse.json({ error: "Forbidden - no admin session" }, { status: 403 })
 
   try {
     const body = await request.json()

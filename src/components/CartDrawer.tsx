@@ -4,16 +4,42 @@ import { useCart } from "@/lib/cart-context"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { Card, CardContent, CardFooter } from "@/components/ui/Card"
-import { X, Plus, Minus, Trash2, Truck, CheckCircle } from "lucide-react"
+import { X, Plus, Minus, Trash2, Truck, CheckCircle, Tag, XCircle } from "lucide-react"
 import { cn, formatPrice } from "@/lib/utils"
 import Link from "next/link"
 import { siteConfig } from "@/lib/site-config"
+import { useState } from "react"
+import { useToast } from "@/components/ui/Toaster"
 
 export function CartDrawer() {
-  const { items, totalItems, totalPrice, removeItem, updateQuantity, clearCart, isOpen, setIsOpen } = useCart()
-  const shippingCost = totalPrice > 0 && totalPrice < 10000 ? 499 : 0
+  const { 
+    items, 
+    totalItems, 
+    totalPrice, 
+    removeItem, 
+    updateQuantity, 
+    clearCart, 
+    isOpen, 
+    setIsOpen,
+    discount,
+    applyDiscount,
+    removeDiscount,
+  } = useCart()
+  const { toast } = useToast()
+  // Shipping: 5€ for orders under 100€, free above
+  const shippingCost = totalPrice > 0 && totalPrice < 10000 ? 500 : 0
   const freeShippingThreshold = 10000
   const remainingForFreeShipping = Math.max(0, freeShippingThreshold - totalPrice)
+  const [discountCode, setDiscountCode] = useState("")
+  const [applyingDiscount, setApplyingDiscount] = useState(false)
+
+  // Calculate discount amount (discount.value is percentage * 100 in DB, e.g., 15% = 1500)
+  const discountAmount = discount ? (discount.type === "percentage" 
+    ? Math.round(totalPrice * (discount.value / 100) / 100)  // e.g., 10000 * 1500 / 10000 = 1500 cents = €15
+    : Math.min(discount.value, totalPrice)) : 0
+  
+  const subtotal = totalPrice
+  const total = subtotal - discountAmount + shippingCost
 
   if (!isOpen) return null
 
@@ -78,7 +104,8 @@ export function CartDrawer() {
                     </p>
                     <div className="flex items-center gap-2 mt-2">
                       <button
-                        onClick={() => updateQuantity(item.productId, item.quantity - 1)}
+                        // CORREGIDO: Añadido item.isVinted
+                        onClick={() => updateQuantity(item.productId, item.quantity - 1, item.isVinted)}
                         className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                         aria-label="Decrease quantity"
                       >
@@ -88,14 +115,16 @@ export function CartDrawer() {
                         {item.quantity}
                       </span>
                       <button
-                        onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                        // CORREGIDO: Añadido item.isVinted
+                        onClick={() => updateQuantity(item.productId, item.quantity + 1, item.isVinted)}
                         className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                         aria-label="Increase quantity"
                       >
                         <Plus className="h-4 w-4 text-gray-600 dark:text-gray-300" aria-hidden="true" />
                       </button>
                       <button
-                        onClick={() => removeItem(item.productId)}
+                        // CORREGIDO: Añadido item.isVinted
+                        onClick={() => removeItem(item.productId, item.isVinted)}
                         className="ml-auto p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-gray-500 hover:text-red-600"
                         aria-label={`Remove ${item.name}`}
                       >
@@ -111,8 +140,28 @@ export function CartDrawer() {
                   <span className="text-gray-600 dark:text-gray-400">
                     {siteConfig.cart.subtotal.replace('{count}', items.reduce((s, i) => s + i.quantity, 0).toString())}
                   </span>
-                  <span className="font-medium text-gray-900 dark:text-white">{formatPrice(totalPrice)}</span>
+                  <span className="font-medium text-gray-900 dark:text-white">{formatPrice(subtotal)}</span>
                 </div>
+                
+                {discount && (
+                  <div className="flex justify-between text-sm text-green-600 dark:text-green-400 flex items-center gap-2">
+                    <span className="flex items-center gap-1">
+                      <Tag className="h-4 w-4" aria-hidden="true" />
+                      Discount ({discount.code})
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">- {formatPrice(discountAmount)}</span>
+                      <button
+                        onClick={removeDiscount}
+                        className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-gray-500 hover:text-red-600"
+                        aria-label="Remove discount"
+                      >
+                        <XCircle className="h-4 w-4" aria-hidden="true" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+                
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600 dark:text-gray-400 flex items-center gap-2">
                     <Truck className="h-4 w-4" aria-hidden="true" />
@@ -129,7 +178,7 @@ export function CartDrawer() {
                 )}
                 <div className="flex justify-between text-base font-semibold border-t border-gray-200 dark:border-gray-800 pt-3">
                   <span className="text-gray-900 dark:text-white">{siteConfig.cart.total}</span>
-                  <span className="text-gray-900 dark:text-white">{formatPrice(totalPrice + shippingCost)}</span>
+                  <span className="text-gray-900 dark:text-white">{formatPrice(total)}</span>
                 </div>
               </div>
             </>
@@ -138,14 +187,42 @@ export function CartDrawer() {
 
         {items.length > 0 && (
           <CardFooter className="p-4 border-t border-gray-200 dark:border-gray-800 space-y-3">
-            <div className="space-y-2">
-              <Input
-                label="Discount Code"
-                placeholder="Enter discount code"
-                className="w-full"
-              />
-              <Button className="w-full" variant="secondary" size="sm">Apply</Button>
-            </div>
+            {!discount ? (
+              <div className="space-y-2">
+                <Input
+                  label="Discount Code"
+                  placeholder="Enter discount code"
+                  value={discountCode}
+                  onChange={(e) => setDiscountCode(e.target.value.toUpperCase())}
+                  className="w-full"
+                  disabled={applyingDiscount}
+                />
+                <Button 
+                  className="w-full" 
+                  variant="secondary" 
+                  size="sm"
+                  onClick={async () => {
+                    if (!discountCode.trim()) return
+                    setApplyingDiscount(true)
+                    const result = await applyDiscount(discountCode.trim())
+                    if (result.success) {
+                      setDiscountCode("")
+                      toast({ type: "success", title: "Discount applied!" })
+                    } else {
+                      toast({ type: "error", title: "Error", message: result.error })
+                    }
+                    setApplyingDiscount(false)
+                  }}
+                  disabled={applyingDiscount || !discountCode.trim()}
+                >
+                  {applyingDiscount ? "Applying..." : "Apply"}
+                </Button>
+              </div>
+            ) : (
+              <p className="text-sm text-center text-gray-500 dark:text-gray-400">
+                Discount <strong>{discount.code}</strong> applied. Remove to apply a different one.
+              </p>
+            )}
             <Button
               className="w-full h-12 text-lg"
               onClick={() => setIsOpen(false)}
@@ -155,7 +232,7 @@ export function CartDrawer() {
             </Button>
             <Link href="/checkout" className="block">
               <Button className="w-full h-12 text-lg" variant="primary">
-                {siteConfig.cart.checkout.replace('{total}', formatPrice(totalPrice + shippingCost))}
+                {siteConfig.cart.checkout.replace('{total}', formatPrice(total))}
               </Button>
             </Link>
             <p className="text-xs text-center text-gray-500 dark:text-gray-400">

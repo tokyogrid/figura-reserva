@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/Input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/DropdownMenu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
-import { ShoppingCart, User, LogOut, Package, Menu, X, ChevronDown, MessageSquare } from "lucide-react"
+import { ShoppingCart, User, LogOut, Package, Menu, X, ChevronDown, MessageSquare, Mail } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { siteConfig } from "@/lib/site-config"
 
@@ -25,7 +25,15 @@ export function Header() {
       <nav className="container">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2" aria-label="Tokyo Grid - Home">
-            <span className="h-6 w-6 text-blue-600 dark:text-blue-400" aria-hidden="true">TG</span>
+            <Image
+              src="/images/logo.png"
+              alt="Tokyo Grid Logo"
+              width={50}
+              height={50}
+              className="h-13 w-13"
+              quality={100}
+              priority
+            />
             <span className="font-bold text-xl text-gray-900 dark:text-white">Tokyo Grid</span>
           </Link>
 
@@ -43,6 +51,15 @@ export function Header() {
             <Link href="/how-it-works" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
               How It Works
             </Link>
+            <Link
+              href="/contact"
+              className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+              Contact Support
+            </Link>
           </div>
 
           <div className="flex items-center gap-4">
@@ -54,7 +71,7 @@ export function Header() {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="flex items-center gap-2 rounded-lg px-3 py-2">
-                        <Avatar className="h-8 w-8">
+                        <Avatar className="h-13 w-13">
                           <AvatarImage src="/api/avatar" alt="User" />
                           <AvatarFallback>{user.name?.[0] || user.email[0].toUpperCase()}</AvatarFallback>
                         </Avatar>
@@ -162,9 +179,15 @@ export function Header() {
           <div id="mobile-menu" className="md:hidden fixed inset-0 z-50 bg-white dark:bg-gray-950 p-4 overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <Link href="/" className="flex items-center gap-2 font-bold text-xl text-gray-900 dark:text-white">
-                <span className="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center">
-                  <span className="h-5 w-5 text-white">TG</span>
-                </span>
+                <Image
+                  src="/images/logo.png"
+                  alt="Tokyo Grid Logo"
+                  width={40}
+                  height={40}
+                  className="h-10 w-10"
+                  quality={100}
+                  priority
+                />
                 <span className="text-xl font-bold text-gray-900 dark:text-white">Tokyo Grid</span>
               </Link>
               <button
@@ -188,6 +211,10 @@ export function Header() {
               </Link>
               <Link href="/how-it-works" className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
                 How It Works
+              </Link>
+              <Link href="/contact" className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-3">
+                <Mail className="h-5 w-5" />
+                Contact Support
               </Link>
 
               {user ? (
@@ -291,7 +318,7 @@ export function Header() {
             </span>
           )}
         </Button>
-    </nav>
-  </header>
+      </nav>
+    </header>
   )
 }

@@ -8,25 +8,24 @@ export const metadata: Metadata = {
 }
 
 interface Props {
-  searchParams: Promise<{ orderId?: string }>
+  searchParams: Promise<{ session_id?: string }>
 }
 
 export default async function CheckoutSuccessPage({ searchParams }: Props) {
-  const { orderId } = await searchParams
+  const { session_id } = await searchParams
 
   let order = null
-  if (orderId) {
-    order = await prisma.order.findUnique({
-      where: { id: orderId },
+  if (session_id) {
+    const orderFromSession = await prisma.order.findUnique({
+      where: { stripeSessionId: session_id },
       include: { items: { include: { product: true } } },
     })
 
-    // Convert Date fields to strings for the component
-    if (order) {
+    if (orderFromSession) {
       order = {
-        ...order,
-        createdAt: order.createdAt.toISOString(),
-        items: order.items.map(item => ({
+        ...orderFromSession,
+        createdAt: orderFromSession.createdAt.toISOString(),
+        items: orderFromSession.items.map(item => ({
           ...item,
           createdAt: item.createdAt.toISOString(),
           product: {

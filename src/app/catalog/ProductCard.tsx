@@ -4,6 +4,7 @@ import Image from "next/image"
 import { Badge } from "@/components/ui/Badge"
 import { parseImages, formatPrice } from "@/lib/utils"
 import { Package } from "lucide-react"
+import { animationClasses } from "@/lib/animations"
 
 interface Product {
   id: string
@@ -22,15 +23,18 @@ interface Product {
   reserved: number
   status: string
   isFeatured: boolean
+  isHidden: boolean
+  isUnpurchasable: boolean
 }
 
 export function ProductCard({ product }: { product: Product }) {
   const images = parseImages(product.images)
   const inStock = product.stock - product.reserved > 0
   const available = product.stock - product.reserved
+  const isUnpurchasable = product.isUnpurchasable
 
   return (
-    <a href={`/catalog/${product.slug}`} className="group block">
+    <a href={`/catalog/${product.slug}`} className={`group block ${isUnpurchasable ? 'opacity-50 pointer-events-none' : ''}`}>
       <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm hover:shadow-lg transition-shadow h-full flex flex-col">
         <div className="relative aspect-square overflow-hidden bg-gray-100 dark:bg-gray-800">
           {images[0] ? (
@@ -47,14 +51,14 @@ export function ProductCard({ product }: { product: Product }) {
               <Package className="h-12 w-12" aria-hidden="true" />
             </div>
           )}
-          {!inStock && (
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-              <Badge variant="danger" className="text-lg px-4 py-2">Out of Stock</Badge>
-            </div>
-          )}
           {product.isFeatured && (
             <Badge className="absolute top-2 left-2" variant="warning">
               ⭐ Featured
+            </Badge>
+          )}
+          {product.isUnpurchasable && (
+            <Badge className="absolute top-2 right-2" variant="secondary">
+              Not purchasable
             </Badge>
           )}
         </div>

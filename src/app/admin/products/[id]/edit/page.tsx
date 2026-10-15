@@ -12,9 +12,10 @@ interface FormData {
   name: string; description: string; price: string; originalPrice: string; images: string; bulkImages: string
   category: string; series: string; character: string; manufacturer: string; scale: string
   releaseDate: string; stock: string; status: string; isFeatured: boolean; sortOrder: string
+  isHidden: boolean; isUnpurchasable: boolean
 }
 
-const initialForm: FormData = { name: "", description: "", price: "", originalPrice: "", images: "[]", bulkImages: "", category: "", series: "", character: "", manufacturer: "", scale: "", releaseDate: "", stock: "0", status: "AVAILABLE", isFeatured: false, sortOrder: "0" }
+const initialForm: FormData = { name: "", description: "", price: "", originalPrice: "", images: "[]", bulkImages: "", category: "", series: "", character: "", manufacturer: "", scale: "", releaseDate: "", stock: "0", status: "AVAILABLE", isFeatured: false, sortOrder: "0", isHidden: false, isUnpurchasable: false }
 const statusOptions = [{ value: "AVAILABLE", label: "Available" }, { value: "LOW_STOCK", label: "Low Stock" }, { value: "OUT_OF_STOCK", label: "Out of Stock" }, { value: "PRE_ORDER", label: "Pre-order" }, { value: "DISCONTINUED", label: "Discontinued" }]
 
 export default function AdminProductFormPage() {
@@ -48,7 +49,9 @@ export default function AdminProductFormPage() {
           stock: String(p.stock ?? 0),
           status: p.status ?? "AVAILABLE",
           isFeatured: p.isFeatured ?? false,
-          sortOrder: String(p.sortOrder ?? 0)
+          sortOrder: String(p.sortOrder ?? 0),
+          isHidden: p.isHidden ?? false,
+          isUnpurchasable: p.isUnpurchasable ?? false
         })
       }
     } catch { toast({ type: "error", title: "Error", message: "Failed to load" }) }
@@ -164,6 +167,10 @@ https://example.com/image3.jpg"
             <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value })} className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">{statusOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}</select>
             <Input label="Sort Order" id="sortOrder" type="number" value={form.sortOrder} onChange={e => setForm({ ...form, sortOrder: e.target.value })} placeholder="0" />
             <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={form.isFeatured} onChange={e => setForm({ ...form, isFeatured: e.target.checked })} className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" /><span className="text-sm text-gray-700 dark:text-gray-300">Featured on home</span></label>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={form.isHidden} onChange={e => setForm({ ...form, isHidden: e.target.checked })} className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" /><span className="text-sm text-gray-700 dark:text-gray-300">Hidden from catalog</span></label>
+            <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={form.isUnpurchasable} onChange={e => setForm({ ...form, isUnpurchasable: e.target.checked })} className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" /><span className="text-sm text-gray-700 dark:text-gray-300">Not purchasable</span></label>
           </div></CardContent></Card>
 
         <div className="flex items-center justify-end gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
