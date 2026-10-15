@@ -2,7 +2,8 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { createPortal } from "react-dom"
 import { useCart } from "@/lib/cart-context"
 import { useAuth } from "@/lib/AuthContext"
 import { Button } from "@/components/ui/Button"
@@ -18,7 +19,145 @@ export function Header() {
   const { totalItems, totalPrice, setIsOpen } = useCart()
   const { user, loading, logout } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const formatPrice = (cents: number) => `€${(cents / 100).toFixed(2)}`
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const MobileMenu = () => {
+    if (!mobileMenuOpen || !mounted) return null
+
+    return createPortal(
+      <div id="mobile-menu" className="fixed inset-0 z-[9999] bg-white dark:bg-gray-950 p-4 overflow-y-auto">
+        <div className="flex items-center justify-between mb-6">
+          <Link href="/" className="flex items-center gap-2 font-bold text-xl text-gray-900 dark:text-white">
+            <Image
+              src="/images/logo.png"
+              alt="Tokyo Grid Logo"
+              width={40}
+              height={40}
+              className="h-10 w-10"
+              quality={100}
+              priority
+            />
+            <span className="text-xl font-bold text-gray-900 dark:text-white">Tokyo Grid</span>
+          </Link>
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+            aria-label="Close menu"
+          >
+            <X className="h-6 w-6" aria-hidden="true" />
+          </button>
+        </div>
+
+        <nav className="space-y-4">
+          <Link href="/catalog" className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+            Catalog
+          </Link>
+          <Link href="/request" className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+            Request Figure
+          </Link>
+          <Link href="/vinted" className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+            Our Vinted
+          </Link>
+          <Link href="/how-it-works" className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+            How It Works
+          </Link>
+          <Link href="/contact" className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-3">
+            <Mail className="h-5 w-5" />
+            Contact Support
+          </Link>
+
+          {user ? (
+            <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
+              <div className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
+                {user.email}
+              </div>
+              <Link
+                href="/account/orders"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-3"
+              >
+                <Package className="h-5 w-5" />
+                My Orders
+              </Link>
+              <Link
+                href="/account/requests"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-3"
+              >
+                <MessageSquare className="h-5 w-5" />
+                My Requests
+              </Link>
+              <Link
+                href="/account/profile"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-3"
+              >
+                <User className="h-5 w-5" />
+                Edit Profile
+              </Link>
+              <button
+                onClick={async () => {
+                  await logout()
+                  setMobileMenuOpen(false)
+                  window.location.href = "/"
+                }}
+                className="w-full text-left py-3 text-lg font-medium text-red-600 dark:text-red-400 flex items-center gap-3"
+              >
+                <LogOut className="h-5 w-5" />
+                Logout
+              </button>
+            </div>
+          ) : (
+            <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
+              <Link 
+                href="/login?callbackUrl=/request"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+              >
+                Sign In
+              </Link>
+              <Link 
+                href="/login?register=true&callbackUrl=/request"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-3 text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg"
+              >
+                Create Account
+              </Link>
+            </div>
+          )}
+
+          <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="relative w-full"
+              onClick={() => setIsOpen(true)}
+              aria-label={`Cart: ${totalItems} items, ${formatPrice(totalPrice)}`}
+            >
+              <ShoppingCart className="h-5 w-5" aria-hidden="true" />
+              <span className="ml-1 font-medium text-gray-700 dark:text-gray-300">
+                {formatPrice(totalPrice)}
+              </span>
+              {totalItems > 0 && (
+                <span className={cn(
+                  "absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold",
+                  totalItems > 99 && "w-auto px-1.5"
+                )} aria-label={`${totalItems} items`}>
+                  {totalItems > 99 ? "99+" : totalItems}
+                </span>
+              )}
+            </Button>
+          </div>
+        </nav>
+      </div>,
+      document.body
+    )
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/95 dark:bg-gray-950/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 supports-[backdrop-filter]:dark:bg-gray-950/80">
@@ -135,11 +274,11 @@ export function Header() {
               )}
             </div>
 
-            {/* Cart Button */}
+            {/* Cart Button - Desktop only */}
             <Button
               variant="ghost"
               size="sm"
-              className="relative"
+              className="hidden md:flex relative"
               onClick={() => setIsOpen(true)}
               aria-label={`Cart: ${totalItems} items, ${formatPrice(totalPrice)}`}
             >
@@ -174,136 +313,7 @@ export function Header() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div id="mobile-menu" className="md:hidden fixed inset-0 z-60 bg-white dark:bg-gray-950 p-4 overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
-              <Link href="/" className="flex items-center gap-2 font-bold text-xl text-gray-900 dark:text-white">
-                <Image
-                  src="/images/logo.png"
-                  alt="Tokyo Grid Logo"
-                  width={40}
-                  height={40}
-                  className="h-10 w-10"
-                  quality={100}
-                  priority
-                />
-                <span className="text-xl font-bold text-gray-900 dark:text-white">Tokyo Grid</span>
-              </Link>
-              <button
-                onClick={() => setMobileMenuOpen(false)}
-                className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
-                aria-label="Close menu"
-              >
-                <X className="h-6 w-6" aria-hidden="true" />
-              </button>
-            </div>
-
-            <nav className="space-y-4">
-              <Link href="/catalog" className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
-                Catalog
-              </Link>
-              <Link href="/request" className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
-                Request Figure
-              </Link>
-              <Link href="/vinted" className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
-                Our Vinted
-              </Link>
-              <Link href="/how-it-works" className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
-                How It Works
-              </Link>
-              <Link href="/contact" className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-3">
-                <Mail className="h-5 w-5" />
-                Contact Support
-              </Link>
-
-              {user ? (
-                <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
-                  <div className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
-                    {user.email}
-                  </div>
-                  <Link
-                    href="/account/orders"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-3"
-                  >
-                    <Package className="h-5 w-5" />
-                    My Orders
-                  </Link>
-                  <Link
-                    href="/account/requests"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-3"
-                  >
-                    <MessageSquare className="h-5 w-5" />
-                    My Requests
-                  </Link>
-                  <Link
-                    href="/account/profile"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-3"
-                  >
-                    <User className="h-5 w-5" />
-                    Edit Profile
-                  </Link>
-                  <button
-                    onClick={async () => {
-                      await logout()
-                      setMobileMenuOpen(false)
-                      window.location.href = "/"
-                    }}
-                    className="w-full text-left py-3 text-lg font-medium text-red-600 dark:text-red-400 flex items-center gap-3"
-                  >
-                    <LogOut className="h-5 w-5" />
-                    Logout
-                  </button>
-                </div>
-              ) : (
-                <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
-                  <Link 
-                    href="/login?callbackUrl=/request"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block py-3 text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-                  >
-                    Sign In
-                  </Link>
-                  <Link 
-                    href="/login?register=true&callbackUrl=/request"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block py-3 text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg"
-                  >
-                    Create Account
-                  </Link>
-                </div>
-              )}
-
-              <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="relative w-full"
-                  onClick={() => setIsOpen(true)}
-                  aria-label={`Cart: ${totalItems} items, ${formatPrice(totalPrice)}`}
-                >
-                  <ShoppingCart className="h-5 w-5" aria-hidden="true" />
-                  <span className="ml-1 font-medium text-gray-700 dark:text-gray-300">
-                    {formatPrice(totalPrice)}
-                  </span>
-                  {totalItems > 0 && (
-                    <span className={cn(
-                      "absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold",
-                      totalItems > 99 && "w-auto px-1.5"
-                    )} aria-label={`${totalItems} items`}>
-                      {totalItems > 99 ? "99+" : totalItems}
-                    </span>
-                  )}
-                </Button>
-              </div>
-            </nav>
-          </div>
-        )}
-
-        {/* Cart Button - Mobile only (hidden on md and up) */}
+        {/* Cart Button - Mobile only (button in header) */}
         <Button
           variant="ghost"
           size="sm"
