@@ -7,8 +7,6 @@ import { createPortal } from "react-dom"
 import { useCart } from "@/lib/cart-context"
 import { useAuth } from "@/lib/AuthContext"
 import { Button } from "@/components/ui/Button"
-import { Input } from "@/components/ui/Input"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/DropdownMenu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { ShoppingCart, User, LogOut, Package, Menu, X, ChevronDown, MessageSquare, Mail } from "lucide-react"
@@ -210,7 +208,7 @@ export function Header() {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="flex items-center gap-2 rounded-lg px-3 py-2">
-                        <Avatar className="h-13 w-13">
+                        <Avatar className="h-10 w-10">
                           <AvatarImage src="/api/avatar" alt="User" />
                           <AvatarFallback>{user.name?.[0] || user.email[0].toUpperCase()}</AvatarFallback>
                         </Avatar>
@@ -274,7 +272,7 @@ export function Header() {
               )}
             </div>
 
-            {/* Cart Button - Desktop only */}
+            {/* Cart Button - Desktop only (with price) */}
             <Button
               variant="ghost"
               size="sm"
@@ -313,21 +311,8 @@ export function Header() {
           </div>
         </div>
 
-        {/* Cart Button - Mobile only (button in header) */}
-        <Button
-          variant="ghost"
-          size="sm"
-          className="md:hidden relative"
-          onClick={() => setIsOpen(true)}
-          aria-label={`Cart: ${totalItems} items, ${formatPrice(totalPrice)}`}
-        >
-          <ShoppingCart className="h-6 w-6" aria-hidden="true" />
-          {totalItems > 0 && (
-            <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">
-              {totalItems > 99 ? "99+" : totalItems}
-            </span>
-          )}
-        </Button>
+        {/* Mobile Menu Portal */}
+        <MobileMenu />
       </nav>
     </header>
   )
