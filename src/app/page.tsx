@@ -16,19 +16,19 @@ const iconMap: Record<string, React.ElementType> = {
 }
 
 const animeCharacters = [
-  { name: "Spy × Family", character: "Anya Forger", image: "https://imgs.search.brave.com/qa1zNirbMeYYdlLPAjQr1N2s4tSPgheLNgR5gogGgZc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zMy56/ZXJvY2hhbi5uZXQv/MjQwLzQ0LzE2LzM2/NzgzNDQuYXZpZg", color: "bg-pink-500", bgColor: "bg-pink-100 dark:bg-pink-900/30" },
-  { name: "One Piece", character: "Monkey D. Luffy", image: "https://imgs.search.brave.com/5FLcqksNc5cYvnbvSLb3vrp-eJL9XHFfO3-wYspIjYo/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvdGh1bWJu/YWlsL29uZS1waWVj/ZS1sdWZmeS1wZnAt/c3VjY2Vzcy1wb3Nl/LXdpbmQtZWZmZWN0/LTA4dG1xZzI2cTUy/OTV1YzMuanBn", color: "bg-yellow-500", bgColor: "bg-yellow-100 dark:bg-yellow-900/30" },
-  { name: "Jujutsu Kaisen", character: "Satoru Gojo", image: "https://imgs.search.brave.com/Cnei4dB-Tc1K9J0pzfeOwcAERH9yRmNWkzg0i18rG60/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9taXIt/czMtY2RuLWNmLmJl/aGFuY2UubmV0L3By/b2plY3RzLzQwNC82/OTNhYmExNzgyMDA3/MjkuWTNKdmNDd3hO/REV6TERFeE1EVXNO/emMyTERFME13LnBu/Zw", color: "bg-blue-500", bgColor: "bg-blue-100 dark:bg-blue-900/30" },
-  { name: "Demon Slayer", character: "Tanjiro Kamado", image: "https://imgs.search.brave.com/H5-2sBhWd_NNpB7HdahONZ5H_bvuW20Au1UUj-jfEfw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJjYXZlLmNv/bS93cC93cDExMTUx/NDI4LnBuZw", color: "bg-green-500", bgColor: "bg-green-100 dark:bg-green-900/30" },
-  { name: "Naruto", character: "Naruto Uzumaki", image: "https://imgs.search.brave.com/YGngAFAJ8Hpz85-ygE9yzy2lZII96u2mN3AOkXOYQE4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS52YW5kYWwubmV0/L2kvNjQweDM2MC8x/MC0yMDIzLzE3LzIw/MjMxMDE3MTYzMTE0/XzIuanBn", color: "bg-orange-500", bgColor: "bg-orange-100 dark:bg-orange-900/30" },
+  { name: "Spy × Family", character: "Anya Forger", image: "/images/anime/anya.webp", color: "bg-pink-500", bgColor: "bg-pink-100 dark:bg-pink-900/30" },
+  { name: "One Piece", character: "Monkey D. Luffy", image: "/images/anime/luffy.webp", color: "bg-yellow-500", bgColor: "bg-yellow-100 dark:bg-yellow-900/30" },
+  { name: "Jujutsu Kaisen", character: "Satoru Gojo", image: "/images/anime/gojo.webp", color: "bg-blue-500", bgColor: "bg-blue-100 dark:bg-blue-900/30" },
+  { name: "Demon Slayer", character: "Tanjiro Kamado", image: "/images/anime/tanjiro.webp", color: "bg-green-500", bgColor: "bg-green-100 dark:bg-green-900/30" },
+  { name: "Naruto", character: "Naruto Uzumaki", image: "/images/anime/naruto.webp", color: "bg-orange-500", bgColor: "bg-orange-100 dark:bg-orange-900/30" },
 ]
 
 const headerCharacters = [
-  { name: "Anya Forger", image: "https://imgs.search.brave.com/qa1zNirbMeYYdlLPAjQr1N2s4tSPgheLNgR5gogGgZc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zMy56/ZXJvY2hhbi5uZXQv/MjQwLzQ0LzE2LzM2/NzgzNDQuYXZpZg", series: "Spy × Family" },
-  { name: "Luffy", image: "https://imgs.search.brave.com/5FLcqksNc5cYvnbvSLb3vrp-eJL9XHFfO3-wYspIjYo/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvdGh1bWJu/YWlsL29uZS1waWVj/ZS1sdWZmeS1wZnAt/c3VjY2Vzcy1wb3Nl/LXdpbmQtZWZmZWN0/LTA4dG1xZzI2cTUy/OTV1YzMuanBn", series: "One Piece" },
-  { name: "Gojo", image: "https://imgs.search.brave.com/Cnei4dB-Tc1K9J0pzfeOwcAERH9yRmNWkzg0i18rG60/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9taXIt/czMtY2RuLWNmLmJl/aGFuY2UubmV0L3By/b2plY3RzLzQwNC82/OTNhYmExNzgyMDA3/MjkuWTNKdmNDd3hO/REV6TERFeE1EVXNO/emMyTERFME13LnBu/Zw", series: "Jujutsu Kaisen" },
-  { name: "Tanjiro", image: "https://imgs.search.brave.com/H5-2sBhWd_NNpB7HdahONZ5H_bvuW20Au1UUj-jfEfw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJjYXZlLmNv/bS93cC93cDExMTUx/NDI4LnBuZw", series: "Demon Slayer" },
-  { name: "Naruto", image: "https://imgs.search.brave.com/YGngAFAJ8Hpz85-ygE9yzy2lZII96u2mN3AOkXOYQE4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS52YW5kYWwubmV0/L2kvNjQweDM2MC8x/MC0yMDIzLzE3LzIw/MjMxMDE3MTYzMTE0/XzIuanBn", series: "Naruto" }
+  { name: "Anya Forger", image: "/images/anime/anya.webp", series: "Spy × Family" },
+  { name: "Luffy", image: "/images/anime/luffy.webp", series: "One Piece" },
+  { name: "Gojo", image: "/images/anime/gojo.webp", series: "Jujutsu Kaisen" },
+  { name: "Tanjiro", image: "/images/anime/tanjiro.webp", series: "Demon Slayer" },
+  { name: "Naruto", image: "/images/anime/naruto.webp", series: "Naruto" }
 ]
 
 const animeDecorations = [
