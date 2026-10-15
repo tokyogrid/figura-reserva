@@ -1,6 +1,7 @@
 import "./globals.css"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
 import { CartProvider } from "@/lib/cart-context"
 import { AuthProvider } from "@/lib/AuthContext"
 import { Header } from "@/components/Header"
@@ -45,6 +46,7 @@ export default function RootLayout({
             </ToasterProvider>
           </AuthProvider>
         </CartProvider>
+        <Analytics />
       </body>
     </html>
   )
