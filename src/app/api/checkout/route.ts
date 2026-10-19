@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma"
 import { createCheckoutSession } from "@/lib/stripe"
 import { checkCSRF } from "@/lib/csrf"
 import { getSessionFromRequest } from "@/lib/auth"
+import { rateLimit } from "@/lib/rate-limit"
 
 function generateVintedCode(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
@@ -23,6 +24,16 @@ function calculateShippingCost(subtotal: number, isVintedOrder: boolean): number
 }
 
 export async function POST(request: NextRequest) {
+  // Rate limiting: 10 requests per minute per IP
+  const ip = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown"
+  const rl = rateLimit(`checkout:${ip}`, 10, 60 * 1000)
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: "Too many checkout attempts. Please try again later." },
+      { status: 429, headers: { "Retry-After": Math.ceil((rl.resetTime - Date.now()) / 1000).toString() } }
+    )
+  }
+
   // Protección CSRF
   if (!(await checkCSRF(request))) {
     return NextResponse.json({ error: "Invalid CSRF token" }, { status: 403 })

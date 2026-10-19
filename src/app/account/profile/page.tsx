@@ -76,37 +76,37 @@ export default function AccountProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 py-12">
+    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black py-12">
       <div className="container max-w-2xl">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" onClick={() => router.back()} className="gap-2">
+            <Button variant="ghost" onClick={() => router.back()} className="gap-2 bg-white/5 hover:bg-white/10 text-white border-white/10">
               <ArrowLeft className="h-4 w-4" />
               Back
             </Button>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Edit Profile</h1>
-              <p className="text-gray-600 dark:text-gray-400">Manage your account information</p>
+              <h1 className="text-3xl font-bold text-white">Edit Profile</h1>
+              <p className="text-gray-400">Manage your account information</p>
             </div>
           </div>
         </div>
 
-        <Card>
+        <Card className="bg-gray-900/50 border-gray-800/50">
           <CardHeader>
             <div className="flex items-center gap-4">
-              <div className="h-16 w-16 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                <User className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+              <div className="h-16 w-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                <User className="h-8 w-8 text-white" />
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Profile Information</h2>
-                <p className="text-gray-600 dark:text-gray-400">Your details are used for order processing and shipping</p>
+                <h2 className="text-xl font-semibold text-white">Profile Information</h2>
+                <p className="text-gray-400">Your details are used for order processing and shipping</p>
               </div>
             </div>
           </CardHeader>
@@ -120,6 +120,7 @@ export default function AccountProfilePage() {
                   onChange={e => setFormData({ ...formData, name: e.target.value })}
                   placeholder="John Smith"
                   required
+                  className="bg-gray-900/50 border-gray-700 text-white placeholder-gray-500 focus:border-purple-500 focus:ring-purple-500/20"
                 />
                 <Input
                   label="Email"
@@ -130,12 +131,13 @@ export default function AccountProfilePage() {
                   placeholder="john@email.com"
                   required
                   disabled
+                  className="bg-gray-900/50 border-gray-700 text-white placeholder-gray-500"
                 />
               </div>
 
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                  <MapPin className="h-5 w-5 text-gray-400" />
+              <div className="border-t border-gray-800/50 pt-6">
+                <h3 className="text-lg font-medium text-white mb-4 flex items-center gap-2">
+                  <MapPin className="h-5 w-5 text-purple-400" />
                   Shipping Address
                 </h3>
                 <div className="space-y-4">
@@ -145,6 +147,7 @@ export default function AccountProfilePage() {
                     value={formData.address}
                     onChange={e => setFormData({ ...formData, address: e.target.value })}
                     placeholder="123 Main St, Apt 4B"
+                    className="bg-gray-900/50 border-gray-700 text-white placeholder-gray-500 focus:border-purple-500 focus:ring-purple-500/20"
                   />
                   <div className="grid sm:grid-cols-3 gap-4">
                     <Input
@@ -153,6 +156,7 @@ export default function AccountProfilePage() {
                       value={formData.city}
                       onChange={e => setFormData({ ...formData, city: e.target.value })}
                       placeholder="Madrid"
+                      className="bg-gray-900/50 border-gray-700 text-white placeholder-gray-500 focus:border-purple-500 focus:ring-purple-500/20"
                     />
                     <Input
                       label="Postal Code"
@@ -161,12 +165,13 @@ export default function AccountProfilePage() {
                       onChange={e => setFormData({ ...formData, postalCode: e.target.value })}
                       placeholder="28001"
                       maxLength={5}
+                      className="bg-gray-900/50 border-gray-700 text-white placeholder-gray-500 focus:border-purple-500 focus:ring-purple-500/20"
                     />
                     <select
                       id="country"
                       value={formData.country}
                       onChange={e => setFormData({ ...formData, country: e.target.value as CountryCode })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-gray-700 rounded-lg bg-gray-900/50 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                     >
                       {countries.map(country => (
                         <option key={country.code} value={country.code}>
@@ -178,8 +183,8 @@ export default function AccountProfilePage() {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                <Button variant="outline" onClick={() => router.back()}>
+              <div className="flex justify-end gap-4 pt-4 border-t border-gray-800/50">
+                <Button variant="outline" onClick={() => router.back()} className="border-white/10 text-white hover:bg-white/5">
                   Cancel
                 </Button>
                 <Button type="submit" disabled={saving} loading={saving} className="gap-2" variant="primary">

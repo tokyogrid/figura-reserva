@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/Badge"
 import { formatPrice } from "@/lib/utils"
 import { Package, ShoppingCart, MessageSquare, Clock, Banknote, ArrowRight } from "lucide-react"
 
+export const dynamic = 'force-dynamic'
+
 async function getStats() {
   const [products, orders, pendingOrders, requests, pendingRequests, recentOrders, lowStock] = await Promise.all([
     prisma.product.count({ where: { status: { in: ["AVAILABLE", "LOW_STOCK", "PRE_ORDER"] } } }),

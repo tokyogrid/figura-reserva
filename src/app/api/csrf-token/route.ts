@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { cookies } from "next/headers"
-import { verifyCSRFToken } from "@/lib/csrf"
+import { verifyCSRFToken, generateCSRFToken, csrfCookie } from "@/lib/csrf"
 
 const CSRF_COOKIE_NAME = "csrf_token"
 const CSRF_HEADER_NAME = "x-csrf-token"
@@ -11,16 +11,10 @@ export async function GET() {
 
   if (!token || !(await verifyCSRFToken(token))) {
     // Token missing or invalid - generate new one
-    const { generateCSRFToken, csrfCookie } = await import("@/lib/csrf")
     const newToken = await generateCSRFToken()
     const response = NextResponse.json({ token: newToken })
-    const cookie = csrfCookie(newToken)
-    // Make it readable by JavaScript (not httpOnly)
-    response.cookies.set({
-      ...cookie,
-      httpOnly: false,
-      sameSite: "lax",
-    })
+    // CSRF token cookie should be httpOnly to prevent XSS access
+    response.cookies.set(csrfCookie(newToken))
     return response
   }
 

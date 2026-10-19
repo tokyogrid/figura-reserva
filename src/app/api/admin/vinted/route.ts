@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getAdminSessionFromRequest } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import bcrypt from "bcryptjs"
 
 export async function GET(request: NextRequest) {
   try {
@@ -65,10 +66,11 @@ export async function POST(request: NextRequest) {
 
     if (!adminUser) {
       // Create a system admin user for Vinted
+      const systemPasswordHash = await bcrypt.hash("system-" + crypto.randomUUID(), 12)
       adminUser = await prisma.user.create({
         data: {
           email: "vinted@system.local",
-          passwordHash: "system",
+          passwordHash: systemPasswordHash,
           name: "Vinted System",
           role: "admin",
         },

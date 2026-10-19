@@ -129,7 +129,6 @@ model VintedAccount {
   userId            String   @unique
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   username          String
-  encryptedPassword String?
   rating            Float    @default(0)
   totalSales        Int      @default(0)
   positiveFeedback  Int      @default(0)

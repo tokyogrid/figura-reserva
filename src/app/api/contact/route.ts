@@ -1,8 +1,18 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { sendContactEmail, sendSupportTicketEmail, sendSupportTicketTelegram } from "@/lib/email"
+import { rateLimit } from "@/lib/rate-limit"
 
 export async function POST(request: NextRequest) {
+  // Rate limiting: 3 requests per minute per IP
+  const ip = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown"
+  const rl = rateLimit(`contact:${ip}`, 3, 60 * 1000)
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429, headers: { "Retry-After": Math.ceil((rl.resetTime - Date.now()) / 1000).toString() } }
+    )
+  }
   try {
     const body = await request.json()
     const { name, email, subject, message } = body

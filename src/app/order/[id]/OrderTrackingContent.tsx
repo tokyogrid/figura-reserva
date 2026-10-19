@@ -97,34 +97,34 @@ export function OrderTrackingContent({ order }: Props) {
   const isFinalCompleted = !isVinted && order.status === "DELIVERED" || isVinted && order.status === "AVAILABLE_ON_VINTED"
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 py-12">
+    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black py-12">
       <div className="container max-w-3xl">
         {/* Header */}
         <div className="mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 mb-6">
+          <Link href="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-purple-400 mb-6">
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
             Back to Home
           </Link>
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Order Tracking</h1>
-            <p className="text-gray-600 dark:text-gray-300">Order <strong>#{order.id.slice(0, 8)}</strong> • {new Date(order.createdAt).toLocaleDateString()}</p>
+            <h1 className="text-3xl font-bold text-white mb-2">Order Tracking</h1>
+            <p className="text-gray-300">Order <strong>#{order.id.slice(0, 8)}</strong> • {new Date(order.createdAt).toLocaleDateString()}</p>
             {isVinted && (
-              <p className="text-sm text-purple-600 dark:text-purple-400 mt-1">Vinted Order - You will complete the purchase on Vinted</p>
+              <p className="text-sm text-purple-400 mt-1">Vinted Order - You will complete the purchase on Vinted</p>
             )}
           </div>
         </div>
 
         {/* Timeline */}
-        <Card className="mb-8">
+        <Card className="mb-8 bg-gray-900/50 border-gray-800/50">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-white">
               <Truck className="h-5 w-5" aria-hidden="true" />
               {isVinted ? "Vinted Purchase Status" : "Shipping Status"}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="relative">
-              <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700" />
+              <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-800/50" />
               <div className="space-y-8">
                 {currentStatusOrder.map((status, index) => {
                   const Icon = statusIcons[status as keyof typeof statusIcons]
@@ -138,22 +138,22 @@ export function OrderTrackingContent({ order }: Props) {
                         {isCompleted ? (
                           <CheckCircle className="h-6 w-6 text-green-500" aria-hidden="true" />
                         ) : isCurrent ? (
-                          <Icon className="h-6 w-6 text-blue-600 animate-pulse" aria-hidden="true" />
+                          <Icon className="h-6 w-6 text-purple-400 animate-pulse" aria-hidden="true" />
                         ) : (
-                          <Icon className="h-6 w-6 text-gray-300 dark:text-gray-600" aria-hidden="true" />
+                          <Icon className="h-6 w-6 text-gray-600" aria-hidden="true" />
                         )}
-                        <div className="absolute -left-1.5 top-12 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700" />
+                        <div className="absolute -left-1.5 top-12 bottom-0 w-0.5 bg-gray-800/50" />
                       </div>
                       <div className="flex-1 pt-1">
                         <div className="flex items-center gap-2">
-                          <h3 className={`font-semibold ${isActive ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400"}`}>
+                          <h3 className={`font-semibold ${isActive ? "text-white" : "text-gray-400"}`}>
                             {currentStatusLabels[status] || status}
                           </h3>
                           {isCurrent && (
-                            <Badge variant="info" className="text-xs">Current</Badge>
+                            <Badge variant="info" className="text-xs bg-purple-500/10 text-purple-400 border-purple-500/20">Current</Badge>
                           )}
                         </div>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        <p className="text-sm text-gray-400 mt-1">
                           {currentStatusDescriptions[status] || status}
                         </p>
                       </div>
@@ -164,21 +164,21 @@ export function OrderTrackingContent({ order }: Props) {
             </div>
 
             {!isVinted && order.status === "SHIPPED" && (
-              <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                <h4 className="font-medium text-blue-800 dark:text-blue-300 mb-2 flex items-center gap-2">
+              <div className="mt-6 p-4 bg-purple-500/10 border border-purple-500/20 rounded-lg">
+                <h4 className="font-medium text-purple-400 mb-2 flex items-center gap-2">
                   <Truck className="h-4 w-4" aria-hidden="true" />
                   Shipping Information
                 </h4>
-                <p className="text-blue-700 dark:text-blue-300">Your package is on the way. You'll receive the tracking number by email.</p>
+                <p className="text-purple-300">Your package is on the way. You'll receive the tracking number by email.</p>
               </div>
             )}
           </CardContent>
         </Card>
 
         {/* Order items */}
-        <Card className="mb-8">
+        <Card className="mb-8 bg-gray-900/50 border-gray-800/50">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-white">
               <Package className="h-5 w-5" aria-hidden="true" />
               Figures in Order
             </CardTitle>
@@ -188,52 +188,52 @@ export function OrderTrackingContent({ order }: Props) {
               {order.items.map((item) => {
                 const images = item.product.images ? JSON.parse(item.product.images) : []
                 return (
-                  <div key={item.id} className="flex gap-4 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
-                    <div className="h-16 w-16 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+                  <div key={item.id} className="flex gap-4 p-3 rounded-lg border border-gray-800/50 bg-gray-900/30">
+                    <div className="h-16 w-16 flex-shrink-0 rounded-lg overflow-hidden bg-gray-800">
                       {images[0] ? (
                         <img src={images[0]} alt={item.product.name} className="w-full h-full object-cover" />
                       ) : (
-                        <Package className="h-8 w-8 mx-auto my-auto text-gray-400" aria-hidden="true" />
+                        <Package className="h-8 w-8 mx-auto my-auto text-gray-500" aria-hidden="true" />
                       )}
                     </div>
                     <div className="flex-1">
-                      <Link href={`/catalog/${item.product.slug}`} className="font-medium text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400">
+                      <Link href={`/catalog/${item.product.slug}`} className="font-medium text-white hover:text-purple-400">
                         {item.product.name}
                       </Link>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                      <p className="text-sm text-gray-400">
                         Quantity: {item.quantity} × {formatPrice(item.price)}
                       </p>
                     </div>
-                    <span className="font-semibold text-gray-900 dark:text-white">
+                    <span className="font-semibold text-white">
                       {formatPrice(item.price * item.quantity)}
                     </span>
                   </div>
                 )
               })}
             </div>
-            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-end space-x-6 text-sm">
+            <div className="mt-4 pt-4 border-t border-gray-800/50 flex justify-end space-x-6 text-sm">
               <div>
-                <p className="text-gray-500 dark:text-gray-400">Subtotal</p>
-                <p className="font-medium text-gray-900 dark:text-white">{formatPrice(order.subtotal)}</p>
+                <p className="text-gray-400">Subtotal</p>
+                <p className="font-medium text-white">{formatPrice(order.subtotal)}</p>
               </div>
               <div>
-                <p className="text-gray-500 dark:text-gray-400">Shipping</p>
-                <p className="font-medium text-gray-900 dark:text-white">
+                <p className="text-gray-400">Shipping</p>
+                <p className="font-medium text-white">
                   {order.shippingCost === 0 ? "Free" : formatPrice(order.shippingCost)}
                 </p>
               </div>
               <div>
-                <p className="text-gray-500 dark:text-gray-400">Total Paid</p>
-                <p className="font-bold text-lg text-gray-900 dark:text-white">{formatPrice(order.total)}</p>
+                <p className="text-gray-400">Total Paid</p>
+                <p className="font-bold text-lg text-white">{formatPrice(order.total)}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Customer info */}
-        <Card className="mb-8">
+        <Card className="mb-8 bg-gray-900/50 border-gray-800/50">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-white">
               <User className="h-5 w-5" aria-hidden="true" />
               Your Information
             </CardTitle>
@@ -241,17 +241,17 @@ export function OrderTrackingContent({ order }: Props) {
           <CardContent className="space-y-4">
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Name</p>
-                <p className="font-medium text-gray-900 dark:text-white">{order.customerName}</p>
+                <p className="text-sm text-gray-400">Name</p>
+                <p className="font-medium text-white">{order.customerName}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Email</p>
-                <p className="font-medium text-gray-900 dark:text-white">{order.email}</p>
+                <p className="text-sm text-gray-400">Email</p>
+                <p className="font-medium text-white">{order.email}</p>
               </div>
             </div>
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Shipping Address</p>
-              <address className="not-italic text-gray-900 dark:text-white">
+              <p className="text-sm text-gray-400">Shipping Address</p>
+              <address className="not-italic text-white">
                 {order.address}<br />
                 {order.postalCode} {order.city}<br />
                 {order.country}
@@ -261,13 +261,13 @@ export function OrderTrackingContent({ order }: Props) {
         </Card>
 
         {/* Help */}
-        <Card className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+        <Card className="bg-purple-500/10 border-purple-500/20">
           <CardContent className="p-6">
-            <h3 className="font-semibold text-blue-800 dark:text-blue-300 mb-3 flex items-center gap-2">
+            <h3 className="font-semibold text-purple-400 mb-3 flex items-center gap-2">
               <Sparkles className="h-5 w-5" aria-hidden="true" />
               Need Help?
             </h3>
-            <p className="text-blue-700 dark:text-blue-300 mb-4">
+            <p className="text-purple-300 mb-4">
               Reply to the confirmation email or write to <a href="mailto:support@tokyogrid.com" className="underline">support@tokyogrid.com</a>. We reply within 24h.
             </p>
             <div className="flex flex-wrap gap-3">
@@ -279,7 +279,7 @@ export function OrderTrackingContent({ order }: Props) {
                 <Button variant="outline" onClick={() => {
                   const phone = order.phone?.replace(/\D/g, "")
                   if (phone) window.open(`https://wa.me/${phone}`)
-                }} className="gap-2">
+                }} className="gap-2 border-purple-500/30 text-purple-400 hover:bg-purple-500/10">
                   <Phone className="h-4 w-4" aria-hidden="true" />
                   WhatsApp
                 </Button>

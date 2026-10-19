@@ -2,8 +2,18 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { sendVerificationEmail } from "@/lib/email"
 import { countries, isValidCountry } from "@/lib/countries"
+import { rateLimit } from "@/lib/rate-limit"
 
 export async function POST(request: NextRequest) {
+  // Rate limiting: 3 requests per 15 minutes per IP
+  const ip = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown"
+  const rl = rateLimit(`resend-verify:${ip}`, 3, 15 * 60 * 1000)
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429, headers: { "Retry-After": Math.ceil((rl.resetTime - Date.now()) / 1000).toString() } }
+    )
+  }
   try {
     const { email } = await request.json()
 

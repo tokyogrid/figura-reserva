@@ -155,10 +155,6 @@ export const siteConfig = {
       a: "Absolutely! Use the 'Request Figure' form. We search our suppliers and if found, notify you with price and photos. You get priority to reserve before it goes to catalog.",
     },
     {
-      q: "How does Vinted work? Do you sell for me?",
-      a: "If you ask, we list the figure on Vinted under your account with your photos/description. We handle messages, offers, and shipping. You get paid directly to your Vinted account. We take a small management fee (3-5%).",
-    },
-    {
       q: "Are figures 100% authentic?",
       a: "Yes. We only buy from official Japanese stores and retailers. Never from shady second-hand markets. Every figure comes with original box, authenticity holograms, and complete accessories.",
     },

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react"
 import Link from "next/link"
-import { ProductCard, ProductCardSkeleton } from "./ProductCard"
+import { ProductCard, ProductCardSkeleton } from "@/components/ProductCard"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { Select } from "@/components/ui/Input"
@@ -197,11 +197,13 @@ export function CatalogContent() {
   const showNoResultsForSearch = showNoResults && (search || category || inStockOnly)
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black">
       <div className="container py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{siteConfig.catalog.title}</h1>
-          <p className="text-gray-600 dark:text-gray-300 mt-1">
+        <div className="mb-8 animate-fade-in">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent">
+            {siteConfig.catalog.title}
+          </h1>
+          <p className="text-gray-400 mt-1">
             {siteConfig.catalog.subtitle}
           </p>
         </div>
@@ -210,12 +212,12 @@ export function CatalogContent() {
         <div className={cn("space-y-4 transition-all duration-300", showFilters ? "" : "hidden md:block")}>
           <form className="space-y-4 md:grid md:grid-cols-5 md:gap-4 md:items-end">
             <div className="md:col-span-2 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" aria-hidden="true" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" aria-hidden="true" />
               <Input
                 placeholder={siteConfig.catalog.searchPlaceholder}
                 value={search}
                 onChange={(e) => handleSearchChange(e.target.value)}
-                className="w-full pl-10"
+                className="w-full pl-10 bg-gray-900/50 border-gray-700 text-white placeholder-gray-500 focus:border-purple-500 focus:ring-purple-500/20"
               />
             </div>
             <div>
@@ -224,6 +226,7 @@ export function CatalogContent() {
                 onChange={(e) => handleCategoryChange(e.target.value)}
                 options={[{ value: "", label: siteConfig.catalog.categoryPlaceholder }, ...categories.map((c) => ({ value: c, label: c }))]}
                 placeholder={siteConfig.catalog.categoryPlaceholder}
+                className="bg-gray-900/50 border-gray-700 text-white focus:border-purple-500 focus:ring-purple-500/20"
               />
             </div>
             <div>
@@ -232,6 +235,7 @@ export function CatalogContent() {
                 onChange={(e) => handleSeriesChange(e.target.value)}
                 options={[{ value: "", label: siteConfig.catalog.seriesPlaceholder }, ...seriesList.map((s) => ({ value: s, label: s }))]}
                 placeholder={siteConfig.catalog.seriesPlaceholder}
+                className="bg-gray-900/50 border-gray-700 text-white focus:border-purple-500 focus:ring-purple-500/20"
               />
             </div>
             <div className="flex items-center gap-4">
@@ -240,15 +244,16 @@ export function CatalogContent() {
                   type="checkbox"
                   checked={inStockOnly}
                   onChange={(e) => handleInStockChange(e.target.checked)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-gray-600 text-purple-500 focus:ring-purple-500 bg-gray-900"
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-300">{siteConfig.catalog.inStockOnly}</span>
+                <span className="text-sm text-gray-300">{siteConfig.catalog.inStockOnly}</span>
               </label>
               <Select
                 value={sort}
                 onChange={(e) => handleSortChange(e.target.value)}
                 options={siteConfig.catalog.sortOptions}
                 placeholder="Sort"
+                className="bg-gray-900/50 border-gray-700 text-white focus:border-purple-500 focus:ring-purple-500/20"
               />
             </div>
           </form>
@@ -256,12 +261,12 @@ export function CatalogContent() {
           {hasFilters && (
             <div className="flex items-center gap-2 flex-wrap">
               {search && (
-                <Badge variant="outline" className="gap-1">
+                <Badge variant="outline" className="gap-1 bg-gray-800/50 border-gray-700 text-gray-200 hover:bg-gray-700">
                   Search: "{search}"
                   <button
                     type="button"
                     onClick={() => { setSearch(""); fetchProducts({ search: "", category, series, inStockOnly, sort }); }}
-                    className="ml-1 hover:text-red-600"
+                    className="ml-1 hover:text-pink-400"
                     aria-label="Clear search"
                   >
                     <X className="h-3 w-3" aria-hidden="true" />
@@ -269,12 +274,12 @@ export function CatalogContent() {
                 </Badge>
               )}
               {category && (
-                <Badge variant="outline" className="gap-1">
+                <Badge variant="outline" className="gap-1 bg-gray-800/50 border-gray-700 text-gray-200 hover:bg-gray-700">
                   Category: {category}
                   <button
                     type="button"
                     onClick={() => { setCategory(""); fetchProducts({ search, category: "", series, inStockOnly, sort }); }}
-                    className="ml-1 hover:text-red-600"
+                    className="ml-1 hover:text-pink-400"
                     aria-label="Clear category"
                   >
                     <X className="h-3 w-3" aria-hidden="true" />
@@ -282,12 +287,12 @@ export function CatalogContent() {
                 </Badge>
               )}
               {series && (
-                <Badge variant="outline" className="gap-1">
+                <Badge variant="outline" className="gap-1 bg-gray-800/50 border-gray-700 text-gray-200 hover:bg-gray-700">
                   Series: {series}
                   <button
                     type="button"
                     onClick={() => { setSeries(""); fetchProducts({ search, category, series: "", inStockOnly, sort }); }}
-                    className="ml-1 hover:text-red-600"
+                    className="ml-1 hover:text-pink-400"
                     aria-label="Clear series"
                   >
                     <X className="h-3 w-3" aria-hidden="true" />
@@ -295,11 +300,11 @@ export function CatalogContent() {
                 </Badge>
               )}
               {inStockOnly && (
-                <Badge variant="outline" className="gap-1" onClick={() => { setInStockOnly(false); fetchProducts({ search, category, series, inStockOnly: false, sort }); }}>
+                <Badge variant="outline" className="gap-1 bg-gray-800/50 border-gray-700 text-gray-200 hover:bg-gray-700" onClick={() => { setInStockOnly(false); fetchProducts({ search, category, series, inStockOnly: false, sort }); }}>
                   {siteConfig.catalog.inStockOnly} <X className="h-3 w-3 ml-1" aria-hidden="true" />
                 </Badge>
               )}
-              <Button variant="ghost" size="sm" onClick={clearFilters}>
+              <Button variant="ghost" size="sm" onClick={clearFilters} className="text-gray-400 hover:text-white">
                 {siteConfig.catalog.clearFilters}
               </Button>
             </div>
@@ -309,18 +314,18 @@ export function CatalogContent() {
         <div className="md:hidden mb-4">
           <Button
             variant="outline"
-            className="w-full gap-2"
+            className="w-full gap-2 bg-gray-800/50 border-gray-700 text-gray-200 hover:bg-gray-700"
             onClick={() => setShowFilters(!showFilters)}
           >
             <Filter className="h-4 w-4" aria-hidden="true" />
-            Filters {hasFilters && <span className="text-blue-600">({Object.values({search, category, series, inStockOnly}).filter(Boolean).length})</span>}
+            Filters {hasFilters && <span className="text-purple-400">({Object.values({search, category, series, inStockOnly}).filter(Boolean).length})</span>}
             <ChevronDown className={cn("h-4 w-4 transition-transform", showFilters && "rotate-180")} aria-hidden="true" />
           </Button>
         </div>
 
         {/* Results */}
         <div className="flex items-center justify-between mb-6">
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-gray-400">
             {loading ? siteConfig.catalog.loading : `${products.length} figure${products.length !== 1 ? "s" : ""} found`}
           </p>
         </div>
@@ -332,16 +337,16 @@ export function CatalogContent() {
             ))}
           </div>
         ) : showNoResultsForSeries ? (
-          <div className="text-center py-16">
-            <Package className="h-16 w-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" aria-hidden="true" />
-            <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">No figures found for "{appliedSeries}"</h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">We don't have any figures from this series in our catalog yet.</p>
+          <div className="text-center py-16 animate-fade-in">
+            <Package className="h-16 w-16 mx-auto text-gray-600 mb-4" aria-hidden="true" />
+            <h3 className="text-xl font-medium text-white mb-2">No figures found for "{appliedSeries}"</h3>
+            <p className="text-gray-500 mb-6">We don't have any figures from this series in our catalog yet.</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button variant="outline" onClick={clearFilters} className="gap-2">
+              <Button variant="outline" onClick={clearFilters} className="gap-2 bg-gray-800/50 border-gray-700 text-gray-200 hover:bg-gray-700">
                 <RotateCcw className="h-4 w-4" aria-hidden="true" />
                 Clear Filter
               </Button>
-              <Link href="/request" className="w-full sm:w-auto">
+              <Link href="/request">
                 <Button variant="primary" className="gap-2 w-full sm:w-auto" size="lg">
                   <Search className="h-4 w-4" aria-hidden="true" />
                   Request Figure
@@ -350,12 +355,12 @@ export function CatalogContent() {
             </div>
           </div>
         ) : showNoResultsForSearch ? (
-          <div className="text-center py-16">
-            <Package className="h-16 w-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" aria-hidden="true" />
-            <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">No figures match your search</h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">We couldn't find any figures matching "{search || category || (inStockOnly ? 'in stock only' : '')}".</p>
+          <div className="text-center py-16 animate-fade-in">
+            <Package className="h-16 w-16 mx-auto text-gray-600 mb-4" aria-hidden="true" />
+            <h3 className="text-xl font-medium text-white mb-2">No figures match your search</h3>
+            <p className="text-gray-500 mb-6">We couldn't find any figures matching "{search || category || (inStockOnly ? 'in stock only' : '')}".</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button variant="outline" onClick={clearFilters} className="gap-2">
+              <Button variant="outline" onClick={clearFilters} className="gap-2 bg-gray-800/50 border-gray-700 text-gray-200 hover:bg-gray-700">
                 <RotateCcw className="h-4 w-4" aria-hidden="true" />
                 Clear Filters
               </Button>
@@ -368,11 +373,11 @@ export function CatalogContent() {
             </div>
           </div>
         ) : products.length === 0 ? (
-          <div className="text-center py-16">
-            <Package className="h-16 w-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" aria-hidden="true" />
-            <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">{siteConfig.catalog.noResults}</h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">{siteConfig.catalog.noResultsDesc}</p>
-            <Button variant="outline" onClick={clearFilters}>{siteConfig.catalog.clearFilters}</Button>
+          <div className="text-center py-16 animate-fade-in">
+            <Package className="h-16 w-16 mx-auto text-gray-600 mb-4" aria-hidden="true" />
+            <h3 className="text-xl font-medium text-white mb-2">{siteConfig.catalog.noResults}</h3>
+            <p className="text-gray-500 mb-6">{siteConfig.catalog.noResultsDesc}</p>
+            <Button variant="outline" onClick={clearFilters} className="bg-gray-800/50 border-gray-700 text-gray-200 hover:bg-gray-700">{siteConfig.catalog.clearFilters}</Button>
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" style={staggerContainer}>
@@ -392,6 +397,7 @@ export function CatalogContent() {
               onClick={() => handlePageChange(page - 1)}
               disabled={page === 1}
               aria-label="Previous page"
+              className="bg-gray-800/50 border-gray-700 text-gray-200 hover:bg-gray-700"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -405,6 +411,7 @@ export function CatalogContent() {
                 onClick={() => handlePageChange(p)}
                 aria-label={`Page ${p}`}
                 aria-current={page === p ? "page" : undefined}
+                className={page === p ? "bg-gradient-to-r from-purple-600 to-pink-600" : "bg-gray-800/50 border-gray-700 text-gray-200 hover:bg-gray-700"}
               >
                 {p}
               </Button>
@@ -415,6 +422,7 @@ export function CatalogContent() {
               onClick={() => handlePageChange(page + 1)}
               disabled={page === totalPages}
               aria-label="Next page"
+              className="bg-gray-800/50 border-gray-700 text-gray-200 hover:bg-gray-700"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -422,7 +430,7 @@ export function CatalogContent() {
             </Button>
           </nav>
         )}
-        <p className="mt-4 text-center text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-4 text-center text-sm text-gray-500">
           Page {page} of {totalPages} &mdash; {products.length} of {products.length > 0 ? (page === totalPages ? totalPages * 20 - (totalPages * 20 - products.length) : products.length) : 0} figures
         </p>
       </div>
