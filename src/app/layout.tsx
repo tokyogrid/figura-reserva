@@ -9,7 +9,7 @@ import { ToasterProvider } from "@/components/ui/Toaster"
 import { CSRFInit } from "@/components/CSRFInit"
 import { siteConfig } from "@/lib/site-config"
 import { Analytics } from "@vercel/analytics/next"
-import { TrustpilotBadgeWrapper } from "@/components/TrustpilotBadgeWrapper"
+import { TrustpilotBadge } from "@/components/TrustpilotBadge"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 
@@ -88,7 +88,7 @@ export default function RootLayout({
                       <p className="mt-1">{siteConfig.footer.disclaimer}</p>
                     </div>
                     <div className="flex items-center justify-center">
-                      <TrustpilotBadgeWrapper />
+                      <TrustpilotBadge />
                     </div>
                   </div>
                 </div>
