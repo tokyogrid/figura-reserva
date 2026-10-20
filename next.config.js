@@ -7,9 +7,14 @@ const nextConfig = {
     ],
     formats: ["image/avif", "image/webp"],
   },
+  api: {
+    bodyParser: {
+      sizeLimit: "10mb",
+    },
+  },
   experimental: {
     serverActions: {
-      bodySizeLimit: "1mb",
+      bodySizeLimit: "10mb",
     },
   },
   async headers() {

@@ -310,7 +310,7 @@ export const ProductDetailContent = ({
                           <span className="flex items-center justify-center h-4 w-4 rounded bg-white/20">
                             <Truck className="h-4 w-4" aria-hidden="true" />
                           </span>
-                          Buy (15-30 days)
+                          Buy (10-20 days)
                         </span>
                       </Button>
                       <Button

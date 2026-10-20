@@ -221,7 +221,7 @@ function ProductDetailContent({
                     variant: "primary"
                   }, React.createElement("span", { className: "flex items-center gap-2" },
                     React.createElement("span", { className: "flex items-center justify-center h-4 w-4 rounded bg-white/20" }, React.createElement(Truck, { className: "h-4 w-4", "aria-hidden": "true" })),
-                    "Buy (15-30 days)"
+                    "Buy (10-20 days)"
                   )),
                   React.createElement(Button, {
                     key: "vinted",

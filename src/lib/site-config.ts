@@ -87,7 +87,7 @@ export const siteConfig = {
           "Photos of actual figure sent before shipping",
           "Certified mail with tracking, insurance up to €500",
           "14-day returns if not satisfied",
-          "Delivery in 24-48h (mainland Spain) after we ship",
+          "In stock: shipped in 24-48h | Not in stock: 10-20 days",
         ],
       },
       {
