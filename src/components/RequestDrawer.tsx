@@ -135,7 +135,12 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
               const MAX_HEIGHT = 1024
               let { width, height } = img
               
-              // Reducir dimensiones para móviles
+              // Verificar dimensiones válidas
+              if (!width || !height || width === 0 || height === 0) {
+                reject(new Error("Imagen con dimensiones inválidas"))
+                return
+              }
+              
               if (width > height) {
                 if (width > MAX_WIDTH) {
                   height = Math.round((height * MAX_WIDTH) / width)
@@ -148,6 +153,13 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
                 }
               }
               
+              // Validar que el canvas no sea demasiado grande
+              if (width * height > 4000000) { // ~4MP max
+                const scale = Math.sqrt(4000000 / (width * height))
+                width = Math.round(width * Math.sqrt(4000000 / (width * height)))
+                height = Math.round(height * Math.sqrt(4000000 / (width * height)))
+              }
+              
               const canvas = document.createElement("canvas")
               canvas.width = width
               canvas.height = height
@@ -157,33 +169,54 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
                 reject(new Error("No se pudo crear contexto del canvas"))
                 return
               }
-              ctx.drawImage(img, 0, 0, width, height)
               
-              // Intentar JPEG primero, fallback a PNG para Android
+              try {
+                ctx.drawImage(img, 0, 0, width, height)
+              } catch (drawError) {
+                URL.revokeObjectURL(objectUrl)
+                reject(new Error(`Error al dibujar imagen: ${drawError instanceof Error ? drawError.message : 'desconocido'}`))
+                return
+              }
+              
+              // Intentar PNG primero (más compatible en Android), luego JPEG
               let compressedDataUrl: string
               try {
-                compressedDataUrl = canvas.toDataURL("image/jpeg", 0.75)
-                // Verificar que sea JPEG válido (no fallback a PNG silencioso)
-                if (!compressedDataUrl.startsWith("data:image/jpeg")) {
-                  throw new Error("JPEG no soportado")
+                // PNG primero - más compatible en Android
+                compressedDataUrl = canvas.toDataURL("image/png", 0.85)
+                console.log("[RequestDrawer] PNG generado correctamente")
+              } catch (pngError) {
+                console.warn("[RequestDrawer] PNG falló, intentando JPEG:", pngError)
+                try {
+                  compressedDataUrl = canvas.toDataURL("image/jpeg", 0.8)
+                  console.log("[RequestDrawer] JPEG generado como fallback")
+                } catch (jpegError) {
+                  URL.revokeObjectURL(objectUrl)
+                  reject(new Error("Ni PNG ni JPEG soportados en este navegador"))
+                  return
                 }
-              } catch (jpegError) {
-                // Fallback a PNG para Android
-                compressedDataUrl = canvas.toDataURL("image/png", 0.8)
+              }
+              
+              // Validar que la data URL sea válida
+              if (!compressedDataUrl || !compressedDataUrl.startsWith("data:image/")) {
+                URL.revokeObjectURL(objectUrl)
+                reject(new Error("Data URL generada inválida"))
+                return
               }
               
               URL.revokeObjectURL(objectUrl)
               resolve(compressedDataUrl)
             } catch (err) {
               URL.revokeObjectURL(objectUrl)
+              console.error("[RequestDrawer] Error en compresión:", err)
               reject(err)
             }
           }
           
-          img.onerror = () => {
+          img.onerror = (err) => {
             clearTimeout(timeoutId)
             URL.revokeObjectURL(objectUrl)
-            reject(new Error("Error al cargar la imagen - formato no soportado o archivo corrupto"))
+            console.error("[RequestDrawer] img.onerror:", err)
+            reject(new Error("Error al cargar la imagen - formato no soportado, archivo corrupto, imagen demasiado grande o memoria insuficiente"))
           }
           
           // No usar crossOrigin para archivos locales (causa problemas en Android)
