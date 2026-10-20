@@ -124,6 +124,12 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
     e.preventDefault()
     if (!validateForm()) return
 
+    console.log("[RequestDrawer] Submitting formData:", { 
+      ...formData, 
+      imagesLen: formData.images?.length || 0,
+      imagesPreview: formData.images?.substring(0, 100)
+    })
+
     setLoading(true)
     try {
       const res = await fetchWithCSRF("/api/requests", {
