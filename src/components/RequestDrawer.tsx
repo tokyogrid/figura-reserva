@@ -177,6 +177,9 @@ img.src = objectUrl
     e.preventDefault()
     if (!validateForm()) return
 
+    console.log("[RequestDrawer] formData.images at submit:", formData.images)
+    console.log("[RequestDrawer] formData.images type:", typeof formData.images)
+    
     setLoading(true)
     try {
       // Leer imágenes directamente del estado actual
@@ -189,7 +192,8 @@ img.src = objectUrl
         budgetMin: formData.budgetMin ? parseInt(formData.budgetMin) * 100 : undefined,
       }
 
-      console.log("[RequestDrawer] Payload enviado:", { ...payload, images: "***OMITIDO***" })
+      console.log("[RequestDrawer] Payload enviado - images field:", payload.images)
+      console.log("[RequestDrawer] Payload images length:", payload.images.length)
 
       const res = await fetchWithCSRF("/api/requests", {
         method: "POST",

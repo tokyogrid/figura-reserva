@@ -28,6 +28,8 @@ export async function POST(request: NextRequest) {
     console.log("[API Requests] Images preview:", body.images?.substring(0, 100))
     console.log("[API Requests] Full images field:", body.images)
     console.log("[API Requests] FigureName:", body.figureName)
+    console.log("[API Requests] Images type:", typeof body.images)
+    console.log("[API Requests] Images is string:", typeof body.images === 'string')
     const { name, email, series, figureName, manufacturer, scale, budgetMin, notes, images } = body
 
     if (!name || !email || !figureName) {
@@ -54,6 +56,7 @@ export async function POST(request: NextRequest) {
         status: "PENDING",
       },
     })
+    console.log("[API Requests] Request created with images:", requestRecord.images)
 
     // Send emails and Telegram notification (fire and forget)
     await Promise.all([
