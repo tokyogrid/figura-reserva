@@ -104,15 +104,16 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
 
     // Procesar archivos secuencialmente para evitar race conditions
     for (const file of files) {
-      // Validar formato - también aceptar HEIC/HEIF de iOS
-      if (!file.type.match(/^image\/(jpeg|png|webp|heic|heif)$/i)) {
-        toast({ type: "error", title: "Formato no válido", message: "Solo se permiten imágenes JPEG, PNG, WebP o HEIC" })
+      // Validar formato - SOLO formatos soportados en Android/iOS web
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
+      if (!validTypes.includes(file.type.toLowerCase())) {
+        toast({ type: "error", title: "Formato no válido", message: "Solo se permiten imágenes JPEG, PNG o WebP" })
         continue
       }
       
-      // Reducir límite para móviles
-      if (file.size > 15 * 1024 * 1024) {
-        toast({ type: "error", title: "Archivo demasiado grande", message: "La imagen no debe superar los 15MB" })
+      // Límite de 10MB para máxima compatibilidad
+      if (file.size > 10 * 1024 * 1024) {
+        toast({ type: "error", title: "Archivo demasiado grande", message: "La imagen no debe superar los 10MB" })
         continue
       }
 
@@ -121,19 +122,20 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
           const img = new Image()
           const objectUrl = URL.createObjectURL(file)
           
-          // Timeout de seguridad para móviles
+          // Timeout de seguridad para móviles (20s)
           const timeoutId = setTimeout(() => {
             URL.revokeObjectURL(objectUrl)
-            reject(new Error("Timeout al cargar la imagen"))
-          }, 30000)
+            reject(new Error("Timeout al cargar la imagen (20s)"))
+          }, 20000)
           
           img.onload = () => {
             clearTimeout(timeoutId)
             try {
-              const MAX_WIDTH = 1200
-              const MAX_HEIGHT = 1200
+              const MAX_WIDTH = 1024
+              const MAX_HEIGHT = 1024
               let { width, height } = img
               
+              // Reducir dimensiones para móviles
               if (width > height) {
                 if (width > MAX_WIDTH) {
                   height = Math.round((height * MAX_WIDTH) / width)
@@ -147,26 +149,29 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
               }
               
               const canvas = document.createElement("canvas")
-              // Verificar límites de canvas para móviles
-              if (width * height > 4000000) { // ~4MP max
-                const scale = Math.sqrt(4000000 / (width * height))
-                width = Math.round(width * scale)
-                height = Math.round(height * scale)
-                canvas.width = width
-                canvas.height = height
-              } else {
-                canvas.width = width
-                canvas.height = height
-              }
+              canvas.width = width
+              canvas.height = height
               const ctx = canvas.getContext("2d")
               if (!ctx) {
+                URL.revokeObjectURL(objectUrl)
                 reject(new Error("No se pudo crear contexto del canvas"))
                 return
               }
               ctx.drawImage(img, 0, 0, width, height)
               
-              // Usar calidad más baja para móviles
-              const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.7)
+              // Intentar JPEG primero, fallback a PNG para Android
+              let compressedDataUrl: string
+              try {
+                compressedDataUrl = canvas.toDataURL("image/jpeg", 0.75)
+                // Verificar que sea JPEG válido (no fallback a PNG silencioso)
+                if (!compressedDataUrl.startsWith("data:image/jpeg")) {
+                  throw new Error("JPEG no soportado")
+                }
+              } catch (jpegError) {
+                // Fallback a PNG para Android
+                compressedDataUrl = canvas.toDataURL("image/png", 0.8)
+              }
+              
               URL.revokeObjectURL(objectUrl)
               resolve(compressedDataUrl)
             } catch (err) {
@@ -178,11 +183,10 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
           img.onerror = () => {
             clearTimeout(timeoutId)
             URL.revokeObjectURL(objectUrl)
-            reject(new Error("Error al cargar la imagen - formato no soportado"))
+            reject(new Error("Error al cargar la imagen - formato no soportado o archivo corrupto"))
           }
           
-          // CORS para imágenes locales
-          img.crossOrigin = "anonymous"
+          // No usar crossOrigin para archivos locales (causa problemas en Android)
           img.src = objectUrl
         })
   
@@ -197,7 +201,8 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
   
       } catch (error) {
         console.error("[RequestDrawer] Error comprimiendo imagen:", error)
-        toast({ type: "error", title: "Error al procesar imagen", message: error instanceof Error ? error.message : "No se pudo procesar la imagen" })
+        const msg = error instanceof Error ? error.message : "No se pudo procesar la imagen"
+        toast({ type: "error", title: "Error al procesar imagen", message: msg })
       }
     }
   }
@@ -408,6 +413,7 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
                       accept="image/jpeg,image/png,image/webp"
                       onChange={handleImageUpload}
                       className="absolute inset-0 opacity-0 cursor-pointer"
+                      capture="environment"
                     />
                   </div>
                 </div>
