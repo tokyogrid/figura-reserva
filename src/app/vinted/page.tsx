@@ -104,11 +104,11 @@ export default function VintedPage() {
   }
 
   // Calculate star breakdown - using hardcoded values per user request
-  const fiveStar = 34
-  const fourStar = 5
+  const fiveStar = 36
+  const fourStar = 1
   const threeStar = 0
   const twoStar = 0
-  const oneStar = 0
+  const oneStar = 2
   const totalReviews = fiveStar + fourStar + threeStar + twoStar + oneStar
   const averageRating = ((fiveStar * 5) + (fourStar * 4) + (threeStar * 3) + (twoStar * 2) + (oneStar * 1)) / totalReviews
 
