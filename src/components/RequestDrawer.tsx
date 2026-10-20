@@ -97,20 +97,22 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
     return Object.keys(newErrors).length === 0
   }
 
-  // FIX 2: Corrección del cierre de estado desactualizado al subir imágenes - usa Promises para procesar secuencialmente
+// FIX 2: Corrección del cierre de estado desactualizado al subir imágenes - usa Promises para procesar secuencialmente
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
     if (files.length === 0) return
 
     // Procesar archivos secuencialmente para evitar race conditions
     for (const file of files) {
-      if (!file.type.match(/^image\/(jpeg|png|webp)$/)) {
-        toast({ type: "error", title: "Formato no válido", message: "Solo se permiten imágenes JPEG, PNG o WebP" })
+      // Validar formato - también aceptar HEIC/HEIF de iOS
+      if (!file.type.match(/^image\/(jpeg|png|webp|heic|heif)$/i)) {
+        toast({ type: "error", title: "Formato no válido", message: "Solo se permiten imágenes JPEG, PNG, WebP o HEIC" })
         continue
       }
       
-      if (file.size > 10 * 1024 * 1024) {
-        toast({ type: "error", title: "Archivo demasiado grande", message: "La imagen no debe superar los 10MB" })
+      // Reducir límite para móviles
+      if (file.size > 15 * 1024 * 1024) {
+        toast({ type: "error", title: "Archivo demasiado grande", message: "La imagen no debe superar los 15MB" })
         continue
       }
 
@@ -119,43 +121,71 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
           const img = new Image()
           const objectUrl = URL.createObjectURL(file)
           
-          img.onload = () => {
-            const MAX_WIDTH = 1200
-            const MAX_HEIGHT = 1200
-            let { width, height } = img
-            
-            if (width > height) {
-              if (width > MAX_WIDTH) {
-                height = Math.round((height * MAX_WIDTH) / width)
-                width = MAX_WIDTH
-              }
-            } else {
-              if (height > MAX_HEIGHT) {
-                width = Math.round((width * MAX_HEIGHT) / height)
-                height = MAX_HEIGHT
-              }
-            }
-            
-            const canvas = document.createElement("canvas")
-            canvas.width = width
-            canvas.height = height
-            const ctx = canvas.getContext("2d")
-            ctx?.drawImage(img, 0, 0, width, height)
-            
-            // Compresión optimizada para evitar superar el límite de la API
-            const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.75)
+          // Timeout de seguridad para móviles
+          const timeoutId = setTimeout(() => {
             URL.revokeObjectURL(objectUrl)
-            resolve(compressedDataUrl)
+            reject(new Error("Timeout al cargar la imagen"))
+          }, 30000)
+          
+          img.onload = () => {
+            clearTimeout(timeoutId)
+            try {
+              const MAX_WIDTH = 1200
+              const MAX_HEIGHT = 1200
+              let { width, height } = img
+              
+              if (width > height) {
+                if (width > MAX_WIDTH) {
+                  height = Math.round((height * MAX_WIDTH) / width)
+                  width = MAX_WIDTH
+                }
+              } else {
+                if (height > MAX_HEIGHT) {
+                  width = Math.round((width * MAX_HEIGHT) / height)
+                  height = MAX_HEIGHT
+                }
+              }
+              
+              const canvas = document.createElement("canvas")
+              // Verificar límites de canvas para móviles
+              if (width * height > 4000000) { // ~4MP max
+                const scale = Math.sqrt(4000000 / (width * height))
+                width = Math.round(width * scale)
+                height = Math.round(height * scale)
+                canvas.width = width
+                canvas.height = height
+              } else {
+                canvas.width = width
+                canvas.height = height
+              }
+              const ctx = canvas.getContext("2d")
+              if (!ctx) {
+                reject(new Error("No se pudo crear contexto del canvas"))
+                return
+              }
+              ctx.drawImage(img, 0, 0, width, height)
+              
+              // Usar calidad más baja para móviles
+              const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.7)
+              URL.revokeObjectURL(objectUrl)
+              resolve(compressedDataUrl)
+            } catch (err) {
+              URL.revokeObjectURL(objectUrl)
+              reject(err)
+            }
           }
           
           img.onerror = () => {
+            clearTimeout(timeoutId)
             URL.revokeObjectURL(objectUrl)
-            reject(new Error("Error al cargar la imagen"))
+            reject(new Error("Error al cargar la imagen - formato no soportado"))
           }
           
-img.src = objectUrl
+          // CORS para imágenes locales
+          img.crossOrigin = "anonymous"
+          img.src = objectUrl
         })
- 
+  
         // Actualizar estado usando functional update para evitar race conditions
         setFormData((prev) => {
           const currentImages = JSON.parse(prev.images || "[]").filter((url: string) => url.trim() !== "")
@@ -164,10 +194,10 @@ img.src = objectUrl
           console.log("[RequestDrawer] Imagen comprimida añadida, total:", newImages.length)
           return { ...prev, images: JSON.stringify(newImages) }
         })
- 
+  
       } catch (error) {
         console.error("[RequestDrawer] Error comprimiendo imagen:", error)
-        toast({ type: "error", title: "Error al procesar imagen", message: "No se pudo procesar la imagen" })
+        toast({ type: "error", title: "Error al procesar imagen", message: error instanceof Error ? error.message : "No se pudo procesar la imagen" })
       }
     }
   }
