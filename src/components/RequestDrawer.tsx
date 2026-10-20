@@ -413,7 +413,6 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
                       accept="image/jpeg,image/png,image/webp"
                       onChange={handleImageUpload}
                       className="absolute inset-0 opacity-0 cursor-pointer"
-                      capture="environment"
                     />
                   </div>
                 </div>
