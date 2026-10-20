@@ -14,13 +14,53 @@ import { TrustpilotBadgeWrapper } from "@/components/TrustpilotBadgeWrapper"
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 
 export const metadata: Metadata = {
-  title: siteConfig.name,
-  description: siteConfig.description,
+  metadataBase: new URL("https://tokyogridstore.com"),
+  title: "Tokyo Grid Store | Figuras de Anime Originales de Japón",
+  description: "Tienda de figuras oficiales e importaciones exclusivas traídas directamente desde Tokio. Ediciones limitadas, envíos garantizados y embalaje hiperprotegido.",
+  keywords: ["figuras anime", "tokyo grid store", "figuras japon", "importacion anime", "akihabara figures"],
+  authors: [{ name: "Tokyo Grid Store" }],
+  creator: "Tokyo Grid Store",
+  publisher: "Tokyo Grid Store",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  openGraph: {
+    title: "Tokyo Grid Store | Figuras de Anime Originales",
+    description: "Importación directa de figuras oficiales desde Japón. Catálogo actualizado y envíos seguros.",
+    url: "https://tokyogridstore.com",
+    siteName: "Tokyo Grid Store",
+    locale: "es_ES",
+    type: "website",
+    images: [
+      {
+        url: "/images/logo.png",
+        alt: "Tokyo Grid Store Logo",
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: "Tokyo Grid Store | Figuras de Anime Originales",
+    description: "Importación directa de figuras oficiales desde Japón.",
+    images: ["/images/logo.png"],
+    creator: "@tokyogridstore",
+  },
   icons: {
     icon: "/images/logo.png",
     shortcut: "/images/logo.png",
     apple: "/images/logo.png",
   },
+  manifest: "/manifest.json",
 }
 
 export default function RootLayout({
@@ -29,7 +69,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${inter.variable} antialiased`}>
+    <html lang="es" className={`${inter.variable} antialiased`}>
       <body className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
         <CartProvider>
           <AuthProvider>
