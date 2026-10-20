@@ -58,7 +58,9 @@ export default function AdminRequestDetailPage() {
 
   const fetchRequest = async () => {
     try {
-      const res = await fetch(`/api/admin/requests/${params.id}`, { credentials: "include" })
+      const requestId = params.id
+      console.log("[Admin Request Detail] Fetching ID:", requestId)
+      const res = await fetch(`/api/admin/requests/${requestId}`, { credentials: "include" })
       console.log("[Admin Request Detail] Response status:", res.status)
       if (res.ok) {
         const data = await res.json()

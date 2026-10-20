@@ -12,6 +12,7 @@ export async function GET(
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
     const { id } = await params
+    console.log("[API Admin GET Request] Received ID:", id)
 
     const requestRecord = await prisma.figureRequest.findUnique({
       where: { id },
@@ -19,12 +20,11 @@ export async function GET(
     })
 
     if (!requestRecord) {
+      console.log("[Admin GET Request] Not found in DB for ID:", id)
       return NextResponse.json({ error: "Request not found" }, { status: 404 })
     }
 
-    console.log("[Admin GET Request] ID:", id)
-    console.log("[Admin GET Request] Images:", requestRecord.images?.substring(0, 100))
-    console.log("[Admin GET Request] Images length:", requestRecord.images?.length || 0)
+    console.log("[Admin GET Request] Found:", { id: requestRecord.id, name: requestRecord.name, imagesLen: requestRecord.images?.length || 0 })
 
     return NextResponse.json({ request: requestRecord })
   } catch (error) {
