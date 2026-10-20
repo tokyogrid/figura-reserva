@@ -4,7 +4,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/Button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { Badge } from "@/components/ui/Badge"
-import { Search, Filter, ChevronDown, MessageSquare, RefreshCw, Eye, Mail } from "lucide-react"
+import { Search, Filter, ChevronDown, MessageSquare, RefreshCw, Eye, Mail, Trash2 } from "lucide-react"
 import { cn, REQUEST_STATUS_LABELS } from "@/lib/utils"
 import { useToast } from "@/components/ui/Toaster"
 
@@ -61,6 +61,15 @@ export default function AdminRequestsPage() {
       if (!res.ok) throw new Error("Error")
       fetchRequests(); toast({ type: "success", title: "Updated" })
     } catch { toast({ type: "error", title: "Error" }) } finally { setUpdating(null) }
+  }
+
+  const deleteRequest = async (requestId: string) => {
+    if (!confirm("¿Estás seguro de que quieres eliminar esta solicitud? Esta acción no se puede deshacer.")) return
+    try {
+      const res = await fetch(`/api/admin/requests/${requestId}`, { method: "DELETE", credentials: "include" })
+      if (!res.ok) throw new Error("Error")
+      fetchRequests(); toast({ type: "success", title: "Eliminado" })
+    } catch { toast({ type: "error", title: "Error" }) }
   }
 
   const formatBudget = (min: number | null, max: number | null) => {
@@ -158,6 +167,7 @@ export default function AdminRequestsPage() {
                       <div className="flex items-center justify-end gap-2">
                         <Link href={`/admin/requests/${request.id}`} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" title="View"><Eye className="h-4 w-4 text-gray-500" /></Link>
                         <Button variant="outline" size="sm" onClick={() => window.open(`mailto:${request.email}`)} className="gap-1"><Mail className="h-3.5 w-3.5" /> Email</Button>
+                        <Button variant="outline" size="sm" onClick={() => deleteRequest(request.id)} className="gap-1 text-red-600 hover:text-red-700 hover:bg-red-50" title="Delete"><Trash2 className="h-3.5 w-3.5" /></Button>
                       </div>
                     </td>
                   </tr>

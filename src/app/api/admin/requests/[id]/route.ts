@@ -83,3 +83,32 @@ export async function PATCH(
     return NextResponse.json({ error: "Error" }, { status: 500 })
   }
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const session = await getSessionFromRequest(request)
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
+    const { id } = await params
+
+    const requestRecord = await prisma.figureRequest.findUnique({
+      where: { id },
+    })
+
+    if (!requestRecord) {
+      return NextResponse.json({ error: "Request not found" }, { status: 404 })
+    }
+
+    await prisma.figureRequest.delete({
+      where: { id },
+    })
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error("Delete request error:", error)
+    return NextResponse.json({ error: "Error" }, { status: 500 })
+  }
+}
