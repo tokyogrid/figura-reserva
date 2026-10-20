@@ -155,19 +155,48 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
         return
       }
       
-      if (file.size > 5 * 1024 * 1024) {
-        toast({ type: "error", title: "File too large", message: "Each image must be less than 5MB" })
+      if (file.size > 10 * 1024 * 1024) {
+        toast({ type: "error", title: "File too large", message: "Each image must be less than 10MB" })
         return
       }
 
-      const reader = new FileReader()
-      reader.onload = (e) => {
+      // Compress image client-side before base64 encoding
+      const img = new Image()
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      
+      img.onload = () => {
+        // Max dimensions
+        const MAX_WIDTH = 1920
+        const MAX_HEIGHT = 1920
+        let { width, height } = img
+        
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height = Math.round(height * MAX_WIDTH / width)
+            width = MAX_WIDTH
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width = Math.round(width * MAX_HEIGHT / height)
+            height = MAX_HEIGHT
+          }
+        }
+        
+        canvas.width = width
+        canvas.height = height
+        ctx?.drawImage(img, 0, 0, width, height)
+        
+        // Compress to JPEG 0.8 quality (much smaller than PNG/base64)
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8)
+        
         const currentImages = JSON.parse(formData.images || "[]")
-        const newImages = [...currentImages, e?.target?.result]
+        const newImages = [...currentImages, compressedDataUrl]
         if (newImages.length > 10) newImages.length = 10
         setFormData(prev => ({ ...prev, images: JSON.stringify(newImages) }))
       }
-      reader.readAsDataURL(file)
+      
+      img.src = URL.createObjectURL(file)
     })
   }
 
