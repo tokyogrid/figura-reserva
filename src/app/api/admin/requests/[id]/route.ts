@@ -22,6 +22,10 @@ export async function GET(
       return NextResponse.json({ error: "Request not found" }, { status: 404 })
     }
 
+    console.log("[Admin GET Request] ID:", id)
+    console.log("[Admin GET Request] Images:", requestRecord.images?.substring(0, 100))
+    console.log("[Admin GET Request] Images length:", requestRecord.images?.length || 0)
+
     return NextResponse.json({ request: requestRecord })
   } catch (error) {
     console.error("Get request error:", error)
