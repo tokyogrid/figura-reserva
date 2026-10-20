@@ -115,6 +115,8 @@ export default function AdminRequestDetailPage() {
   if (!request) return null
 
   const images: string[] = JSON.parse(request.images || "[]")
+  console.log("[Admin Request Detail] Raw images field:", request.images)
+  console.log("[Admin Request Detail] Parsed images:", images)
 
   return (
     <div className="space-y-6">
