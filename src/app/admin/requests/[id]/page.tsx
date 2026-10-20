@@ -178,13 +178,27 @@ export default function AdminRequestDetailPage() {
                       <div key={idx} className="relative group">
                         <div className="aspect-square rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 overflow-hidden relative bg-gray-50 dark:bg-gray-800">
                           {img && img.trim() !== "" ? (
-                            <img src={img} alt={`Reference ${idx + 1}`} className="w-full h-full object-cover" />
+                            <img 
+                              src={img} 
+                              alt={`Reference ${idx + 1}`} 
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                console.error(`Failed to load image ${idx}:`, img?.substring(0, 50))
+                                e.currentTarget.style.display = 'none'
+                                const nextEl = e.currentTarget.nextElementSibling as HTMLElement | null
+                                if (nextEl) nextEl.style.display = 'flex'
+                              }}
+                            />
                           ) : (
                             <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 p-4">
                               <ImageIcon className="h-8 w-8 mb-2" />
                               <span className="text-xs">No image</span>
                             </div>
                           )}
+                          <div className="hidden absolute inset-0 flex flex-col items-center justify-center text-gray-400 p-4 bg-gray-50 dark:bg-gray-800">
+                            <ImageIcon className="h-8 w-8 mb-2" />
+                            <span className="text-xs">Failed to load</span>
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -283,6 +297,10 @@ export default function AdminRequestDetailPage() {
               <Button variant="outline" className="w-full justify-start gap-2" onClick={() => { navigator.clipboard.writeText(request.id); toast({ type: "success", title: "ID copied" }); }}>
                 <Package className="h-4 w-4" />
                 Copy Request ID
+              </Button>
+              <Button variant="outline" className="w-full justify-start gap-2" onClick={() => { navigator.clipboard.writeText(request.images); toast({ type: "success", title: "Images JSON copied" }); }}>
+                <ImageIcon className="h-4 w-4" />
+                Copy Images JSON
               </Button>
             </CardContent>
           </Card>
