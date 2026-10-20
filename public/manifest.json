@@ -1,0 +1,23 @@
+{
+  "name": "Tokyo Grid Store",
+  "short_name": "Tokyo Grid",
+  "description": "Tienda de figuras oficiales e importaciones exclusivas traídas directamente desde Tokio",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#030712",
+  "theme_color": "#7c3aed",
+  "icons": [
+    {
+      "src": "/images/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
