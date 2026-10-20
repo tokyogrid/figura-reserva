@@ -102,18 +102,21 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
     const files = Array.from(e.target.files || [])
     if (files.length === 0) return
 
+    console.log("[RequestDrawer] Files selected:", files.map(f => ({ name: f.name, type: f.type, size: f.size })))
+
     // Procesar archivos secuencialmente para evitar race conditions
     for (const file of files) {
       // Validar formato - SOLO formatos soportados en Android/iOS web
       const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
       if (!validTypes.includes(file.type.toLowerCase())) {
+        console.warn("[RequestDrawer] File type rejected:", file.type, file.name)
         toast({ type: "error", title: "Formato no válido", message: "Solo se permiten imágenes JPEG, PNG o WebP" })
         continue
       }
       
-      // Límite de 10MB para máxima compatibilidad
-      if (file.size > 10 * 1024 * 1024) {
-        toast({ type: "error", title: "Archivo demasiado grande", message: "La imagen no debe superar los 10MB" })
+      // Límite de 8MB para máxima compatibilidad
+      if (file.size > 8 * 1024 * 1024) {
+        toast({ type: "error", title: "Archivo demasiado grande", message: "La imagen no debe superar los 8MB" })
         continue
       }
 
@@ -215,8 +218,8 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
           img.onerror = (err) => {
             clearTimeout(timeoutId)
             URL.revokeObjectURL(objectUrl)
-            console.error("[RequestDrawer] img.onerror:", err)
-            reject(new Error("Error al cargar la imagen - formato no soportado, archivo corrupto, imagen demasiado grande o memoria insuficiente"))
+            console.error("[RequestDrawer] img.onerror:", err, "file.type:", file.type, "file.size:", file.size, "file.name:", file.name)
+            reject(new Error(`Error al cargar la imagen: ${file.type || 'tipo desconocido'}, ${file.size} bytes. Formatos soportados: JPEG, PNG, WebP. Verifica que el archivo no esté corrupto.`))
           }
           
           // No usar crossOrigin para archivos locales (causa problemas en Android)
