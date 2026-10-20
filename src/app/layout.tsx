@@ -9,6 +9,7 @@ import { ToasterProvider } from "@/components/ui/Toaster"
 import { CSRFInit } from "@/components/CSRFInit"
 import { siteConfig } from "@/lib/site-config"
 import { Analytics } from "@vercel/analytics/next"
+import { TrustpilotBadgeWrapper } from "@/components/TrustpilotBadgeWrapper"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 
@@ -37,9 +38,16 @@ export default function RootLayout({
               <Header />
               <main className="flex-1">{children}</main>
               <footer className="border-t border-gray-200 dark:border-gray-800 py-8">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500 dark:text-gray-400">
-                  <p>{siteConfig.footer.copyright}</p>
-                  <p className="mt-1">{siteConfig.footer.disclaimer}</p>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                    <div className="text-center sm:text-left">
+                      <p>{siteConfig.footer.copyright}</p>
+                      <p className="mt-1">{siteConfig.footer.disclaimer}</p>
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <TrustpilotBadgeWrapper />
+                    </div>
+                  </div>
                 </div>
               </footer>
               <CartDrawer />

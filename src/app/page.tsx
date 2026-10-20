@@ -6,6 +6,7 @@ import { Sparkles, Truck, Shield, Banknote, ArrowRight, Package, Search, Star, H
 import { prisma } from "@/lib/prisma"
 import { siteConfig } from "@/lib/site-config"
 import { ProductCard } from "@/components/ProductCard"
+import { TrustpilotBadgeWrapper } from "@/components/TrustpilotBadgeWrapper"
 import Image from "next/image"
 
 export const dynamic = 'force-dynamic'
@@ -155,6 +156,11 @@ export default async function HomePage() {
                   <span className="relative z-10">{siteConfig.hero.ctaSecondary}</span>
                 </Button>
               </Link>
+            </div>
+
+            {/* Trustpilot Badge */}
+            <div className="animate-fade-in delay-500 mt-10" style={{ animationDelay: '500ms' }}>
+              <TrustpilotBadgeWrapper />
             </div>
           </div>
         </div>
