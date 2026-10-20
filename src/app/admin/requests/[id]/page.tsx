@@ -180,34 +180,37 @@ export default function AdminRequestDetailPage() {
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">Reference Images</p>
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-                    {images.map((img: string, idx: number) => (
-                      <div key={idx} className="relative group">
-                        <div className="aspect-square rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 overflow-hidden relative bg-gray-50 dark:bg-gray-800">
-                          {img && img.trim() !== "" ? (
-                            <img 
-                              src={img} 
-                              alt={`Reference ${idx + 1}`} 
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                console.error(`Failed to load image ${idx}:`, img?.substring(0, 50))
-                                e.currentTarget.style.display = 'none'
-                                const nextEl = e.currentTarget.nextElementSibling as HTMLElement | null
-                                if (nextEl) nextEl.style.display = 'flex'
-                              }}
-                            />
-                          ) : (
-                            <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 p-4">
+                    {images.map((img: string, idx: number) => {
+                      console.log(`[Admin Request Detail] Image ${idx}:`, img?.substring(0, 80))
+                      return (
+                        <div key={idx} className="relative group">
+                          <div className="aspect-square rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 overflow-hidden relative bg-gray-50 dark:bg-gray-800">
+                            {img && img.trim() !== "" ? (
+                              <img 
+                                src={img} 
+                                alt={`Reference ${idx + 1}`} 
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  console.error(`Failed to load image ${idx}:`, img?.substring(0, 80))
+                                  e.currentTarget.style.display = 'none'
+                                  const nextEl = e.currentTarget.nextElementSibling as HTMLElement | null
+                                  if (nextEl) nextEl.style.display = 'flex'
+                                }}
+                              />
+                            ) : (
+                              <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 p-4">
+                                <ImageIcon className="h-8 w-8 mb-2" />
+                                <span className="text-xs">No image</span>
+                              </div>
+                            )}
+                            <div className="hidden absolute inset-0 flex flex-col items-center justify-center text-gray-400 p-4 bg-gray-50 dark:bg-gray-800">
                               <ImageIcon className="h-8 w-8 mb-2" />
-                              <span className="text-xs">No image</span>
+                              <span className="text-xs">Failed to load</span>
                             </div>
-                          )}
-                          <div className="hidden absolute inset-0 flex flex-col items-center justify-center text-gray-400 p-4 bg-gray-50 dark:bg-gray-800">
-                            <ImageIcon className="h-8 w-8 mb-2" />
-                            <span className="text-xs">Failed to load</span>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      )
+                    })}
                   </div>
                 </div>
               )}
