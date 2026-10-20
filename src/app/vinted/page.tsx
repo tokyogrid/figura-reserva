@@ -153,7 +153,7 @@ export default function VintedPage() {
                 </div>
                 <div className="flex flex-col items-end sm:items-end">
                   <p className="text-sm text-gray-400">{totalReviews} total reviews</p>
-                  <p className="text-lg font-medium text-white">{account.totalSales} total sales</p>
+                  <p className="text-lg font-medium text-white">{totalReviews} total reviews</p>
                 </div>
               </div>
               {/* Star breakdown bars */}
@@ -181,8 +181,8 @@ export default function VintedPage() {
           </Card>
           <Card className="bg-gray-900/50 border-gray-800/50">
             <CardContent className="p-6">
-              <p className="text-sm text-gray-400">Total Sales</p>
-              <p className="text-3xl font-bold text-white">{account.totalSales}</p>
+              <p className="text-sm text-gray-400">Total Reviews</p>
+              <p className="text-3xl font-bold text-white">{totalReviews}</p>
             </CardContent>
           </Card>
           <Card className="bg-gray-900/50 border-gray-800/50">
