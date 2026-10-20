@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
 import { Badge } from "@/components/ui/Badge"
-import { Star, Truck, Shield, Heart, MessageSquare, ExternalLink, Package, RefreshCw, Settings } from "lucide-react"
+import { Star, Truck, Shield, Heart, ExternalLink, Package, RefreshCw, Settings } from "lucide-react"
 import { siteConfig } from "@/lib/site-config"
 import { formatPrice } from "@/lib/utils"
 import { cn } from "@/lib/utils"
@@ -21,31 +21,19 @@ interface VintedAccount {
   isConnected: boolean
 }
 
-interface VintedReview {
-  vintedReviewId: string
-  buyerUsername: string
-  rating: number
-  comment: string | null
-  orderId: string | null
-  reviewDate: string
-}
-
 export default function VintedPage() {
   const [account, setAccount] = useState<VintedAccount | null>(null)
-  const [reviews, setReviews] = useState<VintedReview[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
-  const [activeTab, setActiveTab] = useState<"overview" | "reviews">("overview")
 
   useEffect(() => {
     fetchAccount()
-    fetchReviews()
   }, [])
 
   const fetchAccount = async () => {
     setLoading(true)
     try {
-      const res = await fetch("/api/admin/vinted", { credentials: "include" })
+      const res = await fetch("/api/vinted/account", { credentials: "include" })
       if (res.ok) {
         const data = await res.json()
         setAccount(data)
@@ -54,18 +42,6 @@ export default function VintedPage() {
       console.error(e)
     } finally {
       setLoading(false)
-    }
-  }
-
-  const fetchReviews = async () => {
-    try {
-      const res = await fetch("/api/admin/vinted/reviews", { credentials: "include" })
-      if (res.ok) {
-        const data = await res.json()
-        setReviews(data.reviews || [])
-      }
-    } catch (e) {
-      console.error(e)
     }
   }
 
@@ -78,7 +54,6 @@ export default function VintedPage() {
       if (res.ok) {
         const data = await res.json()
         setAccount(data)
-        fetchReviews()
       }
     } catch (e) {
       console.error(e)
@@ -136,126 +111,57 @@ export default function VintedPage() {
           </Button>
         </div>
 
-        {/* Tab Navigation */}
-        <div className="flex border-b border-gray-800/50 mb-8">
-          {[
-            { id: "overview", label: "Overview", icon: Star },
-            { id: "reviews", label: "Comments", icon: MessageSquare },
-          ].map(tab => (
-            <Button
-              key={tab.id}
-              variant={activeTab === tab.id ? "primary" : "ghost"}
-              className="gap-2"
-              onClick={() => setActiveTab(tab.id as typeof activeTab)}
-            >
-              <tab.icon className="h-4 w-4" />
-              {tab.label}
-            </Button>
-          ))}
-        </div>
-
-        {/* Overview Tab */}
-        {activeTab === "overview" && account && (
-          <>
-            {/* Ratings Overview */}
-            <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-              <Card className="bg-gray-900/50 border-gray-800/50">
-                <CardContent className="p-6">
-                  <p className="text-sm text-gray-400">Overall Rating</p>
-                  <p className="text-3xl font-bold text-white">{account.rating.toFixed(1)}</p>
-                  <div className="flex items-center gap-1 mt-1">
-                    <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                    <span className="text-sm text-gray-400">{account.rating.toFixed(1)}/5.0</span>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="bg-gray-900/50 border-gray-800/50">
-                <CardContent className="p-6">
-                  <p className="text-sm text-gray-400">Total Sales</p>
-                  <p className="text-3xl font-bold text-white">{account.totalSales}</p>
-                </CardContent>
-              </Card>
-              <Card className="bg-gray-900/50 border-gray-800/50">
-                <CardContent className="p-6">
-                  <p className="text-sm text-gray-400">Positive</p>
-                  <p className="text-3xl font-bold text-green-500">{account.positiveFeedback}</p>
-                </CardContent>
-              </Card>
-              <Card className="bg-gray-900/50 border-gray-800/50">
-                <CardContent className="p-6">
-                  <p className="text-sm text-gray-400">Neutral</p>
-                  <p className="text-3xl font-bold text-yellow-500">{account.neutralFeedback}</p>
-                </CardContent>
-              </Card>
-              <Card className="bg-gray-900/50 border-gray-800/50">
-                <CardContent className="p-6">
-                  <p className="text-sm text-gray-400">Negative</p>
-                  <p className="text-3xl font-bold text-red-500">{account.negativeFeedback}</p>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Vinted Profile Button */}
-            <div className="mb-8 text-center">
-              <a 
-                href="https://www.vinted.es/member/165795784"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button variant="primary" className="gap-2" size="lg">
-                  <ExternalLink className="h-4 w-4" />
-                  View Vinted Profile
-                </Button>
-              </a>
-            </div>
-          </>
-        )}
-
-        {/* Reviews Tab */}
-        {activeTab === "reviews" && (
+        {/* Ratings Overview */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
           <Card className="bg-gray-900/50 border-gray-800/50">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <MessageSquare className="h-5 w-5" />
-                Comments & Reviews
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {reviews.length === 0 ? (
-                <div className="p-8 text-center">
-                  <MessageSquare className="h-16 w-16 mx-auto text-gray-600 mb-4" />
-                  <h3 className="text-lg font-medium text-white mb-2">No reviews yet</h3>
-                  <p className="text-gray-400">Click "Refresh Data" to sync reviews from Vinted</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {reviews.map(review => (
-                    <div key={review.vintedReviewId} className="p-4 border border-gray-800/50 rounded-lg bg-gray-900/30">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="font-medium text-white">{review.buyerUsername}</span>
-                            <div className="flex items-center gap-1">
-                              {[...Array(5)].map((_, i) => (
-                                <Star key={i} className={`h-4 w-4 ${i < review.rating ? "text-yellow-500 fill-current" : "text-gray-600"}`} />
-                              ))}
-                            </div>
-                          </div>
-                          {review.comment && (
-                            <p className="text-gray-300">{review.comment}</p>
-                          )}
-                          <p className="text-xs text-gray-500 mt-1">
-                            Order: {review.orderId || "N/A"} • {new Date(review.reviewDate).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+            <CardContent className="p-6">
+              <p className="text-sm text-gray-400">Overall Rating</p>
+              <p className="text-3xl font-bold text-white">{account.rating.toFixed(1)}</p>
+              <div className="flex items-center gap-1 mt-1">
+                <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                <span className="text-sm text-gray-400">{account.rating.toFixed(1)}/5.0</span>
+              </div>
             </CardContent>
           </Card>
-        )}
+          <Card className="bg-gray-900/50 border-gray-800/50">
+            <CardContent className="p-6">
+              <p className="text-sm text-gray-400">Total Sales</p>
+              <p className="text-3xl font-bold text-white">{account.totalSales}</p>
+            </CardContent>
+          </Card>
+          <Card className="bg-gray-900/50 border-gray-800/50">
+            <CardContent className="p-6">
+              <p className="text-sm text-gray-400">Positive</p>
+              <p className="text-3xl font-bold text-green-500">{account.positiveFeedback}</p>
+            </CardContent>
+          </Card>
+          <Card className="bg-gray-900/50 border-gray-800/50">
+            <CardContent className="p-6">
+              <p className="text-sm text-gray-400">Neutral</p>
+              <p className="text-3xl font-bold text-yellow-500">{account.neutralFeedback}</p>
+            </CardContent>
+          </Card>
+          <Card className="bg-gray-900/50 border-gray-800/50">
+            <CardContent className="p-6">
+              <p className="text-sm text-gray-400">Negative</p>
+              <p className="text-3xl font-bold text-red-500">{account.negativeFeedback}</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Vinted Profile Button */}
+        <div className="mb-8 text-center">
+          <a 
+            href="https://www.vinted.es/member/165795784"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button variant="primary" className="gap-2" size="lg">
+              <ExternalLink className="h-4 w-4" />
+              View Vinted Profile
+            </Button>
+          </a>
+        </div>
       </div>
     </div>
   )
