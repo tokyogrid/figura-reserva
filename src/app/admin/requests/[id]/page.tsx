@@ -59,18 +59,22 @@ export default function AdminRequestDetailPage() {
   const fetchRequest = async () => {
     try {
       const res = await fetch(`/api/admin/requests/${params.id}`, { credentials: "include" })
+      console.log("[Admin Request Detail] Response status:", res.status)
       if (res.ok) {
         const data = await res.json()
+        console.log("[Admin Request Detail] Data:", data)
         setRequest(data.request)
       } else if (res.status === 404) {
         toast({ type: "error", title: "Not found", message: "Request not found" })
         router.push("/admin/requests")
       } else {
+        const errorData = await res.json().catch(() => ({}))
+        console.error("[Admin Request Detail] Error response:", errorData)
         toast({ type: "error", title: "Error", message: "Failed to load request" })
         router.push("/admin/requests")
       }
     } catch (e) {
-      console.error(e)
+      console.error("[Admin Request Detail] Fetch error:", e)
       toast({ type: "error", title: "Error", message: "Failed to load request" })
       router.push("/admin/requests")
     } finally {
