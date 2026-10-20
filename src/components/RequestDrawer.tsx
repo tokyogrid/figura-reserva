@@ -132,12 +132,18 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
 
     setLoading(true)
     try {
+      const payload = {
+        ...formData,
+        budgetMin: formData.budgetMin ? parseInt(formData.budgetMin) * 100 : undefined,
+      }
+      console.log("[RequestDrawer] Payload being sent:", {
+        ...payload,
+        imagesLen: payload.images?.length || 0,
+        imagesPreview: payload.images?.substring(0, 100)
+      })
       const res = await fetchWithCSRF("/api/requests", {
         method: "POST",
-        body: JSON.stringify({
-          ...formData,
-          budgetMin: formData.budgetMin ? parseInt(formData.budgetMin) * 100 : undefined,
-        }),
+        body: JSON.stringify(payload),
       })
 
       const data = await res.json()
