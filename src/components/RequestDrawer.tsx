@@ -97,62 +97,79 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
     return Object.keys(newErrors).length === 0
   }
 
-  // FIX 2: Corrección del cierre de estado desactualizado al subir imágenes
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // FIX 2: Corrección del cierre de estado desactualizado al subir imágenes - usa Promises para procesar secuencialmente
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
-    
-    files.forEach((file) => {
+    if (files.length === 0) return
+
+    // Procesar archivos secuencialmente para evitar race conditions
+    for (const file of files) {
       if (!file.type.match(/^image\/(jpeg|png|webp)$/)) {
         toast({ type: "error", title: "Formato no válido", message: "Solo se permiten imágenes JPEG, PNG o WebP" })
-        return
+        continue
       }
       
       if (file.size > 10 * 1024 * 1024) {
         toast({ type: "error", title: "Archivo demasiado grande", message: "La imagen no debe superar los 10MB" })
-        return
+        continue
       }
 
-      const img = new Image()
-      const objectUrl = URL.createObjectURL(file)
-
-      img.onload = () => {
-        const MAX_WIDTH = 1200
-        const MAX_HEIGHT = 1200
-        let { width, height } = img
-        
-        if (width > height) {
-          if (width > MAX_WIDTH) {
-            height = Math.round((height * MAX_WIDTH) / width)
-            width = MAX_WIDTH
+      try {
+        const compressedDataUrl = await new Promise<string>((resolve, reject) => {
+          const img = new Image()
+          const objectUrl = URL.createObjectURL(file)
+          
+          img.onload = () => {
+            const MAX_WIDTH = 1200
+            const MAX_HEIGHT = 1200
+            let { width, height } = img
+            
+            if (width > height) {
+              if (width > MAX_WIDTH) {
+                height = Math.round((height * MAX_WIDTH) / width)
+                width = MAX_WIDTH
+              }
+            } else {
+              if (height > MAX_HEIGHT) {
+                width = Math.round((width * MAX_HEIGHT) / height)
+                height = MAX_HEIGHT
+              }
+            }
+            
+            const canvas = document.createElement("canvas")
+            canvas.width = width
+            canvas.height = height
+            const ctx = canvas.getContext("2d")
+            ctx?.drawImage(img, 0, 0, width, height)
+            
+            // Compresión optimizada para evitar superar el límite de la API
+            const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.75)
+            URL.revokeObjectURL(objectUrl)
+            resolve(compressedDataUrl)
           }
-        } else {
-          if (height > MAX_HEIGHT) {
-            width = Math.round((width * MAX_HEIGHT) / height)
-            height = MAX_HEIGHT
+          
+          img.onerror = () => {
+            URL.revokeObjectURL(objectUrl)
+            reject(new Error("Error al cargar la imagen"))
           }
-        }
-        
-        const canvas = document.createElement("canvas")
-        canvas.width = width
-        canvas.height = height
-        const ctx = canvas.getContext("2d")
-        ctx?.drawImage(img, 0, 0, width, height)
-        
-        // Compresión optimizada para evitar superar el límite de la API
-        const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.75)
-        
+          
+img.src = objectUrl
+        })
+ 
+        // Actualizar estado usando functional update para evitar race conditions
         setFormData((prev) => {
           const currentImages = JSON.parse(prev.images || "[]").filter((url: string) => url.trim() !== "")
           const newImages = [...currentImages, compressedDataUrl]
           if (newImages.length > 10) newImages.length = 10
-          return { ...prev, images: JSON.stringify(newImages.length > 0 ? newImages : [""]) }
+          console.log("[RequestDrawer] Imagen comprimida añadida, total:", newImages.length)
+          return { ...prev, images: JSON.stringify(newImages) }
         })
-
-        URL.revokeObjectURL(objectUrl)
+ 
+      } catch (error) {
+        console.error("[RequestDrawer] Error comprimiendo imagen:", error)
+        toast({ type: "error", title: "Error al procesar imagen", message: "No se pudo procesar la imagen" })
       }
-      
-      img.src = objectUrl
-    })
+    }
   }
 
   // FIX 3: Filtrar imágenes vacías antes de enviar el Payload al servidor
@@ -162,14 +179,17 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
 
     setLoading(true)
     try {
-      const parsedImages = JSON.parse(formData.images || "[]")
-      const cleanImages = parsedImages.filter((img: string) => typeof img === "string" && img.trim() !== "")
+      // Leer imágenes directamente del estado actual
+      const currentImages = JSON.parse(formData.images || "[]").filter((url: string) => url.trim() !== "")
+      console.log("[RequestDrawer] Submit - imágenes actuales:", currentImages.length, currentImages)
 
       const payload = {
         ...formData,
-        images: JSON.stringify(cleanImages),
+        images: JSON.stringify(currentImages),
         budgetMin: formData.budgetMin ? parseInt(formData.budgetMin) * 100 : undefined,
       }
+
+      console.log("[RequestDrawer] Payload enviado:", { ...payload, images: "***OMITIDO***" })
 
       const res = await fetchWithCSRF("/api/requests", {
         method: "POST",
@@ -190,12 +210,13 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
 
   if (!isOpen) return null
 
+  // Imágenes para previsualización - retorna array vacío si no hay imágenes
   const parsedImagesList = (() => {
     try {
       const arr = JSON.parse(formData.images || "[]")
-      return Array.isArray(arr) && arr.length > 0 ? arr : [""]
+      return Array.isArray(arr) ? arr.filter((url: string) => url.trim() !== "") : []
     } catch {
-      return [""]
+      return []
     }
   })()
 
@@ -297,21 +318,11 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
               <h3 className="text-lg font-bold text-white">Imágenes de Referencia</h3>
             </div>
 
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Subir archivos de imagen (JPEG/PNG, máx 10MB)
-              </label>
-              <input
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                multiple
-                onChange={handleImageUpload}
-                className="w-full px-3 py-2 border border-gray-700 rounded-lg bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-            </div>
+            <p className="text-sm text-gray-400 mb-4">Haz clic en "Añadir imagen" o arrastra archivos (JPEG/PNG/WebP, máx 10MB c/u, máx 10 imgs)</p>
 
             {/* Renderizado dinámico de previsualizaciones de imagen */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {/* Renderizar imágenes existentes */}
               {parsedImagesList.map((img: string, idx: number) => (
                 <div key={idx} className="relative group flex flex-col">
                   <div className="aspect-square rounded-lg border-2 border-dashed border-gray-700 overflow-hidden relative bg-gray-800">
@@ -322,7 +333,7 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
                           type="button" 
                           onClick={() => {
                             const newImages = parsedImagesList.filter((_: any, i: number) => i !== idx)
-                            setFormData({ ...formData, images: JSON.stringify(newImages.length > 0 ? newImages : [""]) })
+                            setFormData({ ...formData, images: JSON.stringify(newImages) })
                           }} 
                           className="absolute top-1 right-1 p-1 rounded-full bg-red-500 text-white"
                         >
@@ -342,7 +353,6 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
                     onChange={(e) => {
                       const newImages = [...parsedImagesList]
                       newImages[idx] = e.target.value
-                      if (idx === newImages.length - 1 && e.target.value.trim()) newImages.push("")
                       setFormData({ ...formData, images: JSON.stringify(newImages) })
                     }}
                     placeholder="https://ejemplo.com/imagen.jpg"
@@ -351,6 +361,23 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
                   />
                 </div>
               ))}
+              {/* Slot para añadir nueva imagen (siempre visible si hay menos de 10) */}
+              {parsedImagesList.length < 10 && (
+                <div key="add-new" className="relative group flex flex-col">
+                  <div className="aspect-square rounded-lg border-2 border-dashed border-gray-700 overflow-hidden relative bg-gray-800">
+                    <div className="w-full h-full flex flex-col items-center justify-center text-gray-500 p-4 cursor-pointer">
+                      <PlusCircle className="h-8 w-8 mb-2" />
+                      <span className="text-xs">Añadir imagen</span>
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      onChange={handleImageUpload}
+                      className="absolute inset-0 opacity-0 cursor-pointer"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
