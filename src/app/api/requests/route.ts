@@ -27,6 +27,7 @@ export async function POST(request: NextRequest) {
     console.log("[API Requests] Images length:", body.images?.length || 0)
     console.log("[API Requests] Images preview:", body.images?.substring(0, 100))
     console.log("[API Requests] Full images field:", body.images)
+    console.log("[API Requests] FigureName:", body.figureName)
     const { name, email, series, figureName, manufacturer, scale, budgetMin, notes, images } = body
 
     if (!name || !email || !figureName) {

@@ -124,7 +124,7 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
     e.preventDefault()
     if (!validateForm()) return
 
-    console.log("[RequestDrawer] Submitting formData:", { 
+    console.log("[RequestDrawer] formData at submit:", { 
       ...formData, 
       imagesLen: formData.images?.length || 0,
       imagesPreview: formData.images?.substring(0, 100)
@@ -139,7 +139,8 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
       console.log("[RequestDrawer] Payload being sent:", {
         ...payload,
         imagesLen: payload.images?.length || 0,
-        imagesPreview: payload.images?.substring(0, 100)
+        imagesPreview: payload.images?.substring(0, 100),
+        fullImages: payload.images
       })
       const res = await fetchWithCSRF("/api/requests", {
         method: "POST",
