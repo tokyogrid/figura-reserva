@@ -32,6 +32,9 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  alternates: {
+    canonical: "https://tokyogridstore.com",
+  },
   openGraph: {
     title: "Tokyo Grid Store | Figuras de Anime Originales",
     description: "Importación directa de figuras oficiales desde Japón. Catálogo actualizado y envíos seguros.",
