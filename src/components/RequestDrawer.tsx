@@ -106,6 +106,16 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
 
     // Procesar archivos secuencialmente para evitar race conditions
     for (const file of files) {
+      // Detectar HEIC/HEIF por extensión o magic bytes (iOS usa .jpg/.heic para HEIC)
+      const isHEIC = file.name.toLowerCase().endsWith('.heic') || 
+                     file.name.toLowerCase().endsWith('.heif') ||
+                     file.type === 'image/heic' || file.type === 'image/heif'
+      if (isHEIC) {
+        console.warn("[RequestDrawer] HEIC file detected:", file.name, file.type)
+        toast({ type: "error", title: "Formato HEIC no soportado", message: "Convierte la imagen a JPEG/PNG desde la app Fotos de iOS antes de subirla" })
+        continue
+      }
+      
       // Validar formato - SOLO formatos soportados en Android/iOS web
       const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
       if (!validTypes.includes(file.type.toLowerCase())) {
@@ -133,7 +143,7 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
           
           img.onload = () => {
             clearTimeout(timeoutId)
-            console.log("[RequestDrawer] img.onload fired - width:", img.width, "height:", img.height)
+            console.log("[RequestDrawer] img.onload fired - width:", img.width, "height:", img.height, "naturalWidth:", img.naturalWidth, "naturalHeight:", img.naturalHeight)
             try {
               const MAX_WIDTH = 1024
               const MAX_HEIGHT = 1024
@@ -221,8 +231,62 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
           img.onerror = (err) => {
             clearTimeout(timeoutId)
             URL.revokeObjectURL(objectUrl)
-            console.error("[RequestDrawer] img.onerror:", err, "file.type:", file.type, "file.size:", file.size, "file.name:", file.name)
-            reject(new Error(`Error al cargar la imagen: ${file.type || 'tipo desconocido'}, ${file.size} bytes. Formatos soportados: JPEG, PNG, WebP. Verifica que el archivo no esté corrupto.`))
+            console.error("[RequestDrawer] img.onerror:", err, "file.type:", file.type, "file.size:", file.size, "file.name:", file.name, "naturalWidth:", img.naturalWidth, "naturalHeight:", img.naturalHeight)
+            
+            // Intentar con FileReader como fallback
+            console.log("[RequestDrawer] Intentando con FileReader como fallback...")
+            const reader = new FileReader()
+            reader.onload = (e) => {
+              const img2 = new Image()
+              img2.onload = () => {
+                try {
+                  const MAX_WIDTH = 1024
+                  const MAX_HEIGHT = 1024
+                  let { width, height } = img2
+                  
+                  if (!width || !height || width === 0 || height === 0) {
+                    reject(new Error("Imagen con dimensiones inválidas (fallback)"))
+                    return
+                  }
+                  
+                  if (width > height) {
+                    if (width > 1024) {
+                      height = Math.round((height * 1024) / width)
+                      width = 1024
+                    }
+                  } else {
+                    if (height > 1024) {
+                      width = Math.round((width * 1024) / height)
+                      height = 1024
+                    }
+                  }
+                  
+                  const canvas = document.createElement("canvas")
+                  canvas.width = width
+                  canvas.height = height
+                  const ctx = canvas.getContext("2d")
+                  if (!ctx) {
+                    reject(new Error("No se pudo crear contexto del canvas (fallback)"))
+                    return
+                  }
+                  
+                  ctx.drawImage(img2, 0, 0, width, height)
+                  const compressedDataUrl = canvas.toDataURL("image/png", 0.85)
+                  console.log("[RequestDrawer] Fallback exitoso, length:", compressedDataUrl.length)
+                  resolve(compressedDataUrl)
+                } catch (fallbackErr) {
+                  reject(new Error(`Error en fallback: ${fallbackErr instanceof Error ? fallbackErr.message : 'desconocido'}`))
+                }
+              }
+              img2.onerror = () => {
+                reject(new Error("Error al cargar la imagen - el archivo puede ser HEIC con extensión .jpg, CMYK JPEG, corrupto, o formato no soportado por el navegador. Convierte a JPEG/PNG desde tu dispositivo."))
+              }
+              img2.src = (e.target as FileReader).result as string
+            }
+            reader.onerror = () => {
+              reject(new Error("Error al leer el archivo con FileReader"))
+            }
+            reader.readAsDataURL(file)
           }
           
           // No usar crossOrigin para archivos locales (causa problemas en Android)
