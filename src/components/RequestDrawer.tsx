@@ -133,6 +133,7 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
           
           img.onload = () => {
             clearTimeout(timeoutId)
+            console.log("[RequestDrawer] img.onload fired - width:", img.width, "height:", img.height)
             try {
               const MAX_WIDTH = 1024
               const MAX_HEIGHT = 1024
@@ -175,6 +176,7 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
               
               try {
                 ctx.drawImage(img, 0, 0, width, height)
+                console.log("[RequestDrawer] drawImage successful")
               } catch (drawError) {
                 URL.revokeObjectURL(objectUrl)
                 reject(new Error(`Error al dibujar imagen: ${drawError instanceof Error ? drawError.message : 'desconocido'}`))
@@ -186,12 +188,12 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
               try {
                 // PNG primero - más compatible en Android
                 compressedDataUrl = canvas.toDataURL("image/png", 0.85)
-                console.log("[RequestDrawer] PNG generado correctamente")
+                console.log("[RequestDrawer] PNG generado correctamente, length:", compressedDataUrl.length)
               } catch (pngError) {
                 console.warn("[RequestDrawer] PNG falló, intentando JPEG:", pngError)
                 try {
                   compressedDataUrl = canvas.toDataURL("image/jpeg", 0.8)
-                  console.log("[RequestDrawer] JPEG generado como fallback")
+                  console.log("[RequestDrawer] JPEG generado como fallback, length:", compressedDataUrl.length)
                 } catch (jpegError) {
                   URL.revokeObjectURL(objectUrl)
                   reject(new Error("Ni PNG ni JPEG soportados en este navegador"))
@@ -207,6 +209,7 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
               }
               
               URL.revokeObjectURL(objectUrl)
+              console.log("[RequestDrawer] Imagen procesada exitosamente, length:", compressedDataUrl.length)
               resolve(compressedDataUrl)
             } catch (err) {
               URL.revokeObjectURL(objectUrl)
