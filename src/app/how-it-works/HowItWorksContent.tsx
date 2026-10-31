@@ -150,7 +150,7 @@ export function HowItWorksContent() {
                   </Button>
                 </Link>
                 <Link href="/request">
-                  <Button size="lg" variant="outline" className="gap-2 w-full sm:w-auto border-white text-white hover:bg-white/10">
+                  <Button size="lg" variant="secondary" className="gap-2 w-full sm:w-auto bg-white text-purple-600 hover:bg-pink-50">
                     <Search className="h-4 w-4" aria-hidden="true" />
                     Request Figure
                   </Button>
