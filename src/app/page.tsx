@@ -351,7 +351,7 @@ export default async function HomePage() {
                     <div className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 text-purple-400 mb-4 group-hover:scale-110 transition-transform duration-300 group-hover:bg-gradient-to-br group-hover:from-purple-500/40 group-hover:to-pink-500/40">
                       <Icon className="h-7 w-7" aria-hidden="true" />
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-2">
+                    <h3 className={`text-xl font-bold mb-2 ${feature.titleColor || "text-white"}`}>
                       {feature.title}
                     </h3>
                     <p className="text-gray-400">{feature.description}</p>

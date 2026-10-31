@@ -41,24 +41,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.5,
     },
-    {
-      url: `${BASE_URL}/login`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${BASE_URL}/register`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${BASE_URL}/verify`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.2,
-    },
   ]
 
   const productRoutes = await prisma.product
@@ -82,26 +64,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }))
     )
 
-  const orderRoutes = await prisma.order
-    .findMany({
-      where: {
-        status: { notIn: ["CANCELLED", "REFUNDED"] },
-      },
-      select: {
-        id: true,
-        updatedAt: true,
-      },
-      orderBy: { updatedAt: "desc" },
-      take: 100,
-    })
-    .then((orders) =>
-      orders.map((order) => ({
-        url: `${BASE_URL}/order/${order.id}`,
-        lastModified: order.updatedAt,
-        changeFrequency: "daily" as const,
-        priority: 0.4,
-      }))
-    )
-
-  return [...staticRoutes, ...productRoutes, ...orderRoutes]
+  return [...staticRoutes, ...productRoutes]
 }

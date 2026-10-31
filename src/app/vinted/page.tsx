@@ -151,10 +151,7 @@ export default function VintedPage() {
                     <span className="text-sm text-gray-400">{averageRating.toFixed(1)}/5.0</span>
                   </div>
                 </div>
-                <div className="flex flex-col items-end sm:items-end">
-                  <p className="text-sm text-gray-400">{totalReviews} total reviews</p>
-                  <p className="text-lg font-medium text-white">{totalReviews} total reviews</p>
-                </div>
+
               </div>
               {/* Star breakdown bars */}
               <div className="mt-6 space-y-2">

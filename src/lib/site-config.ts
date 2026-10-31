@@ -5,7 +5,7 @@ export const siteConfig = {
   name: "Tokyo Grid",
   tagline: "Anime figures from Japan, reserved for you",
   description: "Reserve anime figures directly from Japan. We buy from Japanese suppliers and ship to your door. No markup, no risk.",
-  url: "https://tokyogrid.com",
+  url: "https://tokyogridstore.com",
   
   // Navigation
   nav: {
@@ -30,21 +30,25 @@ export const siteConfig = {
       icon: "Banknote",
       title: "Japan Prices",
       description: "We buy directly from Japanese suppliers. No middlemen, save up to 40%.",
+      titleColor: "text-purple-900",
     },
     {
       icon: "Shield",
       title: "Secure Reservation",
       description: "Pay when you reserve via Stripe. If we can't get the figure, full refund.",
+      titleColor: "text-purple-900",
     },
     {
       icon: "Truck",
       title: "Shipped to Your Door",
       description: "We receive in Spain, inspect, and ship via certified mail (€4.99, free over €100).",
+      titleColor: "text-purple-900",
     },
     {
       icon: "Package",
       title: "Also on Vinted",
       description: "Prefer Vinted? We list the figure on your account and handle the sale for you.",
+      titleColor: "text-purple-900",
     },
   ],
   

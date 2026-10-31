@@ -53,7 +53,7 @@ function emailTemplate({ title, preheader, children, footerText = "Tokyo Grid - 
             <p style="margin: 0 0 16px; color: #6b7280; font-size: 13px;">${footerText}</p>
             <p style="margin: 0; color: #9ca3af; font-size: 12px;">
               <a href="${APP_URL}" style="color: #6366f1; text-decoration: none;">${APP_URL}</a> · 
-              <a href="mailto:support@tokyogrid.com" style="color: #6366f1; text-decoration: none;">Contact Support</a>
+              <a href="mailto:support@tokyogridstore.com" style="color: #6366f1; text-decoration: none;">Contact Support</a>
             </p>
           </td>
         </tr>
