@@ -268,10 +268,10 @@ export function OrderTrackingContent({ order }: Props) {
               Need Help?
             </h3>
             <p className="text-purple-300 mb-4">
-              Reply to the confirmation email or write to <a href="mailto:support@tokyogridstore.com" className="underline">support@tokyogridstore.com</a>. We reply within 24h.
+              Reply to the confirmation email or write to <a href="mailto:tokyogridstore@gmail.com" className="underline">tokyogridstore@gmail.com</a>. We reply within 24h.
             </p>
             <div className="flex flex-wrap gap-3">
-              <Button variant="secondary" onClick={() => window.open(`mailto:support@tokyogridstore.com?subject=Order ${order.id.slice(0, 8)}`)} className="gap-2">
+              <Button variant="secondary" onClick={() => window.open(`mailto:tokyogridstore@gmail.com?subject=Order ${order.id.slice(0, 8)}`)} className="gap-2">
                 <Mail className="h-4 w-4" aria-hidden="true" />
                 Contact Support
               </Button>

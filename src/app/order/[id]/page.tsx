@@ -16,6 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   })
   return {
     title: order ? `Order #${order.id.slice(0, 8)} - ${siteConfig.name}` : "Order Not Found",
+    robots: { index: false, follow: false },
   }
 }
 

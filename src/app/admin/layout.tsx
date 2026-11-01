@@ -1,5 +1,10 @@
 import Link from "next/link"
+import { Metadata } from "next"
 import { LayoutDashboard, Package, ShoppingCart, MessageSquare, LogOut, Store, TicketPercent } from "lucide-react"
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+}
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
