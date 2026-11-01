@@ -31,62 +31,51 @@ export async function GET(request: NextRequest) {
     let total
 
     if (search) {
-      // Use raw query for case-insensitive search on SQLite
-      const searchLower = search.toLowerCase()
-      const searchPattern = `%${searchLower}%`
-      
-      // Build WHERE clause for raw query
-      const whereClauses = ['status IN ("AVAILABLE", "LOW_STOCK", "PRE_ORDER")']
-      const params: any[] = []
-      
-      if (category) {
-        whereClauses.push('category = ?')
-        params.push(category)
+      // Use Prisma's built-in case-insensitive search (works on PostgreSQL)
+      const where: any = {
+        status: { in: ["AVAILABLE", "LOW_STOCK", "PRE_ORDER"] },
+        OR: [
+          { name: { contains: search, mode: "insensitive" } },
+          { series: { contains: search, mode: "insensitive" } },
+          { character: { contains: search, mode: "insensitive" } },
+          { manufacturer: { contains: search, mode: "insensitive" } },
+        ],
       }
-      if (series) {
-        whereClauses.push('series = ?')
-        params.push(series)
-      }
-      if (inStock) {
-        whereClauses.push('stock > 0')
-      }
-      
-      // Search across name, series, character, manufacturer (case-insensitive)
-      whereClauses.push(`(
-        LOWER(name) LIKE ? OR 
-        LOWER(series) LIKE ? OR 
-        LOWER(character) LIKE ? OR 
-        LOWER(manufacturer) LIKE ?
-      )`)
-      params.push(searchPattern, searchPattern, searchPattern, searchPattern)
 
-      const whereSQL = whereClauses.join(' AND ')
+      if (category) where.category = category
+      if (series) where.series = series
+      if (inStock) where.stock = { gt: 0 }
 
-      // Get total count
-      const countResult = await prisma.$queryRawUnsafe<Array<{ count: number }>>(
-        `SELECT COUNT(*) as count FROM Product WHERE ${whereSQL}`,
-        ...params
-      )
-      total = Number(countResult[0]?.count || 0)
-
-      // Get paginated products
-      const orderByMap: Record<string, string> = {
-        'price-asc': 'price ASC',
-        'price-desc': 'price DESC',
-        'newest': 'createdAt DESC',
-        'name': 'name ASC',
-        'featured': 'sortOrder ASC'
+      const orderBy: any = {}
+      switch (sort) {
+        case "price-asc": orderBy.price = "asc"; break
+        case "price-desc": orderBy.price = "desc"; break
+        case "newest": orderBy.createdAt = "desc"; break
+        case "name": orderBy.name = "asc"; break
+        default: orderBy.sortOrder = "asc"
       }
-      const orderBySQL = orderByMap[sort] || 'sortOrder ASC'
-      
-      products = await prisma.$queryRawUnsafe<Array<any>>(
-        `SELECT * FROM Product WHERE ${whereSQL} ORDER BY ${orderBySQL} LIMIT ? OFFSET ?`,
-        ...params,
-        limit,
-        (page - 1) * limit
-      )
+
+      const [productsResult, count] = await Promise.all([
+        prisma.product.findMany({
+          where,
+          orderBy,
+          skip: (page - 1) * limit,
+          take: limit,
+        }),
+        prisma.product.count({ where }),
+      ])
+
+      products = productsResult
+      total = count
     } else {
       // No search - use regular Prisma query
+      const where: any = {
+        status: { in: ["AVAILABLE", "LOW_STOCK", "PRE_ORDER"] },
+      }
+      if (category) where.category = category
+      if (series) where.series = series
+      if (inStock) where.stock = { gt: 0 }
+
       const orderBy: any = {}
       switch (sort) {
         case "price-asc": orderBy.price = "asc"; break
