@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma"
 
 const BASE_URL = "https://tokyogridstore.com"
 
+export const dynamic = "force-dynamic"
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     {

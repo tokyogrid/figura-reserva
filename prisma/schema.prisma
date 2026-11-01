@@ -8,30 +8,30 @@ datasource db {
 }
 
 model Product {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String   @unique
-  description String?
-  price       Int      // en céntimos (euros * 100)
-  originalPrice Int?   // precio original tachado
-  images      String   // JSON array de URLs
-  category    String?
-  series      String?  // anime/serie
-  character   String?  // personaje
-  manufacturer String? // Bandai, Good Smile, etc.
-  scale       String?  // 1/7, 1/8, etc.
-  releaseDate DateTime? // fecha lanzamiento
-  stock       Int      @default(0)
-  reserved    Int      @default(0) // unidades reservadas
-  status      String   @default("AVAILABLE")
-  isFeatured  Boolean  @default(false)
-  sortOrder   Int      @default(0)
-  isHidden    Boolean  @default(false) // ocultar del catálogo
-  isUnpurchasable Boolean @default(false) // no se puede comprar
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  orderItems  OrderItem[]
-  requests    FigureRequest[]
+  id              String          @id @default(cuid())
+  name            String
+  slug            String          @unique
+  description     String?
+  price           Int
+  originalPrice   Int?
+  images          String
+  category        String?
+  series          String?
+  character       String?
+  manufacturer    String?
+  scale           String?
+  releaseDate     DateTime?
+  stock           Int             @default(0)
+  reserved        Int             @default(0)
+  status          String          @default("AVAILABLE")
+  isFeatured      Boolean         @default(false)
+  sortOrder       Int             @default(0)
+  isHidden        Boolean         @default(false)
+  isUnpurchasable Boolean         @default(false)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  requests        FigureRequest[]
+  orderItems      OrderItem[]
 
   @@index([status])
   @@index([category])
@@ -39,29 +39,29 @@ model Product {
 }
 
 model Order {
-  id                String   @id @default(cuid())
-  email             String
-  customerName      String
-  phone             String?
-  address           String
-  city              String
-  postalCode        String
-  country           String @default("ES")
-  subtotal          Int      // en céntimos
-  shippingCost      Int      @default(0)
-  total             Int      // en céntimos
-  status            String   @default("PENDING")
-  paymentStatus     String   @default("UNPAID")
-  stripeSessionId   String?  @unique
-  stripePaymentIntentId String? @unique
-  trackingNumber    String?
-  trackingUrl       String?
-  notes             String?
-  vintedCode        String?  @unique
-  isVintedOrder     Boolean  @default(false) // pedido tipo vinted
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  items             OrderItem[]
+  id                    String      @id @default(cuid())
+  email                 String
+  customerName          String
+  phone                 String?
+  address               String
+  city                  String
+  postalCode            String
+  country               String      @default("ES")
+  subtotal              Int
+  shippingCost          Int         @default(0)
+  total                 Int
+  status                String      @default("PENDING")
+  paymentStatus         String      @default("UNPAID")
+  stripeSessionId       String?     @unique
+  stripePaymentIntentId String?     @unique
+  trackingNumber        String?
+  trackingUrl           String?
+  notes                 String?
+  vintedCode            String?     @unique
+  isVintedOrder         Boolean     @default(false)
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+  items                 OrderItem[]
 
   @@index([email])
   @@index([status])
@@ -69,36 +69,36 @@ model Order {
 }
 
 model OrderItem {
-  id        String @id @default(cuid())
+  id        String   @id @default(cuid())
   orderId   String
-  order     Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
   productId String
-  product   Product @relation(fields: [productId], references: [id])
   quantity  Int
-  price     Int    // precio en céntimos al momento de la compra
-  isVinted  Boolean @default(false)
+  price     Int
+  isVinted  Boolean  @default(false)
   createdAt DateTime @default(now())
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id])
 
   @@unique([orderId, productId])
 }
 
 model User {
-  id                      String    @id @default(cuid())
-  email                   String    @unique
-  passwordHash            String
-  name                    String?
-  role                    String    @default("user")
-  address                 String?
-  city                    String?
-  postalCode              String?
-  country                 String?   @default("ES")
-  emailVerified           Boolean   @default(false)
-  emailVerificationCode   String?
+  id                       String          @id @default(cuid())
+  email                    String          @unique
+  passwordHash             String
+  name                     String?
+  role                     String          @default("user")
+  address                  String?
+  city                     String?
+  postalCode               String?
+  country                  String?         @default("ES")
+  emailVerified            Boolean         @default(false)
+  emailVerificationCode    String?
   emailVerificationExpires DateTime?
-  createdAt               DateTime  @default(now())
-  updatedAt               DateTime  @updatedAt
-  vintedAccount           VintedAccount?
-  discountUsages          DiscountUsage[]
+  createdAt                DateTime        @default(now())
+  updatedAt                DateTime        @updatedAt
+  discountUsages           DiscountUsage[]
+  vintedAccount            VintedAccount?
 }
 
 model FigureRequest {
@@ -106,7 +106,7 @@ model FigureRequest {
   email        String
   name         String
   figureName   String?
-  images       String?  // JSON array of image URLs
+  images       String?
   series       String?
   character    String?
   manufacturer String?
@@ -116,51 +116,52 @@ model FigureRequest {
   notes        String?
   status       String   @default("PENDING")
   productId    String?
-  product      Product? @relation(fields: [productId], references: [id])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  product      Product? @relation(fields: [productId], references: [id])
 
   @@index([email])
   @@index([status])
 }
 
 model VintedAccount {
-  id                String   @id @default(cuid())
-  userId            String   @unique
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String          @id @default(cuid())
+  userId            String          @unique
   username          String
-  rating            Float    @default(0)
-  totalSales        Int      @default(0)
-  positiveFeedback  Int      @default(0)
-  neutralFeedback   Int      @default(0)
-  negativeFeedback  Int      @default(0)
+  encryptedPassword String?
+  rating            Float           @default(0)
+  totalSales        Int             @default(0)
+  positiveFeedback  Int             @default(0)
+  neutralFeedback   Int             @default(0)
+  negativeFeedback  Int             @default(0)
   lastSync          DateTime?
-  isConnected       Boolean  @default(false)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  isConnected       Boolean         @default(false)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listings          VintedListing[]
   orders            VintedOrder[]
   reviews           VintedReview[]
-  listings          VintedListing[]
 
   @@index([userId])
 }
 
 model VintedOrder {
-  id                String   @id @default(cuid())
-  vintedAccountId   String
-  vintedAccount     VintedAccount @relation(fields: [vintedAccountId], references: [id], onDelete: Cascade)
-  vintedOrderId     String   @unique
-  buyerUsername     String
-  itemTitle         String
-  itemPrice         Int      // in cents
-  status            String   // pending, shipped, delivered, cancelled
-  orderDate         DateTime
-  shippedDate       DateTime?
-  deliveredDate     DateTime?
-  trackingNumber    String?
-  trackingUrl       String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id              String        @id @default(cuid())
+  vintedAccountId String
+  vintedOrderId   String        @unique
+  buyerUsername   String
+  itemTitle       String
+  itemPrice       Int
+  status          String
+  orderDate       DateTime
+  shippedDate     DateTime?
+  deliveredDate   DateTime?
+  trackingNumber  String?
+  trackingUrl     String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  vintedAccount   VintedAccount @relation(fields: [vintedAccountId], references: [id], onDelete: Cascade)
 
   @@index([vintedAccountId])
   @@index([status])
@@ -168,68 +169,68 @@ model VintedOrder {
 }
 
 model VintedReview {
-  id                String   @id @default(cuid())
-  vintedAccountId   String
-  vintedAccount     VintedAccount @relation(fields: [vintedAccountId], references: [id], onDelete: Cascade)
-  vintedReviewId    String   @unique
-  buyerUsername     String
-  rating            Int      // 1-5
-  comment           String?
-  orderId           String?
-  reviewDate        DateTime
-  createdAt         DateTime @default(now())
+  id              String        @id @default(cuid())
+  vintedAccountId String
+  vintedReviewId  String        @unique
+  buyerUsername   String
+  rating          Int
+  comment         String?
+  orderId         String?
+  reviewDate      DateTime
+  createdAt       DateTime      @default(now())
+  vintedAccount   VintedAccount @relation(fields: [vintedAccountId], references: [id], onDelete: Cascade)
 
   @@index([vintedAccountId])
   @@index([reviewDate])
 }
 
 model VintedListing {
-  id                String   @id @default(cuid())
-  vintedAccountId   String
-  vintedAccount     VintedAccount @relation(fields: [vintedAccountId], references: [id], onDelete: Cascade)
-  vintedListingId   String   @unique
-  title             String
-  description       String?
-  price             Int      // in cents
-  status            String   // active, sold, inactive
-  size              String?
-  brand             String?
-  category          String?
-  images            String   // JSON array
-  listingUrl        String
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id              String        @id @default(cuid())
+  vintedAccountId String
+  vintedListingId String        @unique
+  title           String
+  description     String?
+  price           Int
+  status          String
+  size            String?
+  brand           String?
+  category        String?
+  images          String
+  listingUrl      String
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  vintedAccount   VintedAccount @relation(fields: [vintedAccountId], references: [id], onDelete: Cascade)
 
   @@index([vintedAccountId])
   @@index([status])
 }
 
 model Discount {
-  id          String   @id @default(cuid())
-  code        String   @unique
-  type        String   // "percentage" | "fixed"
-  value       Int      // percentage (0-100) or fixed amount in cents
-  minOrder    Int      @default(0) // minimum order amount in cents
-  usageLimit  Int?     // maximum number of uses (null = unlimited)
-  usedCount   Int      @default(0)
-  startsAt    DateTime @default(now())
-  expiresAt   DateTime?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  usages      DiscountUsage[]
+  id         String          @id @default(cuid())
+  code       String          @unique
+  type       String
+  value      Int
+  minOrder   Int             @default(0)
+  usageLimit Int?
+  usedCount  Int             @default(0)
+  startsAt   DateTime        @default(now())
+  expiresAt  DateTime?
+  isActive   Boolean         @default(true)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  usages     DiscountUsage[]
 
   @@index([code])
   @@index([isActive])
 }
 
 model DiscountUsage {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id         String   @id @default(cuid())
+  userId     String
   discountId String
-  discount  Discount @relation(fields: [discountId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  discount   Discount @relation(fields: [discountId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, discountId])
   @@index([userId])

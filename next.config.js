@@ -10,6 +10,7 @@ const nextConfig = {
       { protocol: "https", hostname: "img.clerk.com" },
       { protocol: "https", hostname: "lh3.googleusercontent.com" },
       { protocol: "https", hostname: "platform-lookaside.fbsbx.com" },
+      { protocol: "https", hostname: "cdn.suruga-ya.com" },
     ],
     formats: ["image/avif", "image/webp"],
   },
