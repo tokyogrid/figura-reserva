@@ -1,52 +1,47 @@
 import { MetadataRoute } from "next"
 import { prisma } from "@/lib/prisma"
+import { SITE_URL } from "@/lib/utils"
 
-const BASE_URL = "https://tokyogridstore.com"
-
-export const dynamic = "force-dynamic"
+export const revalidate = 3600
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     {
-      url: BASE_URL,
-      lastModified: new Date(),
+      url: `${SITE_URL}`,
       changeFrequency: "daily",
       priority: 1.0,
     },
     {
-      url: `${BASE_URL}/catalog`,
-      lastModified: new Date(),
+      url: `${SITE_URL}/catalog`,
       changeFrequency: "daily",
       priority: 0.9,
     },
     {
-      url: `${BASE_URL}/request`,
-      lastModified: new Date(),
+      url: `${SITE_URL}/request`,
       changeFrequency: "weekly",
       priority: 0.8,
     },
     {
-      url: `${BASE_URL}/how-it-works`,
-      lastModified: new Date(),
+      url: `${SITE_URL}/how-it-works`,
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
-      url: `${BASE_URL}/vinted`,
-      lastModified: new Date(),
+      url: `${SITE_URL}/vinted`,
       changeFrequency: "weekly",
       priority: 0.6,
     },
     {
-      url: `${BASE_URL}/contact`,
-      lastModified: new Date(),
+      url: `${SITE_URL}/contact`,
       changeFrequency: "monthly",
       priority: 0.5,
     },
   ]
 
-  const productRoutes = await prisma.product
-    .findMany({
+  let productRoutes: MetadataRoute.Sitemap = []
+
+  try {
+    const products = await prisma.product.findMany({
       where: {
         status: "AVAILABLE",
         isHidden: false,
@@ -57,14 +52,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
       orderBy: { updatedAt: "desc" },
     })
-    .then((products) =>
-      products.map((product) => ({
-        url: `${BASE_URL}/catalog/${product.slug}`,
-        lastModified: product.updatedAt,
-        changeFrequency: "weekly" as const,
-        priority: 0.7,
-      }))
-    )
+
+    productRoutes = products.map((product) => ({
+      url: `${SITE_URL}/catalog/${product.slug}`,
+      lastModified: product.updatedAt,
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    }))
+  } catch (error) {
+    console.error("[Sitemap] Error fetching products:", error)
+  }
 
   return [...staticRoutes, ...productRoutes]
 }
