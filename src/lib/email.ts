@@ -1,11 +1,12 @@
 import { Resend } from "resend"
+import { getContactEmail, getReplyToEmail, SITE_URL } from "@/lib/utils"
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 const FROM_EMAIL = "Tokyo Grid <noreply@tokyogridstore.com>"
-const SUPPORT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "tokyogridstore@gmail.com"
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || process.env.NEXT_PUBLIC_CONTACT_EMAIL || "tokyogridstore@gmail.com"
-const APP_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+const SUPPORT_EMAIL = getContactEmail() || "tokyogridstore@gmail.com"
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || getContactEmail() || "tokyogridstore@gmail.com"
+const APP_URL = SITE_URL
 // Use a publicly accessible logo URL for emails (localhost won't work in email clients)
 // In production, set NEXT_PUBLIC_LOGO_URL to your CDN/logo URL
 const LOGO_URL = process.env.NEXT_PUBLIC_LOGO_URL || `${APP_URL}/images/logo.png`

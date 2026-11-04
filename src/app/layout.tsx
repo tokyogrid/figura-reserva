@@ -10,11 +10,12 @@ import { CSRFInit } from "@/components/CSRFInit"
 import { siteConfig } from "@/lib/site-config"
 import { Analytics } from "@vercel/analytics/next"
 import { TrustpilotBadge } from "@/components/TrustpilotBadge"
+import { SITE_URL } from "@/lib/utils"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://tokyogridstore.com"),
+  metadataBase: new URL(SITE_URL),
   title: "Tokyo Grid Store | Figuras de Anime Originales de Japón",
   description: "Tienda de figuras oficiales e importaciones exclusivas traídas directamente desde Tokio. Ediciones limitadas, envíos garantizados y embalaje hiperprotegido.",
   keywords: ["figuras anime", "tokyo grid store", "figuras japon", "importacion anime", "akihabara figures"],
@@ -33,12 +34,12 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://tokyogridstore.com",
+    canonical: SITE_URL,
   },
   openGraph: {
     title: "Tokyo Grid Store | Figuras de Anime Originales",
     description: "Importación directa de figuras oficiales desde Japón. Catálogo actualizado y envíos seguros.",
-    url: "https://tokyogridstore.com",
+    url: SITE_URL,
     siteName: "Tokyo Grid Store",
     locale: "es_ES",
     type: "website",

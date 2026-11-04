@@ -1,6 +1,5 @@
 import { MetadataRoute } from "next"
-
-const BASE_URL = "https://tokyogridstore.com"
+import { SITE_URL } from "@/lib/utils"
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -9,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/api/", "/admin/", "/account/", "/checkout/", "/order/", "/login", "/register", "/verify"],
     },
-    sitemap: `${BASE_URL}/sitemap.xml`,
+    sitemap: `${SITE_URL}/sitemap.xml`,
   }
 }

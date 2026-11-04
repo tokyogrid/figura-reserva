@@ -1,6 +1,7 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { prisma } from "@/lib/prisma"
+import { getSession } from "@/lib/auth"
 import { OrderTrackingContent } from "./OrderTrackingContent"
 import { siteConfig } from "@/lib/site-config"
 
@@ -22,6 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function OrderTrackingPage({ params }: Props) {
   const { id } = await params
+  const session = await getSession()
   const order = await prisma.order.findUnique({
     where: { id },
     include: {
@@ -32,6 +34,11 @@ export default async function OrderTrackingPage({ params }: Props) {
   })
 
   if (!order) {
+    notFound()
+  }
+
+  // Check if user is authenticated and order belongs to them
+  if (session && order.email !== session.email) {
     notFound()
   }
 

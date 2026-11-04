@@ -4,6 +4,7 @@ import { createCheckoutSession } from "@/lib/stripe"
 import { checkCSRF } from "@/lib/csrf"
 import { getSessionFromRequest } from "@/lib/auth"
 import { rateLimit } from "@/lib/rate-limit"
+import { SITE_URL } from "@/lib/utils"
 
 function generateVintedCode(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
@@ -164,11 +165,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Crear sesión de Stripe enviando orderId en la metadata
-    const session = await createCheckoutSession({
-      items: stripeItems,
-      customerEmail: email,
-      successUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancelUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout?canceled=true`,
+const session = await createCheckoutSession({
+        items: stripeItems,
+        customerEmail: email,
+        successUrl: `${SITE_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancelUrl: `${SITE_URL}/checkout?canceled=true`,
       metadata: {
         orderId,
         customerName,

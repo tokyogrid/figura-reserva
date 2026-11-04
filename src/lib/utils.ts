@@ -1,9 +1,20 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://tokyogridstore.com"
+const FALLBACK_SITE_URL = "https://tokyogridstore.com"
+const FALLBACK_CONTACT_EMAIL = "tokyogridstore@gmail.com"
 
-export const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "tokyogridstore@gmail.com"
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || FALLBACK_SITE_URL
+
+export function getContactEmail(): string | null {
+  if (!process.env.NEXT_PUBLIC_CONTACT_EMAIL) return null
+  return process.env.NEXT_PUBLIC_CONTACT_EMAIL
+}
+
+export function getReplyToEmail(): string | null {
+  if (!process.env.REPLY_TO_EMAIL) return null
+  return process.env.REPLY_TO_EMAIL
+}
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
