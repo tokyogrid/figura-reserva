@@ -9,6 +9,12 @@ export default function DebugPage() {
   const router = useRouter()
   const [isMounted, setIsMounted] = useState(false)
 
+  const [session, setSession] = useState<{authenticated: boolean, session: any, error?: string} | null>(null)
+  const [email, setEmail] = useState("dapo0770@gmail.com")
+  const [password, setPassword] = useState("RisuGuillermo13")
+  const [result, setResult] = useState("")
+  const [loading, setLoading] = useState(false)
+
   // Only allow in development - check on client side
   useEffect(() => {
     setIsMounted(true)
@@ -16,16 +22,6 @@ export default function DebugPage() {
       router.push("/admin")
     }
   }, [router])
-
-  if (!isMounted || process.env.NODE_ENV === "production") {
-    return null
-  }
-
-  const [session, setSession] = useState<{authenticated: boolean, session: any, error?: string} | null>(null)
-  const [email, setEmail] = useState("dapo0770@gmail.com")
-  const [password, setPassword] = useState("RisuGuillermo13")
-  const [result, setResult] = useState("")
-  const [loading, setLoading] = useState(false)
 
   const checkAuth = async () => {
     try {
@@ -35,6 +31,12 @@ export default function DebugPage() {
     } catch (e) {
       setSession({ authenticated: false, session: null, error: String(e) })
     }
+  }
+
+  useEffect(() => { checkAuth() }, [])
+
+  if (!isMounted || process.env.NODE_ENV === "production") {
+    return null
   }
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -59,8 +61,6 @@ export default function DebugPage() {
       setLoading(false)
     }
   }
-
-  useEffect(() => { checkAuth() }, [])
 
   return (
     <div style={{ padding: "40px", maxWidth: "800px", margin: "0 auto", fontFamily: "system-ui" }}>

@@ -72,7 +72,7 @@ export default function ContactPage() {
             </div>
             <h1 className="text-2xl font-bold text-white mb-2">Contact Support</h1>
             <p className="text-gray-400">
-              Forgot your password? Need help with your account? Fill out the form below and we'll get back to you via email.
+              Forgot your password? Need help with your account? Fill out the form below and we&apos;ll get back to you via email.
             </p>
           </CardHeader>
           <CardContent className="bg-gray-900/30">
@@ -145,7 +145,7 @@ export default function ContactPage() {
               </Button>
 
               <p className="text-center text-sm text-gray-500 mt-4">
-                We'll respond within 24-48 hours. For urgent issues, check your spam folder.
+                We&apos;ll respond within 24-48 hours. For urgent issues, check your spam folder.
               </p>
             </form>
           </CardContent>

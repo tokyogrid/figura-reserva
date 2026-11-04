@@ -3,9 +3,9 @@ import { Resend } from "resend"
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 const FROM_EMAIL = "Tokyo Grid <noreply@tokyogridstore.com>"
-const SUPPORT_EMAIL = "tokyogridstore@gmail.com"
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL!
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
+const SUPPORT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "tokyogridstore@gmail.com"
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || process.env.NEXT_PUBLIC_CONTACT_EMAIL || "tokyogridstore@gmail.com"
+const APP_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
 // Use a publicly accessible logo URL for emails (localhost won't work in email clients)
 // In production, set NEXT_PUBLIC_LOGO_URL to your CDN/logo URL
 const LOGO_URL = process.env.NEXT_PUBLIC_LOGO_URL || `${APP_URL}/images/logo.png`
@@ -25,6 +25,7 @@ function emailTemplate({ title, preheader, children, footerText = "Tokyo Grid - 
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>${title}</title>
     </head>
     <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f3f4f6;">
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
@@ -54,7 +55,7 @@ function emailTemplate({ title, preheader, children, footerText = "Tokyo Grid - 
             <p style="margin: 0 0 16px; color: #6b7280; font-size: 13px;">${footerText}</p>
             <p style="margin: 0; color: #9ca3af; font-size: 12px;">
               <a href="${APP_URL}" style="color: #6366f1; text-decoration: none;">${APP_URL}</a> · 
-              <a href="mailto:tokyogridstore@gmail.com" style="color: #6366f1; text-decoration: none;">Contact Support</a>
+              <a href="mailto:${SUPPORT_EMAIL}" style="color: #6366f1; text-decoration: none;">Contact Support</a>
             </p>
           </td>
         </tr>
@@ -168,7 +169,7 @@ export async function sendAdminFigureRequestEmail({
 
   await resend.emails.send({
     from: FROM_EMAIL,
-    to: process.env.ADMIN_EMAIL!,
+    to: ADMIN_EMAIL,
     subject: `New Figure Request: ${requestId}`,
     html: emailTemplate({
       title: "New Figure Request",
@@ -202,7 +203,7 @@ export async function sendAdminFigureRequestEmail({
             </tr>
           </table>
         </div>
-        ${button({ text: "View in Admin", url: `${process.env.NEXT_PUBLIC_APP_URL}/admin/requests/${requestId}`, color: "#6366f1" })}
+        ${button({ text: "View in Admin", url: `${APP_URL}/admin/requests/${requestId}`, color: "#6366f1" })}
       `,
     }),
   })
@@ -234,14 +235,16 @@ export async function sendOrderConfirmationEmail({
         <p style="margin: 0 0 24px; color: #374151; font-size: 16px; line-height: 1.6;">Thank you for your order! Your payment has been processed successfully.</p>
         
         <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 20px; margin: 24px 0;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #dcfce7;">
-            <span style="color: #166534; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Order ID</span>
-            <span style="color: #1f2937; font-size: 16px; font-weight: 700; font-family: monospace;">${orderId}</span>
-          </div>
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="color: #166534; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Total Paid</span>
-            <span style="color: #166534; font-size: 22px; font-weight: 700;">${formatPrice(total)}</span>
-          </div>
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+            <tr>
+              <td style="color: #166534; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; padding-bottom: 8px;">Order ID</td>
+              <td style="text-align: right; color: #1f2937; font-size: 16px; font-weight: 700; font-family: monospace; padding-bottom: 8px;">${orderId}</td>
+            </tr>
+            <tr>
+              <td style="color: #166534; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; border-top: 1px solid #dcfce7; padding-top: 8px;">Total Paid</td>
+              <td style="text-align: right; color: #166534; font-size: 22px; font-weight: 700; border-top: 1px solid #dcfce7; padding-top: 8px;">${formatPrice(total)}</td>
+            </tr>
+          </table>
         </div>
 
         <h2 style="margin: 32px 0 16px; color: #1f2937; font-size: 18px; font-weight: 600;">Order Items</h2>
@@ -345,7 +348,7 @@ export async function sendAdminNewOrderEmail({
           <p style="margin: 0; color: #374151; font-size: 18px; font-weight: 700;">Total: <span style="color: #1f2937;">${formatPrice(total)}</span></p>
         </div>
 
-        ${button({ text: "View in Admin", url: `${process.env.NEXT_PUBLIC_APP_URL}/admin/orders/${orderId}`, color: "#6366f1" })}
+        ${button({ text: "View in Admin", url: `${APP_URL}/admin/orders/${orderId}`, color: "#6366f1" })}
       `,
     }),
   })
@@ -362,7 +365,7 @@ export async function sendAdminPaymentFailedEmail({
 }) {
   await resend.emails.send({
     from: FROM_EMAIL,
-    to: "tokyogridstore@gmail.com",
+    to: ADMIN_EMAIL,
     subject: `⚠️ Payment Failed: ${orderId}`,
     html: emailTemplate({
       title: "Payment Failed",
@@ -383,7 +386,7 @@ export async function sendAdminPaymentFailedEmail({
           </table>
         </div>
         <p style="margin: 0 0 24px; color: #374151; font-size: 16px; line-height: 1.6;">The payment for this order has failed. Stock has been released.</p>
-        ${button({ text: "View in Admin", url: `${process.env.NEXT_PUBLIC_APP_URL}/admin/orders/${orderId}`, color: "#dc2626" })}
+        ${button({ text: "View in Admin", url: `${APP_URL}/admin/orders/${orderId}`, color: "#dc2626" })}
       `,
     }),
   })
@@ -400,7 +403,7 @@ export async function sendAdminOrderCancelledEmail({
 }) {
   await resend.emails.send({
     from: FROM_EMAIL,
-    to: "tokyogridstore@gmail.com",
+    to: ADMIN_EMAIL,
     subject: `❌ Order Cancelled: ${orderId}`,
     html: emailTemplate({
       title: "Order Cancelled",
@@ -421,7 +424,7 @@ export async function sendAdminOrderCancelledEmail({
           </table>
         </div>
         <p style="margin: 0 0 24px; color: #374151; font-size: 16px; line-height: 1.6;">Order was cancelled (session expired). Stock has been released.</p>
-        ${button({ text: "View in Admin", url: `${process.env.NEXT_PUBLIC_APP_URL}/admin/orders/${orderId}`, color: "#dc2626" })}
+        ${button({ text: "View in Admin", url: `${APP_URL}/admin/orders/${orderId}`, color: "#dc2626" })}
       `,
     }),
   })
@@ -507,7 +510,7 @@ export async function sendContactEmail({
   })
 }
 
-// Send support ticket email to tokyogridstore@gmail.com
+// Send support ticket email to contact email
 export async function sendSupportTicketEmail({
   ticketId,
   name,
@@ -531,7 +534,7 @@ export async function sendSupportTicketEmail({
 
   await resend.emails.send({
     from: FROM_EMAIL,
-    to: "tokyogridstore@gmail.com",
+    to: ADMIN_EMAIL,
     subject: `[Ticket ${ticketId}] ${subjectLabel}`,
     html: emailTemplate({
       title: "New Support Ticket",
@@ -647,8 +650,6 @@ export async function sendOrderStatusUpdateEmail({
     PURCHASING_VINTED: "#8b5cf6",
   }
 
-  const formatPrice = (cents: number) => new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(cents / 100)
-
   const statusColor = statusColors[newStatus] || "#6b7280"
   const statusLabel = statusLabels[newStatus] || newStatus
   const oldStatusLabel = statusLabels[oldStatus] || oldStatus
@@ -702,11 +703,11 @@ export async function sendOrderStatusUpdateEmail({
         <p style="margin: 24px 0 16px; color: #374151; font-size: 16px; line-height: 1.6;">Hi ${customerName},</p>
         <p style="margin: 0 0 24px; color: #374151; font-size: 16px; line-height: 1.6;">Your order <strong>${orderId}</strong> status has been updated:</p>
         
-        <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin: 24px 0; padding: 20px; background: white; border-radius: 12px; border: 1px solid #e5e7eb; flex-wrap: wrap;">
-          <span style="font-size: 14px; color: #6b7280; line-height: 1;">From:</span>
-          <span style="font-weight: 600; color: #374151; font-size: 15px; line-height: 1;">${oldStatusLabel}</span>
-          <span style="color: ${statusColor}; font-size: 20px; font-weight: 700; line-height: 1; display: inline-flex; align-items: center;">→</span>
-          <span style="font-weight: 700; color: ${statusColor}; font-size: 15px; line-height: 1;">${statusLabel}</span>
+        <div style="margin: 24px 0; padding: 20px; background: white; border-radius: 12px; border: 1px solid #e5e7eb; text-align: center;">
+          <span style="font-size: 14px; color: #6b7280;">From: </span>
+          <span style="font-weight: 600; color: #374151; font-size: 15px;">${oldStatusLabel}</span>
+          <span style="color: ${statusColor}; font-size: 20px; font-weight: 700; margin: 0 8px;">→</span>
+          <span style="font-weight: 700; color: ${statusColor}; font-size: 15px;">${statusLabel}</span>
         </div>
         
         ${vintedInfo}
@@ -715,7 +716,7 @@ export async function sendOrderStatusUpdateEmail({
         ${itemsHtml}
         
         <p style="margin-top: 24px; text-align: center;">
-          <a href="${process.env.NEXT_PUBLIC_APP_URL}/order/${orderId}" style="display: inline-block; color: #6366f1; font-weight: 600; text-decoration: none; font-size: 14px;">Track your order →</a>
+          <a href="${APP_URL}/order/${orderId}" style="display: inline-block; color: #6366f1; font-weight: 600; text-decoration: none; font-size: 14px;">Track your order →</a>
         </p>
       `,
     }),
@@ -784,11 +785,11 @@ export async function sendRequestStatusUpdateEmail({
         <p style="margin: 24px 0 16px; color: #374151; font-size: 16px; line-height: 1.6;">Hi ${name},</p>
         <p style="margin: 0 0 24px; color: #374151; font-size: 16px; line-height: 1.6;">Your figure request <strong>${requestId}</strong> status has been updated:</p>
         
-        <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin: 24px 0; padding: 20px; background: white; border-radius: 12px; border: 1px solid #e5e7eb; flex-wrap: wrap;">
-          <span style="font-size: 14px; color: #6b7280; line-height: 1;">From:</span>
-          <span style="font-weight: 600; color: #374151; font-size: 15px; line-height: 1;">${oldStatusLabel}</span>
-          <span style="color: ${statusColor}; font-size: 20px; font-weight: 700; line-height: 1; display: inline-flex; align-items: center;">→</span>
-          <span style="font-weight: 700; color: ${statusColor}; font-size: 15px; line-height: 1;">${statusLabel}</span>
+        <div style="margin: 24px 0; padding: 20px; background: white; border-radius: 12px; border: 1px solid #e5e7eb; text-align: center;">
+          <span style="font-size: 14px; color: #6b7280;">From: </span>
+          <span style="font-weight: 600; color: #374151; font-size: 15px;">${oldStatusLabel}</span>
+          <span style="color: ${statusColor}; font-size: 20px; font-weight: 700; margin: 0 8px;">→</span>
+          <span style="font-weight: 700; color: ${statusColor}; font-size: 15px;">${statusLabel}</span>
         </div>
         
         <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; margin: 24px 0;">
@@ -798,7 +799,7 @@ export async function sendRequestStatusUpdateEmail({
         </div>
         
         <p style="margin-top: 24px; text-align: center;">
-          <a href="${process.env.NEXT_PUBLIC_APP_URL}/account/requests/${requestId}" style="display: inline-block; color: #6366f1; font-weight: 600; text-decoration: none; font-size: 14px;">Track your request →</a>
+          <a href="${APP_URL}/account/requests/${requestId}" style="display: inline-block; color: #6366f1; font-weight: 600; text-decoration: none; font-size: 14px;">Track your request →</a>
         </p>
       `,
     }),

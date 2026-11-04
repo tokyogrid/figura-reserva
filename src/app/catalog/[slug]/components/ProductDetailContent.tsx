@@ -332,7 +332,7 @@ export const ProductDetailContent = ({
                 <div className="flex items-center justify-center gap-6 text-sm text-gray-400 pt-4 border-t border-gray-800">
                   <div className="flex items-center gap-2">
                     <Truck className="h-4 w-4" aria-hidden="true" />
-                    <span>Shipping 4.99€ (free >100€)</span>
+                    <span>Shipping 4.99€ (free &gt;100€)</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Shield className="h-4 w-4" aria-hidden="true" />
@@ -359,7 +359,7 @@ export const ProductDetailContent = ({
                   <Shield className="h-5 w-5" aria-hidden="true" />
                 </div>
                 <p className="font-medium text-white">Secure</p>
-                <p className="text-xs text-gray-500">Refund if we can't get the figure</p>
+                <p className="text-xs text-gray-500">Refund if we can&apos;t get the figure</p>
               </div>
               <div className="p-4 rounded-xl bg-gray-900/50 border border-gray-800/50">
                 <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 text-purple-400 mb-2">

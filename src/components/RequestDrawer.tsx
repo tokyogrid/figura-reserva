@@ -460,7 +460,7 @@ export function RequestDrawer({ isOpen, onClose }: RequestDrawerProps) {
               <h3 className="text-lg font-bold text-white">Imágenes de Referencia</h3>
             </div>
 
-            <p className="text-sm text-gray-400 mb-4">Haz clic en "Añadir imagen" o arrastra archivos (JPEG/PNG/WebP, máx 10MB c/u, máx 10 imgs)</p>
+            <p className="text-sm text-gray-400 mb-4">Haz clic en &quot;Añadir imagen&quot; o arrastra archivos (JPEG/PNG/WebP, máx 10MB c/u, máx 10 imgs)</p>
 
             {/* Renderizado dinámico de previsualizaciones de imagen */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">

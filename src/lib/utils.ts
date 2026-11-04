@@ -3,6 +3,8 @@ import { twMerge } from "tailwind-merge"
 
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://tokyogridstore.com"
 
+export const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "tokyogridstore@gmail.com"
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }

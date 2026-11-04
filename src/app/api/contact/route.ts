@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
       data: { name, email, subject, message, status: "OPEN" },
     })
 
-    // Send email to tokyogridstore@gmail.com
+    // Send email to support email
     await sendSupportTicketEmail({
       ticketId: ticket.id.slice(0, 8).toUpperCase(),
       name,

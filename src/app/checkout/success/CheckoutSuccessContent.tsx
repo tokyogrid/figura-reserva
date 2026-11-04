@@ -155,7 +155,7 @@ export function CheckoutSuccessContent({ order }: Props) {
               ))}
             </ol>
             <p className="mt-4 text-sm text-blue-700 dark:text-blue-300">
-              We'll notify you by email at each step. Questions? Reply to the confirmation email.
+              We&apos;ll notify you by email at each step. Questions? Reply to the confirmation email.
             </p>
           </CardContent>
         </Card>

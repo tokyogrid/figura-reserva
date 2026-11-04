@@ -163,12 +163,12 @@ const digits = pasted.split("")
                   disabled={loading}
                   className="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium"
                 >
-                  Didn't receive the code? Resend
+                  Didn&apos;t receive the code? Resend
                 </button>
               </div>
 
               <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
-                Code expires in 15 minutes. Didn't receive it? Check spam folder.
+                Code expires in 15 minutes. Didn&apos;t receive it? Check spam folder.
               </p>
             </div>
           </form>

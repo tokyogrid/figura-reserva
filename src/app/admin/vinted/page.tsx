@@ -360,7 +360,7 @@ export default function VintedPage() {
                   <div className="p-8 text-center">
                     <Package className="h-16 w-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No orders synced</h3>
-                    <p className="text-gray-500 dark:text-gray-400">Click "Refresh Data" to sync orders from Vinted</p>
+                    <p className="text-gray-500 dark:text-gray-400">Click &quot;Refresh Data&quot; to sync orders from Vinted</p>
                   </div>
                 ) : (
                   <div className="overflow-x-auto">
@@ -421,7 +421,7 @@ export default function VintedPage() {
                   <div className="p-8 text-center">
                     <MessageSquare className="h-16 w-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No reviews synced</h3>
-                    <p className="text-gray-500 dark:text-gray-400">Click "Refresh Data" to sync reviews from Vinted</p>
+                    <p className="text-gray-500 dark:text-gray-400">Click &quot;Refresh Data&quot; to sync reviews from Vinted</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -467,7 +467,7 @@ export default function VintedPage() {
                   <div className="p-8 text-center">
                     <Store className="h-16 w-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No listings synced</h3>
-                    <p className="text-gray-500 dark:text-gray-400">Click "Refresh Data" to sync listings from Vinted</p>
+                    <p className="text-gray-500 dark:text-gray-400">Click &quot;Refresh Data&quot; to sync listings from Vinted</p>
                   </div>
                 ) : (
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">

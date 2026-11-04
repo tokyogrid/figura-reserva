@@ -67,7 +67,7 @@ export async function sendNewOrderTelegram({
 📋 <b>Items:</b>
 ${itemsText}
 
-🔗 <a href="${process.env.NEXT_PUBLIC_APP_URL}/admin/orders/${orderId}">View in Admin</a>
+🔗 <a href="${process.env.NEXT_PUBLIC_SITE_URL}/admin/orders/${orderId}">View in Admin</a>
 `
 
   return sendTelegramMessage(text)
@@ -104,7 +104,7 @@ ${series ? `📺 <b>Series:</b> ${series}` : ""}
 ${manufacturer ? `🏭 <b>Manufacturer:</b> ${manufacturer}` : ""}
 ${scale ? `📏 <b>Scale:</b> ${scale}` : ""}
 
-🔗 <a href="${process.env.NEXT_PUBLIC_APP_URL}/admin/requests/${requestId}">View in Admin</a>
+🔗 <a href="${process.env.NEXT_PUBLIC_SITE_URL}/admin/requests/${requestId}">View in Admin</a>
 `
 
   return sendTelegramMessage(text)

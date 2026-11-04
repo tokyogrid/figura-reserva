@@ -87,9 +87,9 @@ export default function RequestPage() {
                 <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-white/10 mb-4 animate-pulse-slow">
                   <Search className="h-8 w-8" aria-hidden="true" />
                 </div>
-                <h2 className="text-3xl sm:text-4xl font-bold mb-4">Can't Find Your Figure?</h2>
+                <h2 className="text-3xl sm:text-4xl font-bold mb-4">Can&apos;t Find Your Figure?</h2>
                 <p className="text-pink-100 mb-8 max-w-xl mx-auto text-lg">
-                  Request it and we'll search our Japan suppliers. If found, you get priority to reserve.
+                  Request it and we&apos;ll search our Japan suppliers. If found, you get priority to reserve.
                 </p>
                 <Button 
                   onClick={() => setDrawerOpen(true)} 

@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/Badge"
 import { formatPrice } from "@/lib/utils"
 import { Truck, Mail, User, MapPin, Phone, CreditCard, Clock, CheckCircle, Package, Sparkles, ArrowRight } from "lucide-react"
 import { siteConfig } from "@/lib/site-config"
-import { ORDER_STATUS_LABELS, ORDER_STATUS_COLORS, VINTED_ORDER_STATUS_LABELS, VINTED_ORDER_STATUS_COLORS } from "@/lib/utils"
+import { ORDER_STATUS_LABELS, ORDER_STATUS_COLORS, VINTED_ORDER_STATUS_LABELS, VINTED_ORDER_STATUS_COLORS, CONTACT_EMAIL } from "@/lib/utils"
 
 interface Order {
   id: string
@@ -169,7 +169,7 @@ export function OrderTrackingContent({ order }: Props) {
                   <Truck className="h-4 w-4" aria-hidden="true" />
                   Shipping Information
                 </h4>
-                <p className="text-purple-300">Your package is on the way. You'll receive the tracking number by email.</p>
+                <p className="text-purple-300">Your package is on the way. You&apos;ll receive the tracking number by email.</p>
               </div>
             )}
           </CardContent>
@@ -268,10 +268,10 @@ export function OrderTrackingContent({ order }: Props) {
               Need Help?
             </h3>
             <p className="text-purple-300 mb-4">
-              Reply to the confirmation email or write to <a href="mailto:tokyogridstore@gmail.com" className="underline">tokyogridstore@gmail.com</a>. We reply within 24h.
+              Reply to the confirmation email or write to <a href={`mailto:${CONTACT_EMAIL}`} className="underline">{CONTACT_EMAIL}</a>. We reply within 24h.
             </p>
             <div className="flex flex-wrap gap-3">
-              <Button variant="secondary" onClick={() => window.open(`mailto:tokyogridstore@gmail.com?subject=Order ${order.id.slice(0, 8)}`)} className="gap-2">
+              <Button variant="secondary" onClick={() => window.open(`mailto:${CONTACT_EMAIL}?subject=Order ${order.id.slice(0, 8)}`)} className="gap-2">
                 <Mail className="h-4 w-4" aria-hidden="true" />
                 Contact Support
               </Button>

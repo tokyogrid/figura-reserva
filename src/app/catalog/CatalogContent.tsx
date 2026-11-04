@@ -262,7 +262,7 @@ export function CatalogContent() {
             <div className="flex items-center gap-2 flex-wrap">
               {search && (
                 <Badge variant="outline" className="gap-1 bg-gray-800/50 border-gray-700 text-gray-200 hover:bg-gray-700">
-                  Search: "{search}"
+                  Search: &quot;{search}&quot;
                   <button
                     type="button"
                     onClick={() => { setSearch(""); fetchProducts({ search: "", category, series, inStockOnly, sort }); }}
@@ -339,8 +339,8 @@ export function CatalogContent() {
         ) : showNoResultsForSeries ? (
           <div className="text-center py-16 animate-fade-in">
             <Package className="h-16 w-16 mx-auto text-gray-600 mb-4" aria-hidden="true" />
-            <h3 className="text-xl font-medium text-white mb-2">No figures found for "{appliedSeries}"</h3>
-            <p className="text-gray-500 mb-6">We don't have any figures from this series in our catalog yet.</p>
+            <h3 className="text-xl font-medium text-white mb-2">No figures found for &quot;{appliedSeries}&quot;</h3>
+            <p className="text-gray-500 mb-6">We don&apos;t have any figures from this series in our catalog yet.</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button variant="outline" onClick={clearFilters} className="gap-2 bg-gray-800/50 border-gray-700 text-gray-200 hover:bg-gray-700">
                 <RotateCcw className="h-4 w-4" aria-hidden="true" />
@@ -358,7 +358,7 @@ export function CatalogContent() {
           <div className="text-center py-16 animate-fade-in">
             <Package className="h-16 w-16 mx-auto text-gray-600 mb-4" aria-hidden="true" />
             <h3 className="text-xl font-medium text-white mb-2">No figures match your search</h3>
-            <p className="text-gray-500 mb-6">We couldn't find any figures matching "{search || category || (inStockOnly ? 'in stock only' : '')}".</p>
+            <p className="text-gray-500 mb-6">We couldn&apos;t find any figures matching &quot;{search || category || (inStockOnly ? 'in stock only' : '')}&quot;.</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button variant="outline" onClick={clearFilters} className="gap-2 bg-gray-800/50 border-gray-700 text-gray-200 hover:bg-gray-700">
                 <RotateCcw className="h-4 w-4" aria-hidden="true" />

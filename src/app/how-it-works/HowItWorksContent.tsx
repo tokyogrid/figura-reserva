@@ -141,7 +141,7 @@ export function HowItWorksContent() {
             <CardContent className="p-8 md:p-12">
               <h2 className="text-3xl font-bold mb-4">Ready to Get Your Figure?</h2>
               <p className="text-pink-100 mb-8 max-w-xl mx-auto">
-                Browse the catalog or request it if you can't find it. No commitment, no risk.
+                Browse the catalog or request it if you can&apos;t find it. No commitment, no risk.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Link href="/catalog">
