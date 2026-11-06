@@ -1,0 +1,213 @@
+{
+  "nav": {
+    "catalog": "Catálogo",
+    "request": "Solicitar figura",
+    "howItWorks": "Cómo funciona",
+    "vinted": "Nuestro Vinted"
+  },
+  "hero": {
+    "badge": "Nuevo: Reserva figuras de anime de Japón sin riesgo",
+    "title": "Tus figuras de anime sin salir de casa",
+    "subtitle": "Tú eliges, nosotros compramos en Japón, tú recibes. Sin sorpresas.",
+    "ctaPrimary": "Ver catálogo",
+    "ctaSecondary": "Solicitar figura"
+  },
+  "features": [
+    {
+      "icon": "Banknote",
+      "title": "Precios de Japón",
+      "description": "Compramos directo a proveedores japoneses. Sin intermediarios, ahorras hasta un 40%.",
+      "titleColor": "text-purple-900"
+    },
+    {
+      "icon": "Shield",
+      "title": "Reserva segura",
+      "description": "Pagas al reservar por Stripe. Si no conseguimos la figura, te devolvemos el dinero.",
+      "titleColor": "text-purple-900"
+    },
+    {
+      "icon": "Truck",
+      "title": "Envío a tu puerta",
+      "description": "Recibimos en España, inspeccionamos y enviamos por correo certificado (4,99 €, gratis desde 100 €).",
+      "titleColor": "text-purple-900"
+    },
+    {
+      "icon": "Package",
+      "title": "También en Vinted",
+      "description": "¿Prefieres Vinted? Publicamos la figura en tu cuenta y gestionamos la venta por ti.",
+      "titleColor": "text-purple-900"
+    }
+  ],
+  "howItWorks": {
+    "title": "Cómo funciona",
+    "subtitle": "Eliges tu figura, eliges cómo comprarla, nosotros nos ocupamos del resto",
+    "steps": [
+      {
+        "number": 1,
+        "icon": "Search",
+        "title": "Elige tu figura",
+        "description": "Explora nuestro catálogo de figuras disponibles desde Japón, o solicita cualquier figura que no esté en el catálogo. Buscamos en nuestros proveedores de Akihabara, Nakano y tiendas online.",
+        "details": [
+          "Stock en tiempo real de proveedores de Japón",
+          "Solicita figuras que no estén en catálogo",
+          "Precios en EUR, sin conversión de moneda",
+          "Fotos, especificaciones y disponibilidad antes de decidir"
+        ]
+      },
+      {
+        "number": 2,
+        "icon": "CreditCard",
+        "title": "Reserva y elige cómo comprarla",
+        "description": "Reserva tu figura pagando un depósito por Stripe (tarjeta, Apple Pay, Google Pay). Luego eliges cómo quieres recibirla:",
+        "details": [
+          "Pago 100 % seguro con Stripe (PCI DSS)",
+          "Reembolso automático si no conseguimos la figura",
+          "Confirmación inmediata por email con los detalles del pedido"
+        ]
+      },
+      {
+        "number": 3,
+        "icon": "Package",
+        "title": "Opción A — Compra directa (te la enviamos nosotros)",
+        "description": "Compramos la figura en Japón, la recibimos en nuestro almacén en España, la inspeccionamos a fondo y te la enviamos a tu puerta por correo certificado con seguimiento y seguro (4,99 €, gratis desde 100 €).",
+        "details": [
+          "Compramos en tiendas japonesas y tiendas online",
+          "Inspección: caja, figura, accesorios, hologramas de autenticidad",
+          "Fotos de la figura real antes de enviarla",
+          "Correo certificado con seguimiento, seguro hasta 500 €",
+          "Devoluciones en 14 días si no te convence",
+          "En stock: envío en 24-48 h | Sin stock: 10-20 días"
+        ]
+      },
+      {
+        "number": 4,
+        "icon": "Package",
+        "title": "Opción B — Compra en Vinted (nosotros la publicamos)",
+        "description": "¿Prefieres comprar en Vinted? Publicamos la figura en nuestra cuenta Vinted de Tokyo Grid al precio acordado. Pagáis una pequeña comisión de reserva en nuestra web (se descuenta del precio final en Vinted). Cuando la publiquemos, te avisamos por email con el enlace directo para comprar en Vinted.",
+        "details": [
+          "Comisión de reserva en nuestra web (5-15 € según figura)",
+          "La comisión se descuenta del precio final en Vinted",
+          "Publicamos en nuestra cuenta Vinted verificada de Tokyo Grid",
+          "Recibes email con enlace directo al anuncio en Vinted",
+          "Completa la compra en Vinted (protegido por la protección al comprador de Vinted)",
+          "Nosotros gestionamos el envío desde nuestra dirección en España",
+          "Misma inspección y fotos que la Opción A"
+        ]
+      },
+      {
+        "number": 5,
+        "icon": "Truck",
+        "title": "Recibe tu figura",
+        "description": "Tanto si elegiste la Opción A como la B, la figura sale de nuestra dirección en España. Recibes correo certificado con seguimiento, seguro y la misma inspección de calidad. ¡Disfruta de tu figura original de Japón!",
+        "details": [
+          "Correo certificado con seguimiento y seguro",
+          "Entrega en 24-48 h (península)",
+          "Devoluciones en 14 días si no te convence",
+          "Autenticidad garantizada: caja original, hologramas, accesorios",
+          "Soporte por email para cualquier duda"
+        ]
+      }
+    ],
+    "comparison": {
+      "title": "¿Por qué no comprar directo en Vinted/Wallapop?",
+      "subtitle": "Diferencias clave entre reventa y reserva directa",
+      "headers": ["Aspecto", "Vinted / Wallapop", "Tokyo Grid"],
+      "rows": [
+        ["Precio", "+50-200 % sobre precio Japón", "Precio Japón + pequeño margen"],
+        ["Autenticidad", "Riesgo de bootlegs/fakes", "100 % original, tiendas oficiales"],
+        ["Estado", "Fotos a veces engañosas", "Te enviamos fotos reales antes de enviar"],
+        ["Garantía", "Ninguna (venta privada)", "Devoluciones 14 días + seguro de envío"],
+        ["Disponibilidad", "Solo lo que ya está en España", "Acceso a catálogo completo de Japón"],
+        ["Exclusivas", "Imposibles de conseguir", "Podemos conseguir exclusivas de evento/tienda"]
+      ]
+    },
+    "faq": [
+      {
+        "q": "¿Es seguro pagar por adelantado?",
+        "a": "Sí. Usamos Stripe (el mismo que Shopify, Amazon). Tu dinero se retiene hasta que confirmamos la compra. Si no conseguimos la figura, Stripe te reembolsa automáticamente a tu tarjeta en 5-10 días laborables."
+      },
+      {
+        "q": "¿Cuánto tarda en llegar la figura?",
+        "a": "Depende de la disponibilidad en Japón. Normalmente 2-3 semanas desde el pago: 1-2 semanas para comprar y recibir en España + 1 semana para enviártela. Te avisamos en cada paso."
+      },
+      {
+        "q": "¿Qué pasa si la figura llega dañada o equivocada?",
+        "a": "Devoluciones en 14 días (gastos de vuelta a nuestro cargo si el error es nuestro). Inspeccionamos antes de enviar y te mandamos fotos. Si se daña en el transporte, el seguro del correo cubre hasta 500 €."
+      },
+      {
+        "q": "¿Pido figuras que no están en el catálogo?",
+        "a": "¡Por supuesto! Usa el formulario 'Solicitar figura'. Buscamos en nuestros proveedores y, si la encontramos, te avisamos con precio y fotos. Tienes prioridad para reservar antes de que salga al catálogo."
+      },
+      {
+        "q": "¿Las figuras son 100 % auténticas?",
+        "a": "Sí. Solo compramos en tiendas oficiales y retailers japoneses. Nunca en mercados de segunda mano dudosos. Cada figura viene con su caja original, hologramas de autenticidad y accesorios completos."
+      }
+    ],
+    "catalog": {
+      "title": "Catálogo de figuras",
+      "subtitle": "Encuentra tu figura perfecta y resérvala al precio de Japón",
+      "searchPlaceholder": "Busca por nombre, personaje, serie...",
+      "categoryPlaceholder": "Categoría",
+      "seriesPlaceholder": "Serie / Anime",
+      "inStockOnly": "Solo en stock",
+      "sortOptions": [
+        { "value": "featured", "label": "Destacados" },
+        { "value": "price-asc", "label": "Precio: de menor a mayor" },
+        { "value": "price-desc", "label": "Precio: de mayor a menor" },
+        { "value": "newest", "label": "Más nuevos" },
+        { "value": "name", "label": "A-Z" }
+      ],
+      "noResults": "No se han encontrado figuras",
+      "noResultsDesc": "Prueba a cambiar los filtros o busca otra cosa",
+      "clearFilters": "Limpiar filtros",
+      "loading": "Cargando..."
+    },
+    "product": {
+      "addToCart": "Reservar ahora",
+      "buyNow": "Comprar ahora",
+      "outOfStock": "Agotado",
+      "lowStock": "Pocas unidades - {count} disponibles",
+      "preOrder": "Pre-order (10-15 días)",
+      "quantity": "Cantidad",
+      "maxAvailable": "Máx {max} unidad(es) disponible(s)",
+      "shippingInfo": "Envío 4,99 € (gratis desde 100 €)",
+      "securePayment": "Pago seguro Stripe",
+      "returns": "Devoluciones 14 días",
+      "authentic": "Auténtico",
+      "authenticDesc": "Comprado en tiendas oficiales JP",
+      "secure": "Seguro",
+      "secureDesc": "Reembolso si no lo conseguimos",
+      "fast": "Rápido",
+      "fastDesc": "Enviado 24-48 h tras recibirlo"
+    },
+    "common": {
+      "loading": "Cargando...",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "edit": "Editar",
+      "view": "Ver",
+      "create": "Crear",
+      "update": "Actualizar",
+      "search": "Buscar",
+      "filter": "Filtros",
+      "clear": "Limpiar",
+      "back": "Volver",
+      "next": "Siguiente",
+      "previous": "Anterior",
+      "submit": "Enviar",
+      "confirm": "Confirmar",
+      "yes": "Sí",
+      "no": "No",
+      "close": "Cerrar",
+      "open": "Abrir",
+      "required": "*",
+      "optional": "(opcional)"
+    },
+    "cta": {
+      "cantFindTitle": "¿No encuentras tu figura?",
+      "cantFindSubtitle": "Solicítala y buscaremos en nuestros proveedores de Japón. Si la encontramos, tienes prioridad para reservar.",
+      "requestFigure": "Solicitar figura"
+    }
+  }
+}

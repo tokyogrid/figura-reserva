@@ -9,9 +9,10 @@ import { useAuth } from "@/lib/AuthContext"
 import { Button } from "@/components/ui/Button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/DropdownMenu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
-import { ShoppingCart, User, LogOut, Package, Menu, X, ChevronDown, MessageSquare, Mail, Search, Sparkles } from "lucide-react"
+import { ShoppingCart, User, LogOut, Package, Menu, X, ChevronDown, MessageSquare, Mail, Search, Sparkles, Globe } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { siteConfig } from "@/lib/site-config"
+import { LanguageSelector } from "@/components/LanguageSelector"
 
 export function Header() {
   const { totalItems, totalPrice, setIsOpen } = useCart()
@@ -91,7 +92,7 @@ export function Header() {
                 className="block py-3 text-lg font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors flex items-center gap-3"
               >
                 <Package className="h-5 w-5" />
-                My Orders
+                Mis pedidos
               </Link>
               <Link
                 href="/account/requests"
@@ -99,7 +100,7 @@ export function Header() {
                 className="block py-3 text-lg font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors flex items-center gap-3"
               >
                 <MessageSquare className="h-5 w-5" />
-                My Requests
+                Mis solicitudes
               </Link>
               <Link
                 href="/account/profile"
@@ -107,7 +108,7 @@ export function Header() {
                 className="block py-3 text-lg font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors flex items-center gap-3"
               >
                 <User className="h-5 w-5" />
-                Edit Profile
+                Editar perfil
               </Link>
               <button
                 onClick={async () => {
@@ -118,28 +119,33 @@ export function Header() {
                 className="w-full text-left py-3 text-lg font-medium text-red-400 hover:bg-red-500/10 rounded-xl transition-colors flex items-center gap-3"
               >
                 <LogOut className="h-5 w-5" />
-                Logout
+                Cerrar sesión
               </button>
             </div>
           ) : (
             <div className="pt-4 border-t border-gray-800 space-y-3">
               <Link 
-                href="/login?callbackUrl=/request"
+                href="/login?callbackUrl=/solicitar-figura"
                 onClick={() => setMobileMenuOpen(false)}
                 className="block py-3 text-lg font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
               >
-                Sign In
+                Iniciar sesión
               </Link>
               <Link 
-                href="/login?register=true&callbackUrl=/request"
+                href="/login?register=true&callbackUrl=/solicitar-figura"
                 onClick={() => setMobileMenuOpen(false)}
                 className="block py-3 text-lg font-medium text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 rounded-xl transition-all shadow-lg shadow-purple-500/25"
               >
                 <Sparkles className="h-5 w-5 mr-2" aria-hidden="true" />
-                Create Account
+                Crear cuenta
               </Link>
             </div>
           )}
+
+          {/* Language Selector - Mobile */}
+          <div className="pt-4 border-t border-gray-800">
+            <LanguageSelector />
+          </div>
 
           <div className="pt-4 border-t border-gray-800">
             <Button
@@ -198,25 +204,27 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:gap-1">
-            <Link href="/catalog" className="px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-200">
-              Catalog
+            <Link href="/catalogo" className="px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-200">
+              Catálogo
             </Link>
-            <Link href="/request" className="px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-200">
-              Request Figure
+            <Link href="/solicitar-figura" className="px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-200">
+              Solicitar figura
             </Link>
             <Link href="/vinted" className="px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-200">
-              Our Vinted
+              Nuestro Vinted
             </Link>
-            <Link href="/how-it-works" className="px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-200">
-              How It Works
+            <Link href="/como-funciona" className="px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-200">
+              Cómo funciona
             </Link>
             <Link
-              href="/contact"
+              href="/contacto"
               className="px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-200 flex items-center gap-1"
             >
               <Mail className="h-4 w-4" />
-              Contact
+              Contacto
             </Link>
+            {/* Language Selector - Desktop */}
+            <LanguageSelector />
           </div>
 
           <div className="flex items-center gap-3">

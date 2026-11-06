@@ -12,7 +12,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0,
     },
     {
+      url: `${SITE_URL}/en`,
+      changeFrequency: "daily",
+      priority: 1.0,
+    },
+    {
       url: `${SITE_URL}/catalog`,
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+    {
+      url: `${SITE_URL}/en/catalog`,
       changeFrequency: "daily",
       priority: 0.9,
     },
@@ -22,7 +32,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
+      url: `${SITE_URL}/en/request`,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
       url: `${SITE_URL}/how-it-works`,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${SITE_URL}/en/how-it-works`,
       changeFrequency: "monthly",
       priority: 0.7,
     },
@@ -32,7 +52,47 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     },
     {
+      url: `${SITE_URL}/en/vinted`,
+      changeFrequency: "weekly",
+      priority: 0.6,
+    },
+    {
       url: `${SITE_URL}/contact`,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: `${SITE_URL}/en/contact`,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: `${SITE_URL}/login`,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: `${SITE_URL}/en/login`,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: `${SITE_URL}/register`,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: `${SITE_URL}/en/register`,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: `${SITE_URL}/verify`,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: `${SITE_URL}/en/verify`,
       changeFrequency: "monthly",
       priority: 0.5,
     },
@@ -53,12 +113,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       orderBy: { updatedAt: "desc" },
     })
 
-    productRoutes = products.map((product) => ({
-      url: `${SITE_URL}/catalog/${product.slug}`,
-      lastModified: product.updatedAt,
-      changeFrequency: "weekly" as const,
-      priority: 0.7,
-    }))
+    productRoutes = products.flatMap((product) => [
+      {
+        url: `${SITE_URL}/catalog/${product.slug}`,
+        lastModified: product.updatedAt,
+        changeFrequency: "weekly" as const,
+        priority: 0.7,
+      },
+      {
+        url: `${SITE_URL}/en/catalog/${product.slug}`,
+        lastModified: product.updatedAt,
+        changeFrequency: "weekly" as const,
+        priority: 0.7,
+      },
+    ])
   } catch (error) {
     console.error("[Sitemap] Error fetching products:", error)
   }
