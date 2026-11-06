@@ -7,6 +7,16 @@ interface Props {
   params: Promise<{ slug: string }>
 }
 
+function parseImagesSafe(images: string | null): string[] {
+  if (!images) return []
+  try {
+    const parsed = JSON.parse(images)
+    return Array.isArray(parsed) ? parsed.filter(Boolean) : []
+  } catch {
+    return images ? [images] : []
+  }
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const product = await prisma.product.findUnique({
@@ -18,14 +28,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: "Not found - Tokyo Grid" }
   }
 
+  const imageUrls = parseImagesSafe(product.images)
+  const firstImage = imageUrls[0] ? `${process.env.NEXT_PUBLIC_SITE_URL || "https://tokyogridstore.com"}${imageUrls[0].startsWith("/") ? "" : "/"}${imageUrls[0]}` : undefined
+
   return {
     title: `${product.name} - Tokyo Grid`,
     description: product.description || `Reserve ${product.name} at Japan price. Shipping to Spain.`,
+    alternates: {
+      canonical: `/catalog/${slug}`,
+    },
     openGraph: {
+      url: `/catalog/${slug}`,
+      locale: "es_ES",
+      type: "website",
       title: product.name,
       description: product.description || "",
-      images: product.images[0] ? [product.images[0]] : [],
-      type: "website",
+      images: firstImage ? [firstImage] : [],
     },
   }
 }

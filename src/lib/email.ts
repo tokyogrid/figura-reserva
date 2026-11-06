@@ -4,7 +4,7 @@ import { getContactEmail, getReplyToEmail, SITE_URL } from "@/lib/utils"
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 const FROM_EMAIL = "Tokyo Grid <noreply@tokyogridstore.com>"
-const SUPPORT_EMAIL = getContactEmail() || "tokyogridstore@gmail.com"
+const SUPPORT_EMAIL = getContactEmail()
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || getContactEmail() || "tokyogridstore@gmail.com"
 const APP_URL = SITE_URL
 // Use a publicly accessible logo URL for emails (localhost won't work in email clients)

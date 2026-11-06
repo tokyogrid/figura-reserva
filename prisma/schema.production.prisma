@@ -1,0 +1,253 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id              String          @id @default(cuid())
+  name            String
+  slug            String          @unique
+  description     String?
+  price           Int
+  originalPrice   Int?
+  images          String
+  category        String?
+  series          String?
+  character       String?
+  manufacturer    String?
+  scale           String?
+  releaseDate     DateTime?
+  stock           Int             @default(0)
+  reserved        Int             @default(0)
+  status          String          @default("AVAILABLE")
+  isFeatured      Boolean         @default(false)
+  sortOrder       Int             @default(0)
+  isHidden        Boolean         @default(false)
+  isUnpurchasable Boolean         @default(false)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  requests        FigureRequest[]
+  orderItems      OrderItem[]
+
+  @@index([status])
+  @@index([category])
+  @@index([series])
+}
+
+model Order {
+  id                    String      @id @default(cuid())
+  email                 String
+  customerName          String
+  phone                 String?
+  address               String
+  city                  String
+  postalCode            String
+  country               String      @default("ES")
+  subtotal              Int
+  shippingCost          Int         @default(0)
+  total                 Int
+  status                String      @default("PENDING")
+  paymentStatus         String      @default("UNPAID")
+  stripeSessionId       String?     @unique
+  stripePaymentIntentId String?     @unique
+  trackingNumber        String?
+  trackingUrl           String?
+  notes                 String?
+  vintedCode            String?     @unique
+  isVintedOrder         Boolean     @default(false)
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+  items                 OrderItem[]
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  productId String
+  quantity  Int
+  price     Int
+  isVinted  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id])
+
+  @@unique([orderId, productId])
+}
+
+model User {
+  id                       String          @id @default(cuid())
+  email                    String          @unique
+  passwordHash             String
+  name                     String?
+  role                     String          @default("user")
+  address                  String?
+  city                     String?
+  postalCode               String?
+  country                  String?         @default("ES")
+  emailVerified            Boolean         @default(false)
+  emailVerificationCode    String?
+  emailVerificationExpires DateTime?
+  createdAt                DateTime        @default(now())
+  updatedAt                DateTime        @updatedAt
+  discountUsages           DiscountUsage[]
+  vintedAccount            VintedAccount?
+}
+
+model FigureRequest {
+  id           String   @id @default(cuid())
+  email        String
+  name         String
+  figureName   String?
+  images       String?
+  series       String?
+  character    String?
+  manufacturer String?
+  scale        String?
+  budgetMin    Int?
+  budgetMax    Int?
+  notes        String?
+  status       String   @default("PENDING")
+  productId    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  product      Product? @relation(fields: [productId], references: [id])
+
+  @@index([email])
+  @@index([status])
+}
+
+model VintedAccount {
+  id                String          @id @default(cuid())
+  userId            String          @unique
+  username          String
+  encryptedPassword String?
+  rating            Float           @default(0)
+  totalSales        Int             @default(0)
+  positiveFeedback  Int             @default(0)
+  neutralFeedback   Int             @default(0)
+  negativeFeedback  Int             @default(0)
+  lastSync          DateTime?
+  isConnected       Boolean         @default(false)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listings          VintedListing[]
+  orders            VintedOrder[]
+  reviews           VintedReview[]
+
+  @@index([userId])
+}
+
+model VintedOrder {
+  id              String        @id @default(cuid())
+  vintedAccountId String
+  vintedOrderId   String        @unique
+  buyerUsername   String
+  itemTitle       String
+  itemPrice       Int
+  status          String
+  orderDate       DateTime
+  shippedDate     DateTime?
+  deliveredDate   DateTime?
+  trackingNumber  String?
+  trackingUrl     String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  vintedAccount   VintedAccount @relation(fields: [vintedAccountId], references: [id], onDelete: Cascade)
+
+  @@index([vintedAccountId])
+  @@index([status])
+  @@index([orderDate])
+}
+
+model VintedReview {
+  id              String        @id @default(cuid())
+  vintedAccountId String
+  vintedReviewId  String        @unique
+  buyerUsername   String
+  rating          Int
+  comment         String?
+  orderId         String?
+  reviewDate      DateTime
+  createdAt       DateTime      @default(now())
+  vintedAccount   VintedAccount @relation(fields: [vintedAccountId], references: [id], onDelete: Cascade)
+
+  @@index([vintedAccountId])
+  @@index([reviewDate])
+}
+
+model VintedListing {
+  id              String        @id @default(cuid())
+  vintedAccountId String
+  vintedListingId String        @unique
+  title           String
+  description     String?
+  price           Int
+  status          String
+  size            String?
+  brand           String?
+  category        String?
+  images          String
+  listingUrl      String
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  vintedAccount   VintedAccount @relation(fields: [vintedAccountId], references: [id], onDelete: Cascade)
+
+  @@index([vintedAccountId])
+  @@index([status])
+}
+
+model Discount {
+  id         String          @id @default(cuid())
+  code       String          @unique
+  type       String
+  value      Int
+  minOrder   Int             @default(0)
+  usageLimit Int?
+  usedCount  Int             @default(0)
+  startsAt   DateTime        @default(now())
+  expiresAt  DateTime?
+  isActive   Boolean         @default(true)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  usages     DiscountUsage[]
+
+  @@index([code])
+  @@index([isActive])
+}
+
+model DiscountUsage {
+  id         String   @id @default(cuid())
+  userId     String
+  discountId String
+  createdAt  DateTime @default(now())
+  discount   Discount @relation(fields: [discountId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, discountId])
+  @@index([userId])
+  @@index([discountId])
+}
+
+model SupportTicket {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  status    String   @default("OPEN")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+}

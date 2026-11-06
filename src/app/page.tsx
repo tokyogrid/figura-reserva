@@ -8,8 +8,22 @@ import { siteConfig } from "@/lib/site-config"
 import { ProductCard } from "@/components/ProductCard"
 import { TrustpilotBadge } from "@/components/TrustpilotBadge"
 import Image from "next/image"
+import { Metadata } from "next"
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: "Tokyo Grid Store | Figuras de Anime Originales de Japón",
+  description: "Tienda de figuras oficiales e importaciones exclusivas traídas directamente desde Tokio. Ediciones limitadas, envíos garantizados y embalaje hiperprotegido.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    url: "/",
+    locale: "es_ES",
+    type: "website",
+  },
+}
 
 const iconMap: Record<string, React.ElementType> = {
   Banknote,

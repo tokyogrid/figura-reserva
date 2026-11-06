@@ -37,8 +37,11 @@ export default async function OrderTrackingPage({ params }: Props) {
     notFound()
   }
 
-  // Check if user is authenticated and order belongs to them
-  if (session && order.email !== session.email) {
+  // Check if user is authenticated and order belongs to them (or is admin)
+  const isAdmin = session?.role === "admin"
+  const emailMatch = session && order.email.trim().toLowerCase() === session.email.trim().toLowerCase()
+
+  if (!isAdmin && !emailMatch) {
     notFound()
   }
 
