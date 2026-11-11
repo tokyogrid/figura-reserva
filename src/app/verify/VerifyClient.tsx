@@ -65,9 +65,9 @@ function VerifyForm({ email }: { email: string }) {
       })
 
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || "Invalid code")
+      if (!res.ok) throw new Error(data.error || "Código inválido")
 
-      toast({ type: "success", title: "Email verified!" })
+      toast({ type: "success", title: "¡Email verificado!" })
       router.push("/login")
       router.refresh()
     } catch (error: any) {
@@ -91,9 +91,9 @@ function VerifyForm({ email }: { email: string }) {
       })
 
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || "Failed to resend")
+      if (!res.ok) throw new Error(data.error || "Error al reenviar")
 
-      toast({ type: "success", title: "Code resent!" })
+      toast({ type: "success", title: "¡Código reenviado!" })
     } catch (error: any) {
       toast({ type: "error", title: "Error", message: error.message })
     } finally {
@@ -107,13 +107,13 @@ function VerifyForm({ email }: { email: string }) {
         <div className="text-center mb-8">
           <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-600 mx-auto mb-4">
             <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2-2H6a2 2 0 00-2-2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2H8a2 2 0 00-2-2v6a2 2 0 002-2v-6a2 2 0 00-2-2H8a2 2 0 00-2-2v6a2 2 0 002-2h10z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2-2H6a2 2 0 00-2-2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2H8a2 2 0 00-2-2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2H8a2 2 0 00-2-2v6a2 2 0 002 2h10z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 17h4v-4" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Verify Your Email</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Verifica tu Email</h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Enter the 6-digit code sent to <strong>{email}</strong>
+            Introduce el código de 6 dígitos enviado a <strong>{email}</strong>
           </p>
         </div>
 
@@ -125,7 +125,7 @@ function VerifyForm({ email }: { email: string }) {
               </div>
             )}
 
-            <div className="flex gap-2 justify-center" role="group" aria-label="Verification code">
+            <div className="flex gap-2 justify-center" role="group" aria-label="Código de verificación">
               {[0, 1, 2, 3, 4, 5].map((index) => (
                 <input
                   key={index}
@@ -153,7 +153,7 @@ function VerifyForm({ email }: { email: string }) {
                 className="w-full h-12"
                 variant="primary"
               >
-                Verify Email
+                Verificar Email
               </Button>
 
               <div className="text-center">
@@ -163,19 +163,19 @@ function VerifyForm({ email }: { email: string }) {
                   disabled={loading}
                   className="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium"
                 >
-                  Didn&apos;t receive the code? Resend
+                  ¿No recibiste el código? Reenviar
                 </button>
               </div>
 
               <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
-                Code expires in 15 minutes. Didn&apos;t receive it? Check spam folder.
+                El código expira en 15 minutos. ¿No lo recibiste? Revisa carpeta de spam.
               </p>
             </div>
           </form>
 
           <div className="mt-6 text-center">
             <a href="/login" className="text-blue-600 dark:text-blue-400 hover:underline text-sm">
-              Already verified? Sign in
+              ¿Ya verificado? Iniciar sesión
             </a>
           </div>
         </div>
@@ -198,9 +198,9 @@ function VerifyContent() {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center p-8">
         <div className="w-full max-w-md text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Missing Email</h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">Please provide an email to verify.</p>
-          <a href="/login" className="text-blue-600 hover:underline">Back to Login</a>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Email faltante</h1>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">Por favor proporciona un email para verificar.</p>
+          <a href="/login" className="text-blue-600 hover:underline">Volver al Login</a>
         </div>
       </div>
     )
@@ -215,7 +215,7 @@ function VerifyContent() {
 
 export default function VerifyClient() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center"><div className="animate-pulse text-gray-500">Loading...</div></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center"><div className="animate-pulse text-gray-500">Cargando...</div></div>}>
       <VerifyContent />
     </Suspense>
   )

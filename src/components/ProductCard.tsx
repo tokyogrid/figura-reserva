@@ -66,14 +66,14 @@ export function ProductCard({ product, className, style }: ProductCardProps) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
           {!inStock && (
             <div className="absolute inset-0 bg-black/70 flex items-center justify-center z-10">
-              <Badge variant="danger" className="text-lg px-4 py-2">Out of Stock</Badge>
+              <Badge variant="danger" className="text-lg px-4 py-2">Agotado</Badge>
             </div>
           )}
           {product.isFeatured && (
             <div className="absolute top-2 left-2 z-10">
               <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
                 <Sparkles className="h-3 w-3" />
-                Featured
+                Destacado
               </Badge>
             </div>
           )}
@@ -81,14 +81,14 @@ export function ProductCard({ product, className, style }: ProductCardProps) {
             <div className="absolute top-2 right-2 z-10">
               <Badge variant="warning" className="gap-1">
                 <Zap className="h-3 w-3" />
-                Only {available} left
+                Solo {available} unidades
               </Badge>
             </div>
           )}
           {product.createdAt && (Date.now() - new Date(product.createdAt).getTime() < 7 * 24 * 60 * 60 * 1000) && (
             <div className="absolute top-2 left-2 z-10 animate-bounce-subtle" style={{ animationDelay: '0.5s' }}>
               <Badge className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-2 py-1 rounded-full text-xs font-bold tracking-wider flex items-center gap-1">
-                <span className="relative z-10">🔥 NEW</span>
+                <span className="relative z-10">🔥 NUEVO</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full opacity-50 animate-ping" />
               </Badge>
             </div>
@@ -102,7 +102,7 @@ export function ProductCard({ product, className, style }: ProductCardProps) {
             <div className="flex items-center gap-1">
               <Badge className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-2 py-0.5 rounded-full text-xs flex items-center gap-1">
                 <Tag className="h-3 w-3" />
-                Reserve
+                Reservar
               </Badge>
             </div>
           </div>
@@ -124,18 +124,18 @@ export function ProductCard({ product, className, style }: ProductCardProps) {
               <>
                 <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
                   <Truck className="h-3 w-3" />
-                  In Stock
+                  En stock
                 </Badge>
                 {isLowStock && (
                   <Badge variant="warning" className="gap-1">
-                    <span className="text-xs">{available} left</span>
+                    <span className="text-xs">{available} unidades</span>
                   </Badge>
                 )}
               </>
             ) : (
               <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
                 <Tag className="h-3 w-3" />
-                10-15 days
+                10-15 días
               </Badge>
             )}
           </div>

@@ -89,11 +89,11 @@ export default function AccountProfilePage() {
           <div className="flex items-center gap-4">
             <Button variant="ghost" onClick={() => router.back()} className="gap-2 bg-white/5 hover:bg-white/10 text-white border-white/10">
               <ArrowLeft className="h-4 w-4" />
-              Back
+              Volver
             </Button>
             <div>
-              <h1 className="text-3xl font-bold text-white">Edit Profile</h1>
-              <p className="text-gray-400">Manage your account information</p>
+              <h1 className="text-3xl font-bold text-white">Editar Perfil</h1>
+              <p className="text-gray-400">Gestiona tu información de cuenta</p>
             </div>
           </div>
         </div>
@@ -105,8 +105,8 @@ export default function AccountProfilePage() {
                 <User className="h-8 w-8 text-white" />
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-white">Profile Information</h2>
-                <p className="text-gray-400">Your details are used for order processing and shipping</p>
+                <h2 className="text-xl font-semibold text-white">Información del Perfil</h2>
+                <p className="text-gray-400">Tus datos se usan para procesar pedidos y envíos</p>
               </div>
             </div>
           </CardHeader>
@@ -114,11 +114,11 @@ export default function AccountProfilePage() {
             <form onSubmit={handleSubmit} className="space-y-6" noValidate>
               <div className="grid sm:grid-cols-2 gap-4">
                 <Input
-                  label="Full Name"
+                  label="Nombre Completo"
                   id="name"
                   value={formData.name}
                   onChange={e => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="John Smith"
+                  placeholder="Juan Pérez"
                   required
                   className="bg-gray-900/50 border-gray-700 text-white placeholder-gray-500 focus:border-purple-500 focus:ring-purple-500/20"
                 />
@@ -128,7 +128,7 @@ export default function AccountProfilePage() {
                   type="email"
                   value={formData.email}
                   onChange={e => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="john@email.com"
+                  placeholder="juan@email.com"
                   required
                   disabled
                   className="bg-gray-900/50 border-gray-700 text-white placeholder-gray-500"
@@ -138,20 +138,20 @@ export default function AccountProfilePage() {
               <div className="border-t border-gray-800/50 pt-6">
                 <h3 className="text-lg font-medium text-white mb-4 flex items-center gap-2">
                   <MapPin className="h-5 w-5 text-purple-400" />
-                  Shipping Address
+                  Dirección de Envío
                 </h3>
                 <div className="space-y-4">
                   <Input
-                    label="Address"
+                    label="Dirección"
                     id="address"
                     value={formData.address}
                     onChange={e => setFormData({ ...formData, address: e.target.value })}
-                    placeholder="123 Main St, Apt 4B"
+                    placeholder="Calle Principal 123, 4ºB"
                     className="bg-gray-900/50 border-gray-700 text-white placeholder-gray-500 focus:border-purple-500 focus:ring-purple-500/20"
                   />
                   <div className="grid sm:grid-cols-3 gap-4">
                     <Input
-                      label="City"
+                      label="Ciudad"
                       id="city"
                       value={formData.city}
                       onChange={e => setFormData({ ...formData, city: e.target.value })}
@@ -159,7 +159,7 @@ export default function AccountProfilePage() {
                       className="bg-gray-900/50 border-gray-700 text-white placeholder-gray-500 focus:border-purple-500 focus:ring-purple-500/20"
                     />
                     <Input
-                      label="Postal Code"
+                      label="Código Postal"
                       id="postalCode"
                       value={formData.postalCode}
                       onChange={e => setFormData({ ...formData, postalCode: e.target.value })}
@@ -185,11 +185,11 @@ export default function AccountProfilePage() {
 
               <div className="flex justify-end gap-4 pt-4 border-t border-gray-800/50">
                 <Button variant="outline" onClick={() => router.back()} className="border-white/10 text-white hover:bg-white/5">
-                  Cancel
+                  Cancelar
                 </Button>
                 <Button type="submit" disabled={saving} loading={saving} className="gap-2" variant="primary">
                   <Save className="h-4 w-4" />
-                  Save Changes
+                  Guardar Cambios
                 </Button>
               </div>
             </form>

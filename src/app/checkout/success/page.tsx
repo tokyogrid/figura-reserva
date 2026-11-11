@@ -3,8 +3,12 @@ import { prisma } from "@/lib/prisma"
 import { CheckoutSuccessContent } from "./CheckoutSuccessContent"
 
 export const metadata: Metadata = {
-  title: "Pedido confirmado - Figura Reserva",
+  title: "Pedido confirmado - Tokyo Grid",
   description: "Tu reserva ha sido confirmada. Te avisaremos cuando compremos la figura en Japón.",
+  robots: { index: false, follow: false },
+  alternates: {
+    canonical: "/checkout/success",
+  },
 }
 
 interface Props {

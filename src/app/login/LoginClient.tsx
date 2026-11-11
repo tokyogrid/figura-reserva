@@ -29,7 +29,7 @@ function LoginForm() {
     try {
       await authLogin(email, password)
 
-      toast({ type: "success", title: "Welcome back!" })
+      toast({ type: "success", title: "¡Bienvenido de nuevo!" })
       router.push("/")
       router.refresh()
     } catch (error: any) {
@@ -52,9 +52,9 @@ function LoginForm() {
           <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 mx-auto mb-4">
             <Sparkles className="h-6 w-6 text-white" aria-hidden="true" />
           </div>
-          <CardTitle className="text-white">Sign in to Tokyo Grid</CardTitle>
+          <CardTitle className="text-white">Iniciar sesión en Tokyo Grid</CardTitle>
           <p className="text-gray-400">
-            Sign in to request figures or check orders
+            Inicia sesión para solicitar figuras o ver pedidos
           </p>
         </CardHeader>
         <CardContent className="bg-gray-900/30">
@@ -70,14 +70,14 @@ function LoginForm() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
+              placeholder="tu@email.com"
               required
               autoComplete="email"
               className="bg-gray-900/50 border-gray-700 text-white placeholder-gray-500 focus:border-purple-500 focus:ring-purple-500/20"
             />
             <div className="relative">
               <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                Password
+                Contraseña
               </label>
               <div className="relative">
                 <input
@@ -94,7 +94,7 @@ function LoginForm() {
                   type="button"
                   className="absolute right-3 top-[38px] text-gray-500 hover:text-white"
                   onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                 >
                   {showPassword ? (
                     <EyeOff className="h-4 w-4" aria-hidden="true" />
@@ -110,27 +110,27 @@ function LoginForm() {
                 className="text-sm text-purple-400 hover:underline flex items-center gap-1"
               >
                 <HelpCircle className="h-4 w-4" aria-hidden="true" />
-                Forgot password?
+                ¿Olvidaste tu contraseña?
               </Link>
               <Link
                 href="/contact"
                 className="text-sm text-purple-400 hover:underline flex items-center gap-1"
               >
                 <Mail className="h-4 w-4" aria-hidden="true" />
-                Contact Support
+                Contactar Soporte
               </Link>
             </div>
             <Button type="submit" disabled={loading} loading={loading} className="w-full h-12" variant="primary">
               <Loader2 className="h-4 w-4" aria-hidden="true" />
-              Sign in
+              Iniciar sesión
             </Button>
             <p className="text-center text-sm text-gray-500 mt-6">
-              Don&apos;t have an account?{" "}
+              ¿No tienes cuenta?{" "}
               <Link
                 href="/register"
                 className="text-purple-400 cursor-pointer underline"
               >
-                Create account
+                Crear cuenta
               </Link>
             </p>
           </form>

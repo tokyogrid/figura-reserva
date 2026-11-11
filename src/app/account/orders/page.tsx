@@ -64,15 +64,15 @@ export default function AccountOrdersPage() {
   }
 
   const statusOptions = [
-    { value: "", label: "All" },
-    { value: "PENDING", label: "Pending" },
-    { value: "CONFIRMED", label: "Confirmed" },
-    { value: "PURCHASING_IN_JAPAN", label: "Purchasing in Japan" },
-    { value: "AVAILABLE_ON_VINTED", label: "Available on Vinted" },
-    { value: "SHIPPED", label: "Shipped" },
-    { value: "DELIVERED", label: "Delivered" },
-    { value: "CANCELLED", label: "Cancelled" },
-    { value: "REFUNDED", label: "Refunded" },
+    { value: "", label: "Todos" },
+    { value: "PENDING", label: "Pendiente" },
+    { value: "CONFIRMED", label: "Confirmado" },
+    { value: "PURCHASING_IN_JAPAN", label: "Comprando en Japón" },
+    { value: "AVAILABLE_ON_VINTED", label: "Disponible en Vinted" },
+    { value: "SHIPPED", label: "Enviado" },
+    { value: "DELIVERED", label: "Entregado" },
+    { value: "CANCELLED", label: "Cancelado" },
+    { value: "REFUNDED", label: "Reembolsado" },
   ]
 
   if (loading) {
@@ -90,11 +90,11 @@ export default function AccountOrdersPage() {
           <div className="flex items-center gap-4">
             <Button variant="ghost" onClick={() => router.back()} className="gap-2 bg-white/5 hover:bg-white/10 text-white border-white/10">
               <ArrowLeft className="h-4 w-4" />
-              Back
+              Volver
             </Button>
             <div>
-              <h1 className="text-3xl font-bold text-white">My Orders</h1>
-              <p className="text-gray-400">Track and manage your purchases</p>
+              <h1 className="text-3xl font-bold text-white">Mis Pedidos</h1>
+              <p className="text-gray-400">Rastrea y gestiona tus compras</p>
             </div>
           </div>
         </div>
@@ -106,7 +106,7 @@ export default function AccountOrdersPage() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                 <input
                   type="text"
-                  placeholder="Search order #, product name..."
+                  placeholder="Buscar pedido #, nombre producto..."
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 border border-gray-700 rounded-lg bg-gray-900/50 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -125,12 +125,12 @@ export default function AccountOrdersPage() {
             {orders.length === 0 ? (
               <div className="p-12 text-center">
                 <Package className="h-16 w-16 mx-auto text-gray-600 mb-4" />
-                <h3 className="text-lg font-medium text-white mb-2">No orders yet</h3>
-                <p className="text-gray-400 mb-6">When you place an order, it will appear here.</p>
+                <h3 className="text-lg font-medium text-white mb-2">No hay pedidos aún</h3>
+                <p className="text-gray-400 mb-6">Cuando realices un pedido, aparecerá aquí.</p>
                 <Link href="/catalog">
                   <Button variant="primary" className="gap-2">
                     <Package className="h-4 w-4" />
-                    Browse Catalog
+                    Ver Catálogo
                   </Button>
                 </Link>
               </div>
@@ -139,12 +139,12 @@ export default function AccountOrdersPage() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-gray-800/50 bg-gray-900/30 text-left text-sm font-medium text-gray-400">
-                      <th className="p-4">Order</th>
-                      <th className="p-4">Items</th>
+                      <th className="p-4">Pedido</th>
+                      <th className="p-4">Artículos</th>
                       <th className="p-4">Total</th>
-                      <th className="p-4 text-center">Status</th>
-                      <th className="p-4">Date</th>
-                      <th className="p-4 text-right">Actions</th>
+                      <th className="p-4 text-center">Estado</th>
+                      <th className="p-4">Fecha</th>
+                      <th className="p-4 text-right">Acciones</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-800/50">
@@ -167,7 +167,7 @@ export default function AccountOrdersPage() {
                               </div>
                             ))}
                             {order.items.length > 2 && (
-                              <span className="text-sm text-gray-400">+{order.items.length - 2} more</span>
+                              <span className="text-sm text-gray-400">+{order.items.length - 2} más</span>
                             )}
                           </div>
                         </td>
@@ -189,7 +189,7 @@ export default function AccountOrdersPage() {
                         </td>
                         <td className="p-4 text-right">
                           <Link href={`/order/${order.id}`} className="text-sm font-medium text-purple-400 hover:underline">
-                            View
+                            Ver
                           </Link>
                         </td>
                       </tr>

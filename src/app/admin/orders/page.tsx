@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button"
 import { Card, CardContent, CardHeader } from "@/components/ui/Card"
 import { Badge } from "@/components/ui/Badge"
 import { Search, Filter, ChevronDown, Truck, RotateCcw, Eye } from "lucide-react"
-import { formatPrice } from "@/lib/utils"
+import { formatPrice, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS, VINTED_ORDER_STATUS_LABELS, VINTED_ORDER_STATUS_COLORS, PAYMENT_STATUS_LABELS, PAYMENT_STATUS_COLORS } from "@/lib/utils"
 
 interface Order {
   id: string
@@ -40,85 +40,37 @@ interface Order {
   }>
 }
 
-const ORDER_STATUS_LABELS: Record<string, string> = {
-  PENDING: "Pending",
-  CONFIRMED: "Confirmed",
-  PURCHASING_IN_JAPAN: "Purchasing in Japan",
-  AVAILABLE_ON_VINTED: "Available on Vinted",
-  SHIPPED: "Shipped",
-  DELIVERED: "Delivered",
-  CANCELLED: "Cancelled",
-  REFUNDED: "Refunded",
-}
-
-const ORDER_STATUS_COLORS: Record<string, string> = {
-  PENDING: "bg-yellow-100 text-yellow-800",
-  CONFIRMED: "bg-blue-100 text-blue-800",
-  PURCHASING_IN_JAPAN: "bg-purple-100 text-purple-800",
-  AVAILABLE_ON_VINTED: "bg-pink-100 text-pink-800",
-  SHIPPED: "bg-indigo-100 text-indigo-800",
-  DELIVERED: "bg-green-100 text-green-800",
-  CANCELLED: "bg-red-100 text-red-800",
-  REFUNDED: "bg-gray-100 text-gray-800",
-}
-
-const VINTED_ORDER_STATUS_LABELS: Record<string, string> = {
-  PENDING: "Pending",
-  CONFIRMED: "Confirmed",
-  PURCHASING_IN_JAPAN: "Purchasing in Japan",
-  AVAILABLE_ON_VINTED: "Available on Vinted",
-  CANCELLED: "Cancelled",
-  REFUNDED: "Refunded",
-}
-
-const VINTED_ORDER_STATUS_COLORS: Record<string, string> = {
-  PENDING: "bg-yellow-100 text-yellow-800",
-  CONFIRMED: "bg-blue-100 text-blue-800",
-  PURCHASING_IN_JAPAN: "bg-purple-100 text-purple-800",
-  AVAILABLE_ON_VINTED: "bg-pink-100 text-pink-800",
-  CANCELLED: "bg-red-100 text-red-800",
-  REFUNDED: "bg-gray-100 text-gray-800",
-}
-
-const PAYMENT_STATUS_LABELS: Record<string, string> = {
-  UNPAID: "Unpaid",
-  PAID: "Paid",
-  PARTIAL: "Partial",
-  REFUNDED: "Refunded",
-  FAILED: "Failed",
-}
-
 const VINTED_STATUS_FLOW = ["CONFIRMED", "PURCHASING_IN_JAPAN", "AVAILABLE_ON_VINTED"]
 
 const VINTED_STATUS_OPTIONS = [
-  { value: "PENDING", label: "pending" },
-  { value: "CONFIRMED", label: "confirmed" },
-  { value: "PURCHASING_IN_JAPAN", label: "purchasing in japan" },
-  { value: "AVAILABLE_ON_VINTED", label: "available on vinted" },
-  { value: "CANCELLED", label: "cancelled" },
-  { value: "REFUNDED", label: "refunded" },
+  { value: "PENDING", label: "Pendiente" },
+  { value: "CONFIRMED", label: "Confirmado" },
+  { value: "PURCHASING_IN_JAPAN", label: "Comprando en Japón" },
+  { value: "AVAILABLE_ON_VINTED", label: "Disponible en Vinted" },
+  { value: "CANCELLED", label: "Cancelado" },
+  { value: "REFUNDED", label: "Reembolsado" },
 ]
 
 const REGULAR_STATUS_OPTIONS = [
-  { value: "PENDING", label: "pending" },
-  { value: "CONFIRMED", label: "confirmed" },
-  { value: "PURCHASING_IN_JAPAN", label: "purchasing in japan" },
-  { value: "AVAILABLE_ON_VINTED", label: "available on vinted" },
-  { value: "SHIPPED", label: "shipped" },
-  { value: "DELIVERED", label: "delivered" },
-  { value: "CANCELLED", label: "cancelled" },
-  { value: "REFUNDED", label: "refunded" },
+  { value: "PENDING", label: "Pendiente" },
+  { value: "CONFIRMED", label: "Confirmado" },
+  { value: "PURCHASING_IN_JAPAN", label: "Comprando en Japón" },
+  { value: "AVAILABLE_ON_VINTED", label: "Disponible en Vinted" },
+  { value: "SHIPPED", label: "Enviado" },
+  { value: "DELIVERED", label: "Entregado" },
+  { value: "CANCELLED", label: "Cancelado" },
+  { value: "REFUNDED", label: "Reembolsado" },
 ]
 
 const FILTER_STATUS_OPTIONS = [
-  { value: "PENDING", label: "pending" },
-  { value: "CONFIRMED", label: "confirmed" },
-  { value: "PURCHASING_IN_JAPAN", label: "purchasing in japan" },
-  { value: "AVAILABLE_ON_VINTED", label: "available on vinted" },
-  { value: "SHIPPED", label: "shipped" },
-  { value: "DELIVERED", label: "delivered" },
-  { value: "CANCELLED", label: "cancelled" },
-  { value: "REFUNDED", label: "refunded" },
+  { value: "PENDING", label: "Pendiente" },
+  { value: "CONFIRMED", label: "Confirmado" },
+  { value: "PURCHASING_IN_JAPAN", label: "Comprando en Japón" },
+  { value: "AVAILABLE_ON_VINTED", label: "Disponible en Vinted" },
+  { value: "SHIPPED", label: "Enviado" },
+  { value: "DELIVERED", label: "Entregado" },
+  { value: "CANCELLED", label: "Cancelado" },
+  { value: "REFUNDED", label: "Reembolsado" },
 ]
 
 export default function AdminOrdersPage() {
@@ -278,15 +230,8 @@ export default function AdminOrdersPage() {
                       {(() => {
                         const status = order.paymentStatus as keyof typeof PAYMENT_STATUS_LABELS
                         const label = PAYMENT_STATUS_LABELS[status] || order.paymentStatus
-                        const colors: Record<string, string> = {
-                          PAID: "bg-green-100 text-green-800",
-                          FAILED: "bg-red-100 text-red-800",
-                          UNPAID: "bg-yellow-100 text-yellow-800",
-                          PARTIAL: "bg-blue-100 text-blue-800",
-                          REFUNDED: "bg-purple-100 text-purple-800",
-                        }
                         return (
-                          <span className={`px-2 py-1 rounded text-xs font-medium ${colors[status] || "bg-gray-100 text-gray-800"}`}>
+                          <span className={`px-2 py-1 rounded text-xs font-medium ${PAYMENT_STATUS_COLORS[status] || "bg-gray-100 text-gray-800"}`}>
                             {label}
                           </span>
                         )
@@ -307,7 +252,7 @@ export default function AdminOrdersPage() {
                             className="flex items-center gap-1 px-3 py-1.5 border border-pink-300 dark:border-pink-600 rounded-lg text-sm font-medium text-pink-700 dark:text-pink-300 hover:bg-pink-50 dark:hover:bg-pink-900/30 transition-colors"
                           >
                             <Truck className="h-3.5 w-3.5" />
-                            Next Step
+                            Siguiente paso
                           </button>
                         )}
                       </div>

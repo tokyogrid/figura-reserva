@@ -30,10 +30,10 @@ interface Request {
 }
 
 const REQUEST_STATUS_LABELS: Record<string, string> = {
-  PENDING: "Pending",
-  CONTACTED: "Contacted",
-  PRODUCT_CREATED: "Product Created",
-  REJECTED: "Rejected",
+  PENDING: "Pendiente",
+  CONTACTED: "Contactado",
+  PRODUCT_CREATED: "Producto Creado",
+  REJECTED: "Rechazado",
 }
 
 const REQUEST_STATUS_COLORS: Record<string, string> = {
@@ -76,19 +76,19 @@ export default function AccountRequestsPage() {
   }
 
   const formatBudget = (min: number | null, max: number | null) => {
-    if (!min && !max) return "Not specified"
+    if (!min && !max) return "No especificado"
     if (min && max) return `€${(min / 100).toFixed(0)} - €${(max / 100).toFixed(0)}`
-    if (min) return `From €${(min / 100).toFixed(0)}`
-    if (max) return `Up to €${(max / 100).toFixed(0)}`
-    return "Not specified"
+    if (min) return `Desde €${(min / 100).toFixed(0)}`
+    if (max) return `Hasta €${(max / 100).toFixed(0)}`
+    return "No especificado"
   }
 
   const statusOptions = [
-    { value: "", label: "All" },
-    { value: "PENDING", label: "Pending" },
-    { value: "CONTACTED", label: "Contacted" },
-    { value: "PRODUCT_CREATED", label: "Product Created" },
-    { value: "REJECTED", label: "Rejected" },
+    { value: "", label: "Todos" },
+    { value: "PENDING", label: "Pendiente" },
+    { value: "CONTACTED", label: "Contactado" },
+    { value: "PRODUCT_CREATED", label: "Producto Creado" },
+    { value: "REJECTED", label: "Rechazado" },
   ]
 
   if (loading) {
@@ -106,11 +106,11 @@ export default function AccountRequestsPage() {
           <div className="flex items-center gap-4">
             <Button variant="ghost" onClick={() => router.back()} className="gap-2 bg-white/5 hover:bg-white/10 text-white border-white/10">
               <ArrowLeft className="h-4 w-4" />
-              Back
+              Volver
             </Button>
             <div>
-              <h1 className="text-3xl font-bold text-white">My Requests</h1>
-              <p className="text-gray-400">Track your figure requests</p>
+              <h1 className="text-3xl font-bold text-white">Mis Solicitudes</h1>
+              <p className="text-gray-400">Rastrea tus solicitudes de figuras</p>
             </div>
           </div>
         </div>
@@ -122,7 +122,7 @@ export default function AccountRequestsPage() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                 <input
                   type="text"
-                  placeholder="Search figure name, series..."
+                  placeholder="Buscar nombre figura, serie..."
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 border border-gray-700 rounded-lg bg-gray-900/50 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -141,12 +141,12 @@ export default function AccountRequestsPage() {
             {requests.length === 0 ? (
               <div className="p-12 text-center">
                 <MessageSquare className="h-16 w-16 mx-auto text-gray-600 mb-4" />
-                <h3 className="text-lg font-medium text-white mb-2">No requests yet</h3>
-                <p className="text-gray-400 mb-6">When you request a figure, it will appear here.</p>
+                <h3 className="text-lg font-medium text-white mb-2">No hay solicitudes aún</h3>
+                <p className="text-gray-400 mb-6">Cuando solicites una figura, aparecerá aquí.</p>
                 <Link href="/request">
                   <Button variant="primary" className="gap-2">
                     <MessageSquare className="h-4 w-4" />
-                    Request a Figure
+                    Solicitar Figura
                   </Button>
                 </Link>
               </div>
@@ -155,13 +155,13 @@ export default function AccountRequestsPage() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-gray-800/50 bg-gray-900/30 text-left text-sm font-medium text-gray-400">
-                      <th className="p-4">Request</th>
-                      <th className="p-4">Figure</th>
-                      <th className="p-4 hidden md:table-cell">Series</th>
-                      <th className="p-4 hidden lg:table-cell">Budget</th>
-                      <th className="p-4 text-center">Status</th>
-                      <th className="p-4">Date</th>
-                      <th className="p-4 text-right">Actions</th>
+                      <th className="p-4">Solicitud</th>
+                      <th className="p-4">Figura</th>
+                      <th className="p-4 hidden md:table-cell">Serie</th>
+                      <th className="p-4 hidden lg:table-cell">Presupuesto</th>
+                      <th className="p-4 text-center">Estado</th>
+                      <th className="p-4">Fecha</th>
+                      <th className="p-4 text-right">Acciones</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-800/50">
@@ -173,7 +173,7 @@ export default function AccountRequestsPage() {
                           </Link>
                         </td>
                         <td className="p-4">
-                          <p className="font-medium text-white">{request.figureName || request.character || "Not specified"}</p>
+                          <p className="font-medium text-white">{request.figureName || request.character || "No especificado"}</p>
                           {request.images && (() => {
                             try {
                               const imgs = JSON.parse(request.images)
@@ -205,7 +205,7 @@ export default function AccountRequestsPage() {
                         </td>
                         <td className="p-4 text-right">
                           <Link href={`/account/requests/${request.id}`} className="text-sm font-medium text-purple-400 hover:underline">
-                            View
+                            Ver
                           </Link>
                         </td>
                       </tr>

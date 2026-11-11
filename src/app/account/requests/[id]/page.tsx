@@ -30,10 +30,10 @@ interface Request {
 }
 
 const REQUEST_STATUS_LABELS: Record<string, string> = {
-  PENDING: "Pending",
-  CONTACTED: "Contacted",
-  PRODUCT_CREATED: "Product Created",
-  REJECTED: "Rejected",
+  PENDING: "Pendiente",
+  CONTACTED: "Contactado",
+  PRODUCT_CREATED: "Producto Creado",
+  REJECTED: "Rechazado",
 }
 
 const REQUEST_STATUS_COLORS: Record<string, string> = {
@@ -84,11 +84,11 @@ export default function RequestDetailPage() {
   }
 
   const formatBudget = (min: number | null, max: number | null) => {
-    if (!min && !max) return "Not specified"
+    if (!min && !max) return "No especificado"
     if (min && max) return `€${(min / 100).toFixed(0)} - €${(max / 100).toFixed(0)}`
-    if (min) return `From €${(min / 100).toFixed(0)}`
-    if (max) return `Up to €${(max / 100).toFixed(0)}`
-    return "Not specified"
+    if (min) return `Desde €${(min / 100).toFixed(0)}`
+    if (max) return `Hasta €${(max / 100).toFixed(0)}`
+    return "No especificado"
   }
 
   if (loading) {
@@ -111,11 +111,11 @@ export default function RequestDetailPage() {
           <div className="flex items-center gap-4">
             <Button variant="ghost" onClick={() => router.back()} className="gap-2 bg-white/5 hover:bg-white/10 text-white border-white/10">
               <ArrowLeft className="h-4 w-4" />
-              Back
+              Volver
             </Button>
             <div>
-              <h1 className="text-3xl font-bold text-white">Request #{request.id.slice(0, 8)}</h1>
-              <p className="text-gray-400">Submitted {new Date(request.createdAt).toLocaleDateString()}</p>
+              <h1 className="text-3xl font-bold text-white">Solicitud #{request.id.slice(0, 8)}</h1>
+              <p className="text-gray-400">Enviada el {new Date(request.createdAt).toLocaleDateString()}</p>
             </div>
           </div>
           <Badge className={REQUEST_STATUS_COLORS[request.status] || "bg-gray-800/50 text-gray-400 border-gray-700"} variant="outline">
@@ -130,53 +130,53 @@ export default function RequestDetailPage() {
             <CardHeader>
               <div className="flex items-center gap-2">
                 <ImageIcon className="h-5 w-5 text-purple-400" />
-                <CardTitle className="text-white">Figure Details</CardTitle>
+                <CardTitle className="text-white">Detalles de la Figura</CardTitle>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-gray-400">Figure Name</p>
-                  <p className="font-medium text-white">{request.figureName || request.character || "Not specified"}</p>
+                  <p className="text-sm text-gray-400">Nombre de la Figura</p>
+                  <p className="font-medium text-white">{request.figureName || request.character || "No especificado"}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-400">Series / Anime</p>
-                  <p className="font-medium text-white">{request.series || "Not specified"}</p>
+                  <p className="text-sm text-gray-400">Serie / Anime</p>
+                  <p className="font-medium text-white">{request.series || "No especificado"}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-400">Manufacturer</p>
-                  <p className="font-medium text-white">{request.manufacturer || "Not specified"}</p>
+                  <p className="text-sm text-gray-400">Fabricante</p>
+                  <p className="font-medium text-white">{request.manufacturer || "No especificado"}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-400">Scale</p>
-                  <p className="font-medium text-white">{request.scale || "Not specified"}</p>
+                  <p className="text-sm text-gray-400">Escala</p>
+                  <p className="font-medium text-white">{request.scale || "No especificado"}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-400">Budget</p>
+                  <p className="text-sm text-gray-400">Presupuesto</p>
                   <p className="font-medium text-white">{formatBudget(request.budgetMin, request.budgetMax)}</p>
                 </div>
               </div>
 
               {request.notes && (
                 <div>
-                  <p className="text-sm text-gray-400">Notes</p>
+                  <p className="text-sm text-gray-400">Notas</p>
                   <p className="text-white whitespace-pre-wrap">{request.notes}</p>
                 </div>
               )}
 
               {images.length > 0 && images.some(img => img && img.trim() !== "") && (
                 <div>
-                  <p className="text-sm text-gray-400">Reference Images</p>
+                  <p className="text-sm text-gray-400">Imágenes de Referencia</p>
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                     {images.map((img: string, idx: number) => (
                       <div key={idx} className="relative group">
                         <div className="aspect-square rounded-lg border-2 border-dashed border-gray-700 overflow-hidden relative bg-gray-800">
                           {img && img.trim() !== "" ? (
-                            <img src={img} alt={`Reference ${idx + 1}`} className="w-full h-full object-cover" />
+                            <img src={img} alt={`Referencia ${idx + 1}`} className="w-full h-full object-cover" />
                           ) : (
                             <div className="w-full h-full flex flex-col items-center justify-center text-gray-500 p-4">
                               <ImageIcon className="h-8 w-8 mb-2" />
-                              <span className="text-xs">No image</span>
+                              <span className="text-xs">Sin imagen</span>
                             </div>
                           )}
                         </div>
@@ -193,13 +193,13 @@ export default function RequestDetailPage() {
             <CardHeader>
               <div className="flex items-center gap-2">
                 <MessageSquare className="h-5 w-5 text-blue-400" />
-                <CardTitle className="text-white">Your Information</CardTitle>
+                <CardTitle className="text-white">Tu Información</CardTitle>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-gray-400">Name</p>
+                  <p className="text-sm text-gray-400">Nombre</p>
                   <p className="font-medium text-white">{request.name}</p>
                 </div>
                 <div>
@@ -213,15 +213,15 @@ export default function RequestDetailPage() {
           {/* Status Timeline */}
           <Card className="bg-gray-900/50 border-gray-800/50">
             <CardHeader>
-              <CardTitle className="text-white">Status Timeline</CardTitle>
+              <CardTitle className="text-white">Historial de Estado</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {[
-                  { key: "PENDING", label: "Request Submitted", date: request.createdAt },
-                  { key: "CONTACTED", label: "Supplier Contacted", date: request.status === "CONTACTED" || request.status === "PRODUCT_CREATED" || request.status === "REJECTED" ? request.createdAt : null },
-                  { key: "PRODUCT_CREATED", label: "Product Found & Listed", date: request.status === "PRODUCT_CREATED" ? request.createdAt : null },
-                  { key: "REJECTED", label: "Request Declined", date: request.status === "REJECTED" ? request.createdAt : null },
+                  { key: "PENDING", label: "Solicitud Enviada", date: request.createdAt },
+                  { key: "CONTACTED", label: "Proveedor Contactado", date: request.status === "CONTACTED" || request.status === "PRODUCT_CREATED" || request.status === "REJECTED" ? request.createdAt : null },
+                  { key: "PRODUCT_CREATED", label: "Producto Encontrado y Listado", date: request.status === "PRODUCT_CREATED" ? request.createdAt : null },
+                  { key: "REJECTED", label: "Solicitud Rechazada", date: request.status === "REJECTED" ? request.createdAt : null },
                 ].map((step, idx) => (
                   <div key={step.key} className={cn("flex items-start gap-4", idx < 3 && "pb-4 border-l-2 border-gray-800/50 pl-4")}>
                     <div className={cn("flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center", request.status === step.key || (step.key === "CONTACTED" && (request.status === "PRODUCT_CREATED" || request.status === "REJECTED")) || (step.key === "PENDING") ? "bg-purple-600" : "bg-gray-800")}>
@@ -254,13 +254,13 @@ export default function RequestDetailPage() {
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-6 w-6 text-green-500" />
                   <div>
-                    <p className="font-medium text-green-400">Figure Found!</p>
-                    <p className="text-sm text-green-300">We found the figure and created a product listing.</p>
+                    <p className="font-medium text-green-400">¡Figura Encontrada!</p>
+                    <p className="text-sm text-green-300">Hemos encontrado la figura y creado el producto.</p>
                   </div>
                 </div>
                 <Link href={`/catalog/${request.productId}`}>
                   <Button variant="primary" className="gap-2">
-                    View Product
+                    Ver Producto
                     <ArrowLeft className="h-4 w-4" />
                   </Button>
                 </Link>

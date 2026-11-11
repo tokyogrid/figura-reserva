@@ -180,12 +180,12 @@ export default function VintedPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Vinted Integration</h1>
-          <p className="text-gray-600 dark:text-gray-400">Manage your Vinted connection and sync data</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Integración Vinted</h1>
+          <p className="text-gray-600 dark:text-gray-400">Gestiona tu conexión Vinted y sincroniza datos</p>
         </div>
         <Button variant="outline" onClick={handleRefresh} disabled={loading || refreshing} className="gap-2">
           <RefreshCw className={cn("h-4 w-4", refreshing && "animate-spin")} />
-          Refresh Data
+          Actualizar datos
         </Button>
       </div>
 
@@ -194,12 +194,12 @@ export default function VintedPage() {
         <CardHeader className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <Settings className="h-5 w-5" />
-            Vinted Connection
+            Conexión Vinted
           </CardTitle>
           {account?.isConnected && (
             <Badge variant="success" className="gap-1">
               <Shield className="h-3 w-3" />
-              Connected
+              Conectado
             </Badge>
           )}
         </CardHeader>
@@ -207,15 +207,15 @@ export default function VintedPage() {
           <form onSubmit={(e) => { e.preventDefault(); handleSave(e) }} className="space-y-4">
             <div className="grid sm:grid-cols-2 gap-4">
               <Input
-                label="Vinted Username"
+                label="Usuario Vinted"
                 value={formData.username}
                 onChange={e => setFormData({ ...formData, username: e.target.value })}
-                placeholder="your_vinted_username"
+                placeholder="tu_usuario_vinted"
                 disabled={account?.isConnected}
               />
             </div>
             <Button type="submit" disabled={saving} loading={saving} className="w-full sm:w-auto" variant="primary">
-              {account?.isConnected ? "Update Username" : "Connect Vinted"}
+              {account?.isConnected ? "Actualizar usuario" : "Conectar Vinted"}
             </Button>
           </form>
         </CardContent>
@@ -226,10 +226,10 @@ export default function VintedPage() {
           {/* Tab Navigation */}
           <div className="flex border-b border-gray-200 dark:border-gray-700">
             {[
-              { id: "overview", label: "Overview", icon: TrendingUp },
-              { id: "orders", label: "Orders", icon: Package },
-              { id: "reviews", label: "Reviews", icon: MessageSquare },
-              { id: "listings", label: "Listings", icon: Store },
+              { id: "overview", label: "Resumen", icon: TrendingUp },
+              { id: "orders", label: "Pedidos", icon: Package },
+              { id: "reviews", label: "Reseñas", icon: MessageSquare },
+              { id: "listings", label: "Anuncios", icon: Store },
             ].map(tab => (
               <Button
                 key={tab.id}
@@ -250,7 +250,7 @@ export default function VintedPage() {
               <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
                 <Card>
                   <CardContent className="p-6">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Overall Rating</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Valoración general</p>
                     <p className="text-3xl font-bold text-gray-900 dark:text-white">{account.rating.toFixed(1)}</p>
                     <div className="flex items-center gap-1 mt-1">
                       <Star className="h-4 w-4 text-yellow-500 fill-current" />
@@ -260,25 +260,25 @@ export default function VintedPage() {
                 </Card>
                 <Card>
                   <CardContent className="p-6">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Total Sales</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Ventas totales</p>
                     <p className="text-3xl font-bold text-gray-900 dark:text-white">{account.totalSales}</p>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-6">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Positive</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Positivas</p>
                     <p className="text-3xl font-bold text-green-600">{account.positiveFeedback}</p>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-6">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Neutral</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Neutras</p>
                     <p className="text-3xl font-bold text-yellow-600">{account.neutralFeedback}</p>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-6">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Negative</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Negativas</p>
                     <p className="text-3xl font-bold text-red-600">{account.negativeFeedback}</p>
                   </CardContent>
                 </Card>
@@ -289,13 +289,13 @@ export default function VintedPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Star className="h-5 w-5 text-yellow-500" />
-                    Account Details
+                    Detalles de la cuenta
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Username</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Usuario</p>
                       <div className="flex items-center gap-2">
                         <p className="font-medium text-gray-900 dark:text-white">{account.username}</p>
                         <a 
@@ -304,39 +304,39 @@ export default function VintedPage() {
                           rel="noopener noreferrer"
                           className="text-sm text-blue-600 hover:underline"
                         >
-                          View Profile
+                          Ver perfil
                         </a>
                       </div>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Last Sync</p>
-                      <p className="font-medium text-gray-900 dark:text-white">{account.lastLogin || "Never"}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Última sincronización</p>
+                      <p className="font-medium text-gray-900 dark:text-white">{account.lastLogin || "Nunca"}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Total Sales</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Ventas totales</p>
                       <p className="font-medium text-gray-900 dark:text-white">{account.totalSales}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Status</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Estado</p>
                       <Badge variant={account.isConnected ? "success" : "danger"}>
-                        {account.isConnected ? "Connected" : "Disconnected"}
+                        {account.isConnected ? "Conectado" : "Desconectado"}
                       </Badge>
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <h4 className="font-medium text-gray-900 dark:text-white">Feedback Breakdown</h4>
+                    <h4 className="font-medium text-gray-900 dark:text-white">Desglose de valoraciones</h4>
                     <div className="grid sm:grid-cols-3 gap-4">
                       <div className="p-4 rounded-lg bg-green-50 dark:bg-green-900/20">
-                        <p className="text-sm text-green-700 dark:text-green-400">Positive</p>
+                        <p className="text-sm text-green-700 dark:text-green-400">Positivas</p>
                         <p className="text-2xl font-bold text-green-700">{account.positiveFeedback}</p>
                       </div>
                       <div className="p-4 rounded-lg bg-yellow-50 dark:bg-yellow-900/20">
-                        <p className="text-sm text-yellow-700 dark:text-yellow-400">Neutral</p>
+                        <p className="text-sm text-yellow-700 dark:text-yellow-400">Neutras</p>
                         <p className="text-2xl font-bold text-yellow-700">{account.neutralFeedback}</p>
                       </div>
                       <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20">
-                        <p className="text-sm text-red-700 dark:text-red-400">Negative</p>
+                        <p className="text-sm text-red-700 dark:text-red-400">Negativas</p>
                         <p className="text-2xl font-bold text-red-700">{account.negativeFeedback}</p>
                       </div>
                     </div>
@@ -352,28 +352,28 @@ export default function VintedPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Package className="h-5 w-5" />
-                  Vinted Orders
+                  Pedidos Vinted
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {orders.length === 0 ? (
                   <div className="p-8 text-center">
                     <Package className="h-16 w-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No orders synced</h3>
-                    <p className="text-gray-500 dark:text-gray-400">Click &quot;Refresh Data&quot; to sync orders from Vinted</p>
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No hay pedidos sincronizados</h3>
+                    <p className="text-gray-500 dark:text-gray-400">Haz clic en "Actualizar datos" para sincronizar pedidos de Vinted</p>
                   </div>
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead>
                         <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-left text-sm font-medium text-gray-500 dark:text-gray-400">
-                          <th className="p-4">Order ID</th>
-                          <th className="p-4">Buyer</th>
-                          <th className="p-4">Item</th>
-                          <th className="p-4 text-right">Price</th>
-                          <th className="p-4 text-center">Status</th>
-                          <th className="p-4">Order Date</th>
-                          <th className="p-4 text-right">Actions</th>
+                          <th className="p-4">ID Pedido</th>
+                          <th className="p-4">Comprador</th>
+                          <th className="p-4">Artículo</th>
+                          <th className="p-4 text-right">Precio</th>
+                          <th className="p-4 text-center">Estado</th>
+                          <th className="p-4">Fecha pedido</th>
+                          <th className="p-4 text-right">Acciones</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -393,7 +393,7 @@ export default function VintedPage() {
                               {order.trackingNumber && order.trackingUrl && (
                                 <Button variant="outline" size="sm" onClick={() => window.open(order.trackingUrl!)} className="gap-1">
                                   <Eye className="h-3 w-3" />
-                                  Track
+                                  Rastrear
                                 </Button>
                               )}
                             </td>
@@ -413,15 +413,15 @@ export default function VintedPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <MessageSquare className="h-5 w-5" />
-                  Reviews & Ratings
+                  Reseñas y valoraciones
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {reviews.length === 0 ? (
                   <div className="p-8 text-center">
                     <MessageSquare className="h-16 w-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No reviews synced</h3>
-                    <p className="text-gray-500 dark:text-gray-400">Click &quot;Refresh Data&quot; to sync reviews from Vinted</p>
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No hay reseñas sincronizadas</h3>
+                    <p className="text-gray-500 dark:text-gray-400">Haz clic en "Actualizar datos" para sincronizar reseñas de Vinted</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -441,7 +441,7 @@ export default function VintedPage() {
                               <p className="text-gray-600 dark:text-gray-300">{review.comment}</p>
                             )}
                             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                              Order: {review.orderId || "N/A"} • {new Date(review.reviewDate).toLocaleDateString()}
+                              Pedido: {review.orderId || "N/A"} • {new Date(review.reviewDate).toLocaleDateString()}
                             </p>
                           </div>
                         </div>
@@ -459,15 +459,15 @@ export default function VintedPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Store className="h-5 w-5" />
-                  Active Listings
+                  Anuncios
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {listings.length === 0 ? (
                   <div className="p-8 text-center">
                     <Store className="h-16 w-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No listings synced</h3>
-                    <p className="text-gray-500 dark:text-gray-400">Click &quot;Refresh Data&quot; to sync listings from Vinted</p>
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No hay anuncios sincronizados</h3>
+                    <p className="text-gray-500 dark:text-gray-400">Haz clic en "Actualizar datos" para sincronizar anuncios de Vinted</p>
                   </div>
                 ) : (
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -496,7 +496,7 @@ export default function VintedPage() {
                             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{listing.brand} • {listing.category}</p>
                             <p className="text-lg font-bold text-gray-900 dark:text-white mt-2">{formatPrice(listing.price)}</p>
                             <a href={listing.listingUrl} target="_blank" rel="noopener noreferrer" className="mt-3 inline-block text-sm text-blue-600 hover:underline">
-                              View on Vinted
+                              Ver en Vinted
                             </a>
                           </div>
                         </div>

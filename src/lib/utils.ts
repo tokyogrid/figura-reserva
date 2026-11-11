@@ -48,14 +48,15 @@ export function slugify(text: string): string {
 }
 
 export const ORDER_STATUS_LABELS: Record<string, string> = {
-  PENDING: "Pending",
-  CONFIRMED: "Confirmed",
-  PURCHASING_IN_JAPAN: "Purchasing in Japan",
-  AVAILABLE_ON_VINTED: "Available on Vinted",
-  SHIPPED: "Shipped",
-  DELIVERED: "Delivered",
-  CANCELLED: "Cancelled",
-  REFUNDED: "Refunded",
+  PENDING: "Pendiente",
+  CONFIRMED: "Confirmado",
+  PURCHASING_IN_JAPAN: "Comprando en Japón",
+  AVAILABLE_ON_VINTED: "Disponible en Vinted",
+  PURCHASING_VINTED: "Comprando (Vinted)",
+  SHIPPED: "Enviado",
+  DELIVERED: "Entregado",
+  CANCELLED: "Cancelado",
+  REFUNDED: "Reembolsado",
 }
 
 export const ORDER_STATUS_COLORS: Record<string, string> = {
@@ -63,6 +64,7 @@ export const ORDER_STATUS_COLORS: Record<string, string> = {
   CONFIRMED: "bg-blue-100 text-blue-800",
   PURCHASING_IN_JAPAN: "bg-purple-100 text-purple-800",
   AVAILABLE_ON_VINTED: "bg-pink-100 text-pink-800",
+  PURCHASING_VINTED: "bg-purple-100 text-purple-800",
   SHIPPED: "bg-indigo-100 text-indigo-800",
   DELIVERED: "bg-green-100 text-green-800",
   CANCELLED: "bg-red-100 text-red-800",
@@ -70,12 +72,12 @@ export const ORDER_STATUS_COLORS: Record<string, string> = {
 }
 
 export const VINTED_ORDER_STATUS_LABELS: Record<string, string> = {
-  PENDING: "Pending",
-  CONFIRMED: "Confirmed",
-  PURCHASING_IN_JAPAN: "Purchasing in Japan",
-  AVAILABLE_ON_VINTED: "Available on Vinted",
-  CANCELLED: "Cancelled",
-  REFUNDED: "Refunded",
+  PENDING: "Pendiente",
+  CONFIRMED: "Confirmado",
+  PURCHASING_IN_JAPAN: "Comprando en Japón",
+  AVAILABLE_ON_VINTED: "Disponible en Vinted",
+  CANCELLED: "Cancelado",
+  REFUNDED: "Reembolsado",
 }
 
 export const VINTED_ORDER_STATUS_COLORS: Record<string, string> = {
@@ -88,11 +90,19 @@ export const VINTED_ORDER_STATUS_COLORS: Record<string, string> = {
 }
 
 export const PAYMENT_STATUS_LABELS: Record<string, string> = {
-  UNPAID: "Unpaid",
-  PAID: "Paid",
-  PARTIAL: "Partial",
-  REFUNDED: "Refunded",
-  FAILED: "Failed",
+  UNPAID: "No pagado",
+  PAID: "Pagado",
+  PARTIAL: "Parcial",
+  REFUNDED: "Reembolsado",
+  FAILED: "Fallido",
+}
+
+export const PAYMENT_STATUS_COLORS: Record<string, string> = {
+  UNPAID: "bg-yellow-100 text-yellow-800",
+  PAID: "bg-green-100 text-green-800",
+  PARTIAL: "bg-blue-100 text-blue-800",
+  REFUNDED: "bg-purple-100 text-purple-800",
+  FAILED: "bg-red-100 text-red-800",
 }
 
 export const REQUEST_STATUS_LABELS: Record<string, string> = {
@@ -111,7 +121,7 @@ export const REQUEST_STATUS_COLORS: Record<string, string> = {
 
 export const PRODUCT_STATUS_LABELS: Record<string, string> = {
   AVAILABLE: "Disponible",
-  LOW_STOCK: "Stock bajo",
+  LOW_STOCK: "Pocas unidades",
   OUT_OF_STOCK: "Agotado",
   PRE_ORDER: "Pre-order",
   DISCONTINUED: "Descatalogado",

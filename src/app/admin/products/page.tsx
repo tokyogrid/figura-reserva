@@ -52,12 +52,12 @@ export default function AdminProductsPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Delete this product?")) return
+    if (!confirm("¿Eliminar este producto?")) return
     try {
       const res = await fetch(`/api/admin/products/${id}`, { method: "DELETE", credentials: "include" })
       if (!res.ok) throw new Error("Failed")
       fetchProducts()
-    } catch { alert("Error deleting") }
+    } catch { alert("Error al eliminar") }
   }
 
   const available = (p: Product) => p.stock - p.reserved
@@ -66,10 +66,10 @@ export default function AdminProductsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Products</h1>
-          <p className="text-gray-600 dark:text-gray-400">Manage your figure catalog</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Productos</h1>
+          <p className="text-gray-600 dark:text-gray-400">Gestiona tu catálogo de figuras</p>
         </div>
-        <Link href="/admin/products/new"><Button className="gap-2"><Plus className="h-4 w-4" /> New Product</Button></Link>
+        <Link href="/admin/products/new"><Button className="gap-2"><Plus className="h-4 w-4" /> Nuevo Producto</Button></Link>
       </div>
 
       <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 pt-0">
@@ -77,43 +77,43 @@ export default function AdminProductsPage() {
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <input type="text" placeholder="Search name, series, character..." value={search} onChange={e => setSearch(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <input type="text" placeholder="Buscar nombre, serie, personaje..." value={search} onChange={e => setSearch(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
             <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800">
-              <option value="">All Status</option>
-              <option value="AVAILABLE">Available</option>
-              <option value="LOW_STOCK">Low Stock</option>
-              <option value="OUT_OF_STOCK">Out of Stock</option>
+              <option value="">Todos los Estados</option>
+              <option value="AVAILABLE">Disponible</option>
+              <option value="LOW_STOCK">Pocas Unidades</option>
+              <option value="OUT_OF_STOCK">Agotado</option>
               <option value="PRE_ORDER">Pre-order</option>
-              <option value="DISCONTINUED">Discontinued</option>
+              <option value="DISCONTINUED">Descatalogado</option>
             </select>
           </div>
         </div>
         <div className="md:hidden">
           <Button variant="outline" className="w-full gap-2" onClick={() => setShowFilters(!showFilters)}>
-            <Filter className="h-4 w-4" /> Filters <ChevronDown className={cn("h-4 w-4 transition-transform", showFilters && "rotate-180")} />
+            <Filter className="h-4 w-4" /> Filtros <ChevronDown className={cn("h-4 w-4 transition-transform", showFilters && "rotate-180")} />
           </Button>
         </div>
       </div>
 
       <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
         {loading ? (
-          <div className="p-8 text-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto" /><p className="mt-4 text-gray-500">Loading...</p></div>
+          <div className="p-8 text-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto" /><p className="mt-4 text-gray-500">Cargando...</p></div>
         ) : products.length === 0 ? (
           <div className="p-8 text-center">
             <Package className="h-16 w-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No products</h3>
-            <p className="text-gray-500 dark:text-gray-400 mb-4">Add your first figure</p>
-            <Link href="/admin/products/new"><Button variant="primary" className="gap-2"><Plus className="h-4 w-4" /> Create Product</Button></Link>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No hay productos</h3>
+            <p className="text-gray-500 dark:text-gray-400 mb-4">Añade tu primera figura</p>
+            <Link href="/admin/products/new"><Button variant="primary" className="gap-2"><Plus className="h-4 w-4" /> Crear Producto</Button></Link>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-left text-sm font-medium text-gray-500 dark:text-gray-400">
-                  <th className="p-4">Image</th><th className="p-4">Product</th><th className="p-4 hidden md:table-cell">Series</th>
-                  <th className="p-4 text-right">Price</th><th className="p-4 text-center hidden lg:table-cell">Stock</th>
-                  <th className="p-4 text-center">Status</th><th className="p-4 text-right">Actions</th>
+                  <th className="p-4">Imagen</th><th className="p-4">Producto</th><th className="p-4 hidden md:table-cell">Serie</th>
+                  <th className="p-4 text-right">Precio</th><th className="p-4 text-center hidden lg:table-cell">Stock</th>
+                  <th className="p-4 text-center">Estado</th><th className="p-4 text-right">Acciones</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -147,9 +147,9 @@ export default function AdminProductsPage() {
                       </td>
                       <td className="p-4 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <Link href={`/admin/products/${product.id}`} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" title="View"><Eye className="h-4 w-4 text-gray-500" /></Link>
-                          <Link href={`/admin/products/${product.id}/edit`} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" title="Edit"><Edit className="h-4 w-4 text-gray-500" /></Link>
-                          <button onClick={() => handleDelete(product.id)} className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20" title="Delete"><Trash2 className="h-4 w-4 text-red-500" /></button>
+                          <Link href={`/admin/products/${product.id}`} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" title="Ver"><Eye className="h-4 w-4 text-gray-500" /></Link>
+                          <Link href={`/admin/products/${product.id}/edit`} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" title="Editar"><Edit className="h-4 w-4 text-gray-500" /></Link>
+                          <button onClick={() => handleDelete(product.id)} className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20" title="Eliminar"><Trash2 className="h-4 w-4 text-red-500" /></button>
                         </div>
                       </td>
                     </tr>

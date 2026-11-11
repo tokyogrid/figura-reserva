@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { getAdminSessionFromRequest } from "@/lib/auth"
+import { getAdminSessionFromRequest, getSessionFromRequest } from "@/lib/auth"
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -16,6 +16,17 @@ export async function middleware(request: NextRequest) {
 
     if (!session) {
       const loginUrl = new URL("/admin/login", request.url)
+      loginUrl.searchParams.set("callbackUrl", pathname)
+      return NextResponse.redirect(loginUrl)
+    }
+  }
+
+  // Proteger rutas de usuario (checkout, account, order)
+  if (pathname.startsWith("/checkout") || pathname.startsWith("/account") || pathname.startsWith("/order")) {
+    const session = await getSessionFromRequest(request)
+
+    if (!session) {
+      const loginUrl = new URL("/login", request.url)
       loginUrl.searchParams.set("callbackUrl", pathname)
       return NextResponse.redirect(loginUrl)
     }

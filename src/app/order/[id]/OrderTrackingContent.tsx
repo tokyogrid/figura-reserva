@@ -71,19 +71,19 @@ const statusIcons = {
 }
 
 const statusDescriptions: Record<string, string> = {
-  PENDING: "Waiting for payment confirmation",
-  CONFIRMED: "Payment confirmed, preparing purchase in Japan",
-  PURCHASING_IN_JAPAN: "Buying figure from Japanese stores",
-  SHIPPED: "Figure received in Spain and shipped to you",
-  DELIVERED: "Order delivered! Enjoy your figure",
-  AVAILABLE_ON_VINTED: "Figure listed on Vinted, ready for you to complete purchase",
+  PENDING: "Esperando confirmación de pago",
+  CONFIRMED: "Pago confirmado, preparando compra en Japón",
+  PURCHASING_IN_JAPAN: "Comprando figura en tiendas japonesas",
+  SHIPPED: "Figura recibida en España y enviada a ti",
+  DELIVERED: "¡Pedido entregado! Disfruta tu figura",
+  AVAILABLE_ON_VINTED: "Figura listada en Vinted, listo para que completes la compra",
 }
 
 const vintedStatusDescriptions: Record<string, string> = {
-  PENDING: "Waiting for payment confirmation",
-  CONFIRMED: "Payment confirmed, preparing purchase in Japan",
-  PURCHASING_IN_JAPAN: "Buying figure from Japanese stores",
-  AVAILABLE_ON_VINTED: "Figure listed on Vinted, ready for you to complete purchase",
+  PENDING: "Esperando confirmación de pago",
+  CONFIRMED: "Pago confirmado, preparando compra en Japón",
+  PURCHASING_IN_JAPAN: "Comprando figura en tiendas japonesas",
+  AVAILABLE_ON_VINTED: "Figura listada en Vinted, listo para que completes la compra",
 }
 
 export function OrderTrackingContent({ order }: Props) {
@@ -103,13 +103,13 @@ export function OrderTrackingContent({ order }: Props) {
         <div className="mb-8">
           <Link href="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-purple-400 mb-6">
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-            Back to Home
+            Volver al Inicio
           </Link>
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-white mb-2">Order Tracking</h1>
-            <p className="text-gray-300">Order <strong>#{order.id.slice(0, 8)}</strong> • {new Date(order.createdAt).toLocaleDateString()}</p>
+            <h1 className="text-3xl font-bold text-white mb-2">Seguimiento de Pedido</h1>
+            <p className="text-gray-300">Pedido <strong>#{order.id.slice(0, 8)}</strong> • {new Date(order.createdAt).toLocaleDateString()}</p>
             {isVinted && (
-              <p className="text-sm text-purple-400 mt-1">Vinted Order - You will complete the purchase on Vinted</p>
+              <p className="text-sm text-purple-400 mt-1">Pedido Vinted - Completarás la compra en Vinted</p>
             )}
           </div>
         </div>
@@ -119,7 +119,7 @@ export function OrderTrackingContent({ order }: Props) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
               <Truck className="h-5 w-5" aria-hidden="true" />
-              {isVinted ? "Vinted Purchase Status" : "Shipping Status"}
+              {isVinted ? "Estado de Compra Vinted" : "Estado de Envío"}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -150,7 +150,7 @@ export function OrderTrackingContent({ order }: Props) {
                             {currentStatusLabels[status] || status}
                           </h3>
                           {isCurrent && (
-                            <Badge variant="info" className="text-xs bg-purple-500/10 text-purple-400 border-purple-500/20">Current</Badge>
+                            <Badge variant="info" className="text-xs bg-purple-500/10 text-purple-400 border-purple-500/20">Actual</Badge>
                           )}
                         </div>
                         <p className="text-sm text-gray-400 mt-1">
@@ -167,9 +167,9 @@ export function OrderTrackingContent({ order }: Props) {
               <div className="mt-6 p-4 bg-purple-500/10 border border-purple-500/20 rounded-lg">
                 <h4 className="font-medium text-purple-400 mb-2 flex items-center gap-2">
                   <Truck className="h-4 w-4" aria-hidden="true" />
-                  Shipping Information
+                  Información de Envío
                 </h4>
-                <p className="text-purple-300">Your package is on the way. You&apos;ll receive the tracking number by email.</p>
+                <p className="text-purple-300">Tu paquete está en camino. Recibirás el número de seguimiento por email.</p>
               </div>
             )}
           </CardContent>
@@ -180,7 +180,7 @@ export function OrderTrackingContent({ order }: Props) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
               <Package className="h-5 w-5" aria-hidden="true" />
-              Figures in Order
+              Figuras del Pedido
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -201,7 +201,7 @@ export function OrderTrackingContent({ order }: Props) {
                         {item.product.name}
                       </Link>
                       <p className="text-sm text-gray-400">
-                        Quantity: {item.quantity} × {formatPrice(item.price)}
+                        Cantidad: {item.quantity} × {formatPrice(item.price)}
                       </p>
                     </div>
                     <span className="font-semibold text-white">
@@ -217,13 +217,13 @@ export function OrderTrackingContent({ order }: Props) {
                 <p className="font-medium text-white">{formatPrice(order.subtotal)}</p>
               </div>
               <div>
-                <p className="text-gray-400">Shipping</p>
+                <p className="text-gray-400">Envío</p>
                 <p className="font-medium text-white">
-                  {order.shippingCost === 0 ? "Free" : formatPrice(order.shippingCost)}
+                  {order.shippingCost === 0 ? "Gratis" : formatPrice(order.shippingCost)}
                 </p>
               </div>
               <div>
-                <p className="text-gray-400">Total Paid</p>
+                <p className="text-gray-400">Total Pagado</p>
                 <p className="font-bold text-lg text-white">{formatPrice(order.total)}</p>
               </div>
             </div>
@@ -235,13 +235,13 @@ export function OrderTrackingContent({ order }: Props) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
               <User className="h-5 w-5" aria-hidden="true" />
-              Your Information
+              Tu Información
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-gray-400">Name</p>
+                <p className="text-sm text-gray-400">Nombre</p>
                 <p className="font-medium text-white">{order.customerName}</p>
               </div>
               <div>
@@ -250,7 +250,7 @@ export function OrderTrackingContent({ order }: Props) {
               </div>
             </div>
             <div>
-              <p className="text-sm text-gray-400">Shipping Address</p>
+              <p className="text-sm text-gray-400">Dirección de Envío</p>
               <address className="not-italic text-white">
                 {order.address}<br />
                 {order.postalCode} {order.city}<br />
@@ -265,15 +265,15 @@ export function OrderTrackingContent({ order }: Props) {
           <CardContent className="p-6">
             <h3 className="font-semibold text-purple-400 mb-3 flex items-center gap-2">
               <Sparkles className="h-5 w-5" aria-hidden="true" />
-              Need Help?
+              ¿Necesitas Ayuda?
             </h3>
             <p className="text-purple-300 mb-4">
-              Reply to the confirmation email or write to {getContactEmail() ? <a href={`mailto:${getContactEmail()}`} className="underline">{getContactEmail()}</a> : <a href="/contact" className="underline">Contact Support</a>}. We reply within 24h.
+              Responde al email de confirmación o escribe a {getContactEmail() ? <a href={`mailto:${getContactEmail()}`} className="underline">{getContactEmail()}</a> : <a href="/contact" className="underline">Contactar Soporte</a>}. Respondemos en 24h.
             </p>
             <div className="flex flex-wrap gap-3">
-              <Button variant="secondary" onClick={() => getContactEmail() ? window.open(`mailto:${getContactEmail()}?subject=Order ${order.id.slice(0, 8)}`) : window.open(`/contact`)} className="gap-2">
+              <Button variant="secondary" onClick={() => getContactEmail() ? window.open(`mailto:${getContactEmail()}?subject=Pedido ${order.id.slice(0, 8)}`) : window.open(`/contact`)} className="gap-2">
                 <Mail className="h-4 w-4" aria-hidden="true" />
-                Contact Support
+                Contactar Soporte
               </Button>
               {order.phone && (
                 <Button variant="outline" onClick={() => {

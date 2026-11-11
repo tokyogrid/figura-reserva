@@ -42,9 +42,9 @@ function ProductDetailContent({
   return React.createElement("div", { className: "min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black" },
     React.createElement("div", { className: "container py-8" },
       React.createElement("nav", { className: "mb-6 flex items-center gap-2 text-sm text-gray-400", "aria-label": "Navigation" },
-        React.createElement("a", { href: "/", className: "hover:text-purple-400" }, "Home"),
+        React.createElement("a", { href: "/", className: "hover:text-purple-400" }, "Inicio"),
         React.createElement("span", null, "/"),
-        React.createElement("a", { href: "/catalog", className: "hover:text-purple-400" }, "Catalog"),
+        React.createElement("a", { href: "/catalog", className: "hover:text-purple-400" }, "Catálogo"),
         React.createElement("span", null, "/"),
         React.createElement("span", { className: "text-white truncate max-w-[200px]" }, product.name)
       ),
@@ -62,11 +62,11 @@ function ProductDetailContent({
             }) : React.createElement("div", { className: "w-full h-full flex items-center justify-center text-gray-500" },
               React.createElement(Package, { className: "h-24 w-24", "aria-hidden": "true" })
             ),
-            !inStock && React.createElement("div", { className: "absolute inset-0 bg-black/70 flex items-center justify-center" },
-              React.createElement("span", { className: "bg-gradient-to-r from-red-500 to-red-600 text-white text-lg px-6 py-3 rounded-full" }, "Out of Stock - Pre-order Available")
+            !inStock && React.createElement("div", { className: "absolute inset-0 bg-black/70 flex items-center justify-center z-10" },
+              React.createElement("span", { className: "bg-gradient-to-r from-red-500 to-red-600 text-white text-lg px-6 py-3 rounded-full" }, "Agotado - Pre-order disponible")
             ),
             product.isFeatured && React.createElement("span", { className: "absolute top-4 left-4 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1" },
-              React.createElement("span", { className: "relative z-10" }, "⭐ Featured")
+              React.createElement("span", { className: "relative z-10" }, "⭐ Destacado")
             )
           ),
           images.length > 1 && React.createElement("div", { className: "flex gap-2 overflow-x-auto pb-2" },
@@ -77,7 +77,7 @@ function ProductDetailContent({
                 "relative h-20 w-20 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-colors",
                 index === selectedImage ? "border-purple-500" : "border-transparent hover:border-gray-600"
               ),
-              "aria-label": "View image " + (index + 1),
+              "aria-label": "Ver imagen " + (index + 1),
               "aria-current": index === selectedImage ? "true" : "false"
             },
               React.createElement(Image, {
@@ -103,31 +103,31 @@ function ProductDetailContent({
           React.createElement("div", { className: "flex flex-wrap gap-2" },
             (product.stock - product.reserved > 0) && (product.stock - product.reserved) < 5 && React.createElement("span", { className: "bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1" },
               React.createElement(Package, { className: "h-3 w-3", "aria-hidden": "true" }),
-              "Only " + (product.stock - product.reserved) + " left"
+              "Solo " + (product.stock - product.reserved) + " unidades"
             ),
             !(product.stock - product.reserved > 0) && React.createElement("span", { className: "bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1" },
               React.createElement(Package, { className: "h-3 w-3", "aria-hidden": "true" }),
-              "Out of Stock - Available for Pre-order"
+              "Agotado - Disponible para pre-order"
             ),
             product.status === "PRE_ORDER" && React.createElement("span", { className: "bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-3 py-1 rounded-full text-xs font-medium" }, "Pre-order"),
-            product.status === "LOW_STOCK" && product.stock - product.reserved > 0 && React.createElement("span", { className: "bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-medium" }, "Low stock"),
+            product.status === "LOW_STOCK" && product.stock - product.reserved > 0 && React.createElement("span", { className: "bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-medium" }, "Pocas unidades"),
             product.isUnpurchasable && React.createElement("span", { className: "bg-gray-800/50 text-gray-300 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1" },
               React.createElement(Tag, { className: "h-3 w-3", "aria-hidden": "true" }),
-              "Not purchasable"
+              "No disponible para compra"
             ),
-            product.isHidden && React.createElement("span", { className: "bg-gray-800/50 text-gray-300 px-3 py-1 rounded-full text-xs font-medium" }, "Hidden from catalog")
+            product.isHidden && React.createElement("span", { className: "bg-gray-800/50 text-gray-300 px-3 py-1 rounded-full text-xs font-medium" }, "Oculto del catálogo")
           ),
           product.description && React.createElement("div", { className: "prose prose-invert max-w-none" },
             React.createElement("p", { className: "text-gray-300 whitespace-pre-wrap", dangerouslySetInnerHTML: { __html: sanitizeHtml(product.description) } })
           ),
           (function() {
             const specsArray = [
-              { label: "Series", value: product.series },
-              { label: "Character", value: product.character },
-              { label: "Manufacturer", value: product.manufacturer },
-              { label: "Scale", value: product.scale },
-              { label: "Category", value: product.category },
-              { label: "Release", value: product.releaseDate ? new Date(product.releaseDate).toLocaleDateString("en-US") : null }
+              { label: "Serie", value: product.series },
+              { label: "Personaje", value: product.character },
+              { label: "Fabricante", value: product.manufacturer },
+              { label: "Escala", value: product.scale },
+              { label: "Categoría", value: product.category },
+              { label: "Lanzamiento", value: product.releaseDate ? new Date(product.releaseDate).toLocaleDateString("es-ES") : null }
             ]
             const specs = specsArray.filter(function(s) { return s.value !== null })
             if (specs.length === 0) return null
@@ -150,13 +150,13 @@ function ProductDetailContent({
           React.createElement("div", { className: "bg-gray-900/50 border border-gray-800 rounded-2xl p-6" },
             React.createElement("div", { className: "space-y-4" },
               React.createElement("div", null,
-                React.createElement("label", { htmlFor: "quantity", className: "block text-sm font-medium text-gray-300 mb-2" }, "Quantity"),
+                React.createElement("label", { htmlFor: "quantity", className: "block text-sm font-medium text-gray-300 mb-2" }, "Cantidad"),
                 React.createElement("div", { className: "flex items-center gap-3" },
                   React.createElement("button", {
                     onClick: function() { return setQuantity(Math.max(1, quantity - 1)) },
                     disabled: quantity <= 1 || product.stock - product.reserved <= 0,
                     className: "p-2 border border-gray-700 rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed",
-                    "aria-label": "Decrease quantity"
+                    "aria-label": "Disminuir cantidad"
                   },
                     React.createElement("svg", { className: "h-5 w-5", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24" },
                       React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M20 12H4" })
@@ -176,7 +176,7 @@ function ProductDetailContent({
                     onClick: function() { return setQuantity(Math.min(Math.min(product.stock - product.reserved > 0 ? product.stock - product.reserved : 0, 5), quantity + 1)) },
                     disabled: quantity >= Math.min(product.stock - product.reserved > 0 ? product.stock - product.reserved : 0, 5) || product.stock - product.reserved <= 0,
                     className: "p-2 border border-gray-700 rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed",
-                    "aria-label": "Increase quantity"
+                    "aria-label": "Aumentar cantidad"
                   },
                     React.createElement("svg", { className: "h-5 w-5", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24" },
                       React.createElement("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M12 4v16m8-8H4" })
@@ -185,9 +185,9 @@ function ProductDetailContent({
                 ),
                 (function() {
                   const maxQty = Math.min(product.stock - product.reserved > 0 ? product.stock - product.reserved : 0, 5)
-                  return maxQty > 0 && maxQty < 5 && product.stock - product.reserved > 0 ? React.createElement("p", { className: "text-xs text-gray-400 mt-1" }, "Max " + maxQty + " unit" + (maxQty !== 1 ? "s" : "") + " available") : null
+                  return maxQty > 0 && maxQty < 5 && product.stock - product.reserved > 0 ? React.createElement("p", { className: "text-xs text-gray-400 mt-1" }, "Máx. " + maxQty + " unidad" + (maxQty !== 1 ? "es" : "") + " disponible" + (maxQty !== 1 ? "s" : "")) : null
                 })(),
-                !(product.stock - product.reserved > 0) && React.createElement("p", { className: "text-xs text-gray-400 mt-1" }, "Out of stock - Pre-order available")
+                !(product.stock - product.reserved > 0) && React.createElement("p", { className: "text-xs text-gray-400 mt-1" }, "Agotado - Pre-order disponible")
               ),
               React.createElement("div", { className: "space-y-3" },
                 inStock && !product.isUnpurchasable ? [
@@ -198,7 +198,7 @@ function ProductDetailContent({
                     variant: "primary"
                   }, React.createElement("span", { className: "flex items-center gap-2" },
                     React.createElement("span", { className: "flex items-center justify-center h-4 w-4 rounded bg-white/20" }, React.createElement(Zap, { className: "h-4 w-4", "aria-hidden": "true" })),
-                    "Buy Now - Fast Shipping (1-3 days)"
+                    "Comprar ahora - Envío rápido (1-3 días)"
                   )),
                   React.createElement(Button, {
                     key: "vinted",
@@ -207,11 +207,11 @@ function ProductDetailContent({
                     variant: "secondary"
                   }, React.createElement("span", { className: "flex items-center gap-2" },
                     React.createElement("span", { className: "flex items-center justify-center h-4 w-4 rounded bg-white/20" }, React.createElement(Tag, { className: "h-4 w-4", "aria-hidden": "true" })),
-                    "Buy via Vinted (50% now, 50% on Vinted)"
+                    "Comprar vía Vinted (50% ahora, 50% en Vinted)"
                   ))
                 ] : product.isUnpurchasable ? [
                   React.createElement("div", { key: "unpurchasable", className: "w-full h-12 text-lg bg-gray-800/50 border border-gray-700 rounded-xl flex items-center justify-center text-gray-400" },
-                    "Not available for purchase"
+                    "No disponible para compra"
                   )
                 ] : [
                   React.createElement(Button, {
@@ -221,7 +221,7 @@ function ProductDetailContent({
                     variant: "primary"
                   }, React.createElement("span", { className: "flex items-center gap-2" },
                     React.createElement("span", { className: "flex items-center justify-center h-4 w-4 rounded bg-white/20" }, React.createElement(Truck, { className: "h-4 w-4", "aria-hidden": "true" })),
-                    "Buy (10-20 days)"
+                    "Comprar (10-20 días)"
                   )),
                   React.createElement(Button, {
                     key: "vinted",
@@ -230,22 +230,22 @@ function ProductDetailContent({
                     variant: "secondary"
                   }, React.createElement("span", { className: "flex items-center gap-2" },
                     React.createElement("span", { className: "flex items-center justify-center h-4 w-4 rounded bg-white/20" }, React.createElement(Package, { className: "h-4 w-4", "aria-hidden": "true" })),
-                    "Buy via Vinted (50% now, 50% on Vinted)"
+                    "Comprar vía Vinted (50% ahora, 50% en Vinted)"
                   ))
                 ]
               ),
               React.createElement("div", { className: "flex items-center justify-center gap-6 text-sm text-gray-400 pt-4 border-t border-gray-800" },
                 React.createElement("div", { className: "flex items-center gap-2" },
                   React.createElement(Truck, { className: "h-4 w-4", "aria-hidden": "true" }),
-                  React.createElement("span", null, "Shipping 4.99\u20ac (free >100\u20ac)")
+                  React.createElement("span", null, "Envío 4,99€ (gratis >100€)")
                 ),
                 React.createElement("div", { className: "flex items-center gap-2" },
                   React.createElement(Shield, { className: "h-4 w-4", "aria-hidden": "true" }),
-                  React.createElement("span", null, "Secure Stripe payment")
+                  React.createElement("span", null, "Pago seguro con Stripe")
                 ),
                 React.createElement("div", { className: "flex items-center gap-2" },
                   React.createElement(RotateCcw, { className: "h-4 w-4", "aria-hidden": "true" }),
-                  React.createElement("span", null, "14-day returns")
+                  React.createElement("span", null, "Devoluciones 14 días")
                 )
               )
             )
