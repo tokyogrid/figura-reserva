@@ -360,7 +360,7 @@ export default function VintedPage() {
                   <div className="p-8 text-center">
                     <Package className="h-16 w-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No hay pedidos sincronizados</h3>
-                    <p className="text-gray-500 dark:text-gray-400">Haz clic en "Actualizar datos" para sincronizar pedidos de Vinted</p>
+                    <p className="text-gray-500 dark:text-gray-400">Haz clic en «Actualizar datos» para sincronizar pedidos de Vinted</p>
                   </div>
                 ) : (
                   <div className="overflow-x-auto">
@@ -421,7 +421,7 @@ export default function VintedPage() {
                   <div className="p-8 text-center">
                     <MessageSquare className="h-16 w-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No hay reseñas sincronizadas</h3>
-                    <p className="text-gray-500 dark:text-gray-400">Haz clic en "Actualizar datos" para sincronizar reseñas de Vinted</p>
+                    <p className="text-gray-500 dark:text-gray-400">Haz clic en «Actualizar datos» para sincronizar reseñas de Vinted</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -467,7 +467,7 @@ export default function VintedPage() {
                   <div className="p-8 text-center">
                     <Store className="h-16 w-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No hay anuncios sincronizados</h3>
-                    <p className="text-gray-500 dark:text-gray-400">Haz clic en "Actualizar datos" para sincronizar anuncios de Vinted</p>
+                    <p className="text-gray-500 dark:text-gray-400">Haz clic en «Actualizar datos» para sincronizar anuncios de Vinted</p>
                   </div>
                 ) : (
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
