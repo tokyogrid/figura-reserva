@@ -19,11 +19,16 @@ function escapeHtml(html: string): string {
 }
 
 export function sanitizeHtml(html: string): string {
-  if (DOMPurify) {
-    return DOMPurify.sanitize(html, {
-      ALLOWED_TAGS: ["b", "i", "em", "strong", "p", "br", "ul", "ol", "li", "a"],
-      ALLOWED_ATTR: ["href", "target", "rel"],
-    })
+  try {
+    if (DOMPurify) {
+      return DOMPurify.sanitize(html, {
+        ALLOWED_TAGS: ["b", "i", "em", "strong", "p", "br", "ul", "ol", "li", "a"],
+        ALLOWED_ATTR: ["href", "target", "rel"],
+      })
+    }
+    return escapeHtml(html)
+  } catch (error) {
+    console.error("sanitizeHtml error:", error)
+    return escapeHtml(html)
   }
-  return escapeHtml(html)
 }
