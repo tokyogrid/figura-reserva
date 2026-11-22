@@ -10,7 +10,7 @@ export const siteConfig = {
   // Navigation
   nav: {
     catalog: "Catálogo",
-    request: "Pedir Figura",
+    request: "Solicitar Figura",
     howItWorks: "Cómo Funciona",
     vinted: "Nuestro Vinted",
   },
@@ -21,7 +21,7 @@ export const siteConfig = {
     title: "Tus figuras de anime sin salir de casa",
     subtitle: "Tú eliges, nosotros compramos en Japón, tú recibes. Sin sorpresas.",
     ctaPrimary: "Ver Catálogo",
-    ctaSecondary: "Pedir Figura",
+    ctaSecondary: "Solicitar Figura",
   },
   
   // Features
@@ -156,7 +156,7 @@ export const siteConfig = {
     },
     {
       q: "¿Pido figuras que no estén en el catálogo?",
-      a: "¡Claro! Usa el formulario 'Pedir Figura'. Buscamos a nuestros proveedores y, si la encontramos, te avisamos con precio y fotos. Tienes prioridad para reservar antes de que salga al catálogo.",
+      a: "¡Claro! Usa el formulario 'Solicitar Figura'. Buscamos a nuestros proveedores y, si la encontramos, te avisamos con precio y fotos. Tienes prioridad para reservar antes de que salga al catálogo.",
     },
     {
       q: "¿Las figuras son 100 % auténticas?",
@@ -294,7 +294,7 @@ export const siteConfig = {
       title: "¡Petición Enviada!",
       desc: "Hemos recibido tu petición. La revisaremos y te enviaremos un email a <strong>{email}</strong> si podemos encontrar la figura.",
       browseCatalog: "Ver Catálogo Actual",
-      requestAnother: "Pedir Otra Figura",
+      requestAnother: "Solicitar Otra Figura",
     },
   },
   

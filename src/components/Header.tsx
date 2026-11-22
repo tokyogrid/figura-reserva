@@ -67,7 +67,7 @@ export function Header() {
             Catálogo
           </Link>
           <Link href="/request" onClick={() => setMobileMenuOpen(false)} className="block py-3 text-lg font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors">
-            Pedir Figura
+            Solicitar Figura
           </Link>
           <Link href="/vinted" onClick={() => setMobileMenuOpen(false)} className="block py-3 text-lg font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors">
             Nuestro Vinted
@@ -202,7 +202,7 @@ export function Header() {
               Catálogo
             </Link>
             <Link href="/request" className="px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-200">
-              Pedir Figura
+              Solicitar Figura
             </Link>
             <Link href="/vinted" className="px-3 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-200">
               Nuestro Vinted
