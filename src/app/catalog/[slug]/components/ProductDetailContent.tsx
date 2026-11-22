@@ -3,11 +3,9 @@
 import Image from "next/image"
 import { Button } from "@/components/ui/Button"
 import { Badge } from "@/components/ui/Badge"
-import { Card, CardContent } from "@/components/ui/Card"
 import { formatPrice, cn } from "@/lib/utils"
 import { sanitizeHtml } from "@/lib/sanitize"
 import { Truck, Shield, RotateCcw, Package, Check, Zap, Tag, Sparkles } from "lucide-react"
-import { siteConfig } from "@/lib/site-config"
 
 interface Product {
   id: string
@@ -27,6 +25,8 @@ interface Product {
   reserved: number
   status: string
   isFeatured: boolean
+  isUnpurchasable?: boolean
+  isHidden?: boolean
 }
 
 interface ProductDetailContentProps {
@@ -234,7 +234,7 @@ export const ProductDetailContent = ({
                       className="p-2 border border-gray-700 rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed text-white"
                       aria-label="Decrease quantity"
                     >
-                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="h-5 w-5 text-white" fill="none" stroke="#ffffff" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
                       </svg>
                     </button>
@@ -254,7 +254,7 @@ export const ProductDetailContent = ({
                       className="p-2 border border-gray-700 rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed text-white"
                       aria-label="Increase quantity"
                     >
-                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="h-5 w-5 text-white" fill="none" stroke="#ffffff" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                       </svg>
                     </button>
@@ -271,7 +271,7 @@ export const ProductDetailContent = ({
                   {inStock && !product.isUnpurchasable ? (
                     <>
                       <Button
-                        onClick={() => handleAddToCart(true, images, product, addItem, { isVinted: false })}
+                        onClick={() => handleAddToCart(true, images, product, addItem, false)}
                         className="w-full h-12 text-lg"
                         variant="primary"
                       >
@@ -283,7 +283,7 @@ export const ProductDetailContent = ({
                         </span>
                       </Button>
                       <Button
-                        onClick={() => handleAddToCart(true, images, product, addItem, { isVinted: true })}
+                        onClick={() => handleAddToCart(true, images, product, addItem, true)}
                         className="w-full h-12 text-lg"
                         variant="secondary"
                       >
@@ -302,7 +302,7 @@ export const ProductDetailContent = ({
                   ) : (
                     <>
                       <Button
-                        onClick={() => handleAddToCart(true, images, product, addItem, { isVinted: false })}
+                        onClick={() => handleAddToCart(true, images, product, addItem, false)}
                         className="w-full h-12 text-lg"
                         variant="primary"
                       >
@@ -314,7 +314,7 @@ export const ProductDetailContent = ({
                         </span>
                       </Button>
                       <Button
-                        onClick={() => handleAddToCart(true, images, product, addItem, { isVinted: true })}
+                        onClick={() => handleAddToCart(true, images, product, addItem, true)}
                         className="w-full h-12 text-lg"
                         variant="secondary"
                       >
