@@ -232,11 +232,10 @@ export const ProductDetailContent = ({
                       type="button"
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
                       disabled={quantity <= 1 || !inStock}
-                      style={{ color: "#ffffff" }}
-                      className="flex h-10 w-10 items-center justify-center border border-gray-700 rounded-lg bg-gray-900/50 hover:bg-gray-800 disabled:cursor-not-allowed !text-white text-xl font-bold leading-none"
+                      className="flex h-10 w-10 items-center justify-center border border-gray-700 rounded-lg bg-gray-900/50 hover:bg-gray-800 disabled:cursor-not-allowed"
                       aria-label="Decrease quantity"
                     >
-                      -
+                      <span style={{ display: "block", width: "14px", height: "2px", backgroundColor: "#ffffff" }} />
                     </button>
                     <input
                       id="quantity"
@@ -252,11 +251,11 @@ export const ProductDetailContent = ({
                       type="button"
                       onClick={() => setQuantity(Math.min(maxQty, quantity + 1))}
                       disabled={quantity >= maxQty || !inStock}
-                      style={{ color: "#ffffff" }}
-                      className="flex h-10 w-10 items-center justify-center border border-gray-700 rounded-lg bg-gray-900/50 hover:bg-gray-800 disabled:cursor-not-allowed !text-white text-xl font-bold leading-none"
+                      className="relative flex h-10 w-10 items-center justify-center border border-gray-700 rounded-lg bg-gray-900/50 hover:bg-gray-800 disabled:cursor-not-allowed"
                       aria-label="Increase quantity"
                     >
-                      +
+                      <span style={{ position: "absolute", width: "14px", height: "2px", backgroundColor: "#ffffff" }} />
+                      <span style={{ position: "absolute", width: "2px", height: "14px", backgroundColor: "#ffffff" }} />
                     </button>
                   </div>
                   {maxQty > 0 && maxQty < 5 && inStock && (
