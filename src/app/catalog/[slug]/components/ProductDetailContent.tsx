@@ -254,8 +254,8 @@ export const ProductDetailContent = ({
                       className="relative flex h-10 w-10 items-center justify-center border border-gray-700 rounded-lg bg-gray-900/50 hover:bg-gray-800 disabled:cursor-not-allowed"
                       aria-label="Increase quantity"
                     >
-                      <span style={{ position: "absolute", width: "14px", height: "2px", backgroundColor: "#ffffff" }} />
-                      <span style={{ position: "absolute", width: "2px", height: "14px", backgroundColor: "#ffffff" }} />
+                      <span style={{ position: "absolute", width: "14px", height: "2px", backgroundColor: "#ffffff", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }} />
+                      <span style={{ position: "absolute", width: "2px", height: "14px", backgroundColor: "#ffffff", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }} />
                     </button>
                   </div>
                   {maxQty > 0 && maxQty < 5 && inStock && (
