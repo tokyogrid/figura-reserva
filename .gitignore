@@ -43,3 +43,6 @@ prisma/schema.local.prisma
 .vscode/
 *.swp
 *.swo
+
+# Local scripts (not for git)
+update_ratings.py

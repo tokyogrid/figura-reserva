@@ -60,6 +60,7 @@ export async function createCheckoutSession({
       quantity: item.quantity,
     })),
     mode: "payment",
+    expires_at: Math.floor(Date.now() / 1000) + 31 * 60,
     success_url: successUrl,
     cancel_url: cancelUrl,
     customer_email: customerEmail,

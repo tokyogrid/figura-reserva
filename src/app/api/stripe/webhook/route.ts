@@ -62,7 +62,10 @@ export async function POST(request: NextRequest) {
           where: { id: orderId },
           include: { items: { include: { product: true } } },
         })
-
+        if (order && order.paymentStatus === "PAID") {
+          console.log("Evento repetido, pedido ya pagado:", order.id)
+          break
+        }
         if (order) {
           // Si existía en PENDING, recalcular totales y actualizar estado y pago
           let subtotal = 0
@@ -80,7 +83,7 @@ export async function POST(request: NextRequest) {
               stripePaymentIntentId: session.payment_intent as string,
               subtotal: subtotal,
               shippingCost: shippingCost,
-              total: total,
+              total: session.amount_total ?? total,
             },
             include: { items: { include: { product: true } } },
           })
@@ -110,7 +113,7 @@ export async function POST(request: NextRequest) {
               country: metadata.country || "",
               subtotal: subtotal,
               shippingCost: shippingCost,
-              total: total,
+              total: session.amount_total ?? total,
               status: "CONFIRMED",
               paymentStatus: "PAID",
               notes: metadata.notes || "",
