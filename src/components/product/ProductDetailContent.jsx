@@ -155,7 +155,7 @@ function ProductDetailContent({
                   React.createElement("button", {
                     onClick: function() { return setQuantity(Math.max(1, quantity - 1)) },
                     disabled: quantity <= 1 || product.stock - product.reserved <= 0,
-                    className: "p-2 border border-gray-700 rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed",
+                    className: "p-2 border border-gray-700 rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed text-white",
                     "aria-label": "Disminuir cantidad"
                   },
                     React.createElement("svg", { className: "h-5 w-5", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24" },
@@ -175,7 +175,7 @@ function ProductDetailContent({
                   React.createElement("button", {
                     onClick: function() { return setQuantity(Math.min(Math.min(product.stock - product.reserved > 0 ? product.stock - product.reserved : 0, 5), quantity + 1)) },
                     disabled: quantity >= Math.min(product.stock - product.reserved > 0 ? product.stock - product.reserved : 0, 5) || product.stock - product.reserved <= 0,
-                    className: "p-2 border border-gray-700 rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed",
+                    className: "p-2 border border-gray-700 rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed text-white",
                     "aria-label": "Aumentar cantidad"
                   },
                     React.createElement("svg", { className: "h-5 w-5", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24" },
