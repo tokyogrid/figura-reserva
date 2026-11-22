@@ -104,7 +104,7 @@ export default function VintedClient() {
   }
 
   // Calculate star breakdown - using hardcoded values per user request
-  const fiveStar = 36
+  const fiveStar = 39
   const fourStar = 1
   const threeStar = 0
   const twoStar = 0

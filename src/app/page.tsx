@@ -184,10 +184,10 @@ export default async function HomePage() {
       <section className="relative z-10 border-y border-gray-800/50 py-6 animate-fade-in">
         <div className="container">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <StatCard icon={Truck} label="Fast Shipping" value="24-48h" desc="After Japan arrival" />
-            <StatCard icon={Shield} label="Authenticity" value="100%" desc="Official sources only" />
-            <StatCard icon={Banknote} label="Japan Prices" value="Best Price" desc="No middleman markup" />
-            <StatCard icon={Sparkles} label="Exclusive Access" value="Priority" desc="First dibs on new arrivals" />
+            <StatCard icon={Truck} label="Envío Rápido" value="24-48 h" desc="Tras llegada de Japón" />
+            <StatCard icon={Shield} label="Autenticidad" value="100 %" desc="Solo fuentes oficiales" />
+            <StatCard icon={Banknote} label="Precios de Japón" value="Mejor Precio" desc="Sin intermediarios" />
+            <StatCard icon={Sparkles} label="Acceso Exclusivo" value="Prioridad" desc="Primero en novedades" />
           </div>
         </div>
       </section>
@@ -204,12 +204,12 @@ export default async function HomePage() {
                   <div className="absolute -inset-1 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl blur opacity-30 animate-pulse" />
                 </div>
                 <div>
-                  <h2 className="text-2xl sm:text-3xl font-bold text-white">Latest Arrivals</h2>
-                  <p className="text-gray-400 text-sm">Fresh from Japan — just added to our catalog</p>
+                  <h2 className="text-2xl sm:text-3xl font-bold text-white">Últimas Llegadas</h2>
+                  <p className="text-gray-400 text-sm">Recién llegadas de Japón — recién añadidas al catálogo</p>
                 </div>
               </div>
               <Link href="/catalog?sort=newest" className="hidden md:flex items-center gap-2 text-purple-400 hover:text-pink-400 font-medium transition-colors">
-                View All <ArrowRight className="h-4 w-4" />
+                Ver Todas <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
 
@@ -220,7 +220,7 @@ export default async function HomePage() {
                     {/* NEW Badge */}
                     <div className="absolute top-3 left-3 z-10 animate-bounce-subtle">
                       <Badge className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-3 py-1 rounded-full text-xs font-bold tracking-wider flex items-center gap-1.5">
-                        <span className="relative z-10">🔥 NEW</span>
+                        <span className="relative z-10">🔥 NUEVO</span>
                         <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full opacity-50 animate-ping" />
                       </Badge>
                     </div>
@@ -256,7 +256,7 @@ export default async function HomePage() {
                         )}
                         <div className="absolute top-3 right-3">
                           <Badge className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-2 py-0.5 rounded-full text-xs">
-                            🎁 Reserve
+                            🎁 Reservar
                           </Badge>
                         </div>
                       </div>
@@ -281,7 +281,7 @@ export default async function HomePage() {
             
             <div className="mt-8 text-center md:hidden">
               <Link href="/catalog?sort=newest" className="inline-flex items-center gap-2 text-purple-400 hover:text-pink-400 font-medium transition-colors">
-                View All Latest <ArrowRight className="h-4 w-4" />
+                Ver Todas las Novedades <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           </div>
@@ -298,13 +298,13 @@ export default async function HomePage() {
           <div className="text-center max-w-2xl mx-auto mb-10 animate-slide-up">
             <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-400 px-4 py-2 rounded-full mb-3">
               <Crown className="h-3 w-3" aria-hidden="true" />
-              <span className="font-medium">Popular Series</span>
+              <span className="font-medium">Series Populares</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">
-              Popular Anime Series
+              Series de Anime Populares
             </h2>
             <p className="text-gray-400">
-              Discover figures from your favorite anime series
+              Descubre figuras de tus series de anime favoritas
             </p>
           </div>
 
@@ -316,7 +316,7 @@ export default async function HomePage() {
                     <div className="relative h-52 flex items-center justify-center overflow-hidden">
                       <img
                         src={series.image}
-                        alt={`${series.character} from ${series.name}`}
+                        alt={`${series.character} de ${series.name}`}
                         className="object-cover group-hover:scale-110 transition-transform duration-500 w-full h-full"
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                       />
@@ -343,7 +343,7 @@ export default async function HomePage() {
           <div className="text-center max-w-2xl mx-auto mb-16 animate-slide-up">
             <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-400 px-4 py-2 rounded-full mb-3">
               <Sparkles className="h-3 w-3" aria-hidden="true" />
-              <span className="font-medium">How It Works</span>
+              <span className="font-medium">Cómo Funciona</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
               {siteConfig.howItWorks.title}
@@ -389,13 +389,13 @@ export default async function HomePage() {
                   <div className="absolute -inset-1 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl blur opacity-30 animate-pulse" />
                 </div>
                 <div>
-                  <h2 className="text-3xl font-bold text-white">Featured Figures</h2>
-                  <p className="text-gray-400">Most reserved this week</p>
+                  <h2 className="text-3xl font-bold text-white">Figuras Destacadas</h2>
+                  <p className="text-gray-400">Más reservadas esta semana</p>
                 </div>
               </div>
               <Link href="/catalog">
                 <Button variant="ghost" className="gap-2 group">
-                  View All <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                  Ver Todas <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </Button>
               </Link>
             </div>
@@ -425,13 +425,13 @@ export default async function HomePage() {
               <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-white/10 mb-4 group animate-pulse-slow">
                 <Search className="h-8 w-8" aria-hidden="true" />
               </div>
-              <h2 className="text-3xl sm:text-4xl font-bold mb-4">Can&apos;t Find Your Figure?</h2>
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4">¿No Encuentras Tu Figura?</h2>
               <p className="text-pink-100 mb-8 max-w-xl mx-auto text-lg">
-                Request it and we&apos;ll search our Japan suppliers. If found, you get priority to reserve.
+                Pídela y buscaremos entre nuestros proveedores de Japón. Si la encontramos, tienes prioridad para reservar.
               </p>
               <Link href="/request">
                 <Button size="lg" variant="secondary" className="gap-2 bg-white text-pink-600 hover:bg-pink-50 group relative overflow-hidden">
-                  <span className="relative z-10">Request Figure</span>
+                  <span className="relative z-10">Pedir Figura</span>
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </Button>
               </Link>
@@ -444,10 +444,10 @@ export default async function HomePage() {
       <section className="relative z-10 py-12 border-t border-gray-800/50 animate-fade-in">
         <div className="container">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <TrustBadge icon={Truck} title="Free Shipping" desc="Over €100" />
-            <TrustBadge icon={Shield} title="Secure Payment" desc="Stripe encrypted" />
-            <TrustBadge icon={Package} title="Authentic" desc="Official sources" />
-            <TrustBadge icon={Sparkles} title="Support" desc="24/7 help" />
+            <TrustBadge icon={Truck} title="Envío Gratis" desc="Desde 100 €" />
+            <TrustBadge icon={Shield} title="Pago Seguro" desc="Stripe cifrado" />
+            <TrustBadge icon={Package} title="Auténtico" desc="Fuentes oficiales" />
+            <TrustBadge icon={Sparkles} title="Soporte" desc="Ayuda 24/7" />
           </div>
         </div>
       </section>
