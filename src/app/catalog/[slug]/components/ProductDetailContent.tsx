@@ -229,14 +229,14 @@ export const ProductDetailContent = ({
                   <label htmlFor="quantity" className="block text-sm font-medium text-gray-300 mb-2">Quantity</label>
                   <div className="flex items-center gap-3">
                     <button
+                      type="button"
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
                       disabled={quantity <= 1 || !inStock}
-                      className="p-2 border border-gray-700 rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed text-white"
+                      style={{ color: "#ffffff" }}
+                      className="flex h-10 w-10 items-center justify-center border border-gray-700 rounded-lg bg-gray-900/50 hover:bg-gray-800 disabled:cursor-not-allowed !text-white text-xl font-bold leading-none"
                       aria-label="Decrease quantity"
                     >
-                      <svg className="h-5 w-5 text-white" fill="none" stroke="#ffffff" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-                      </svg>
+                      -
                     </button>
                     <input
                       id="quantity"
@@ -245,18 +245,18 @@ export const ProductDetailContent = ({
                       onChange={(e) => setQuantity(Math.min(maxQty, Math.max(1, parseInt(e.target.value) || 1)))}
                       min={1}
                       max={maxQty}
-                      className="w-20 text-center border border-gray-700 rounded-lg py-2 px-3 text-white bg-gray-900/50 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-20 h-10 text-center border border-gray-700 rounded-lg py-2 px-3 text-white bg-gray-900/50 focus:outline-none focus:ring-2 focus:ring-purple-500"
                       disabled={!inStock}
                     />
                     <button
+                      type="button"
                       onClick={() => setQuantity(Math.min(maxQty, quantity + 1))}
                       disabled={quantity >= maxQty || !inStock}
-                      className="p-2 border border-gray-700 rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed text-white"
+                      style={{ color: "#ffffff" }}
+                      className="flex h-10 w-10 items-center justify-center border border-gray-700 rounded-lg bg-gray-900/50 hover:bg-gray-800 disabled:cursor-not-allowed !text-white text-xl font-bold leading-none"
                       aria-label="Increase quantity"
                     >
-                      <svg className="h-5 w-5 text-white" fill="none" stroke="#ffffff" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                      </svg>
+                      +
                     </button>
                   </div>
                   {maxQty > 0 && maxQty < 5 && inStock && (
