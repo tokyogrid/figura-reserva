@@ -83,38 +83,84 @@ export default function RootLayout({
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500 dark:text-gray-400">
                     <div className="flex items-center justify-center sm:justify-start gap-6">
-                      <a href="https://www.instagram.com/tokyogridstore/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-purple-400 transition-colors" aria-label="Instagram">
+                      <a
+                        href="https://www.instagram.com/tokyogridstore/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-400 hover:text-purple-400 transition-colors"
+                        aria-label="Instagram"
+                      >
                         <Instagram className="h-9 w-9" />
                       </a>
                       <a
-  href="https://www.tiktok.com/@tokyogridstore?is_from_webapp=1&sender_device=pc"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="text-gray-400 hover:text-purple-400 transition-colors"
-  aria-label="TikTok"
->
-  <svg
-    className="h-9 w-9"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-    <path d="M10 13a2.5 2.5 0 1 0 2.5 2.5V6.5a3.5 3.5 0 0 0 3.5 3.5" />
-  </svg>
-</a>
-                      <a href="https://www.youtube.com/@tokyogridstore" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-purple-400 transition-colors" aria-label="YouTube">
+                        href="https://www.tiktok.com/@tokyogridstore?is_from_webapp=1&sender_device=pc"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-400 hover:text-purple-400 transition-colors"
+                        aria-label="TikTok"
+                      >
+                        <svg
+                          className="h-9 w-9"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden="true"
+                        >
+                          <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                          <path d="M10 13a2.5 2.5 0 1 0 2.5 2.5V6.5a3.5 3.5 0 0 0 3.5 3.5" />
+                        </svg>
+                      </a>
+                      <a
+                        href="https://www.youtube.com/@tokyogridstore"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-400 hover:text-purple-400 transition-colors"
+                        aria-label="YouTube"
+                      >
                         <Youtube className="h-9 w-9" />
                       </a>
+                      <a
+                        href="https://x.com/tokyogridstore"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-400 hover:text-purple-400 transition-colors"
+                        aria-label="X (Twitter)"
+                      >
+                        <svg
+                          className="h-9 w-9"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden="true"
+                        >
+                          <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                          <g transform="translate(5.5, 5.5) scale(0.54)" fill="currentColor" stroke="none">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                          </g>
+                        </svg>
+                      </a>
                     </div>
-                    <div className="text-center sm:text-left">
+
+                    <div className="text-center">
                       <p>{siteConfig.footer.copyright}</p>
                       <p className="mt-1">{siteConfig.footer.disclaimer}</p>
+                      <div className="mt-3 flex flex-wrap items-center justify-center gap-4 text-xs text-gray-400">
+                        <a href="/aviso-legal" className="hover:text-purple-400 transition-colors">Aviso Legal</a>
+                        <span>•</span>
+                        <a href="/politica-privacidad" className="hover:text-purple-400 transition-colors">Política de Privacidad</a>
+                        <span>•</span>
+                        <a href="/terminos-y-condiciones" className="hover:text-purple-400 transition-colors">Términos y Condiciones</a>
+                        <span>•</span>
+                        <a href="/cookies" className="hover:text-purple-400 transition-colors">Política de Cookies</a>
+                      </div>
                     </div>
+
                     <div className="flex items-center justify-center">
                       <TrustpilotBadge />
                     </div>

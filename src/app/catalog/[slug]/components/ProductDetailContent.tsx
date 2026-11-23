@@ -105,13 +105,13 @@ export const ProductDetailContent = ({
               )}
               {!inStock && (
                 <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
-                  <Badge variant="danger" className="text-lg px-6 py-3">Out of Stock - Pre-order Available</Badge>
+                  <Badge variant="danger" className="text-lg px-6 py-3">Agotado - Pre-order disponible</Badge>
                 </div>
               )}
               {product.isFeatured && (
                 <span className="absolute top-4 left-4 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
                   <Sparkles className="h-3 w-3" />
-                  Featured
+                  Destacado
                 </span>
               )}
             </div>
@@ -162,29 +162,29 @@ export const ProductDetailContent = ({
               {inStock && available < 5 && (
                 <span className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
                   <Package className="h-3 w-3" aria-hidden="true" />
-                  Only {available} left
+                  Solo {available} disponibles
                 </span>
               )}
               {!inStock && (
                 <span className="bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
                   <Package className="h-3 w-3" aria-hidden="true" />
-                  Out of Stock - Available for Pre-order
+                  Agotado - Disponible para Pre-order
                 </span>
               )}
               {product.status === "PRE_ORDER" && (
                 <span className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-3 py-1 rounded-full text-xs font-medium">Pre-order</span>
               )}
               {product.status === "LOW_STOCK" && inStock && (
-                <span className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-medium">Low stock</span>
+                <span className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-medium">Pocas unidades</span>
               )}
               {product.isUnpurchasable && (
                 <span className="bg-gray-800/50 text-gray-300 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
                   <Tag className="h-3 w-3" aria-hidden="true" />
-                  Not purchasable
+                  No disponible para compra
                 </span>
               )}
               {product.isHidden && (
-                <span className="bg-gray-800/50 text-gray-300 px-3 py-1 rounded-full text-xs font-medium">Hidden from catalog</span>
+                <span className="bg-gray-800/50 text-gray-300 px-3 py-1 rounded-full text-xs font-medium">Oculto del catálogo</span>
               )}
             </div>
 
@@ -331,7 +331,7 @@ export const ProductDetailContent = ({
                 <div className="flex items-center justify-center gap-6 text-sm text-gray-400 pt-4 border-t border-gray-800">
                   <div className="flex items-center gap-2">
                     <Truck className="h-4 w-4" aria-hidden="true" />
-                    <span>Envío 4,99€ (gratis >100€)</span>
+                    <span>Envío 4,99€ (gratis &gt;100€)</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Shield className="h-4 w-4" aria-hidden="true" />

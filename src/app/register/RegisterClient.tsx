@@ -23,6 +23,7 @@ function RegisterForm() {
   const [city, setCity] = useState("")
   const [postalCode, setPostalCode] = useState("")
   const [country, setCountry] = useState("ES")
+  const [acceptedTerms, setAcceptedTerms] = useState(false)
   const [error, setError] = useState("")
   const [showPassword, setShowPassword] = useState(false)
 
@@ -31,6 +32,12 @@ function RegisterForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
+
+    if (!acceptedTerms) {
+      setError("Debes aceptar los Términos y Condiciones y la Política de Privacidad")
+      return
+    }
+
     setLoading(true)
 
     try {
@@ -168,7 +175,45 @@ function RegisterForm() {
                 </button>
               </div>
             </div>
-            <Button type="submit" disabled={loading} loading={loading} className="w-full h-12" variant="primary">
+
+            <label className="flex items-start gap-3 text-sm text-gray-300 cursor-pointer pt-1">
+              <input
+                type="checkbox"
+                checked={acceptedTerms}
+                onChange={(e) => setAcceptedTerms(e.target.checked)}
+                required
+                className="mt-1 h-4 w-4 rounded border-gray-700 bg-gray-900 text-purple-500 focus:ring-purple-500"
+              />
+              <span>
+                He leído y acepto los{" "}
+                <a
+                  href="/terminos-y-condiciones"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-purple-400 hover:underline"
+                >
+                  Términos y Condiciones
+                </a>{" "}
+                y la{" "}
+                <a
+                  href="/politica-privacidad"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-purple-400 hover:underline"
+                >
+                  Política de Privacidad
+                </a>
+                .
+              </span>
+            </label>
+
+            <Button
+              type="submit"
+              disabled={loading || !acceptedTerms}
+              loading={loading}
+              className="w-full h-12"
+              variant="primary"
+            >
               <Loader2 className="h-4 w-4" aria-hidden="true" />
               Crear Cuenta
             </Button>

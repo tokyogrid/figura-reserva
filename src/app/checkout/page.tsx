@@ -27,6 +27,7 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false)
   const [purchaseOption, setPurchaseOption] = useState<"direct" | "other">("direct")
   const [step, setStep] = useState("form")
+  const [acceptedTerms, setAcceptedTerms] = useState(false)
   
   // Shipping: 5€ for orders under 100€, free above
   const shippingCost = totalPrice > 0 && totalPrice < 10000 ? 500 : 0
@@ -91,6 +92,7 @@ export default function CheckoutPage() {
     if (!formData.city.trim()) newErrors.city = "City required"
     if (!formData.postalCode.trim()) newErrors.postalCode = "Postal code required"
     else if (!/^\d{5}$/.test(formData.postalCode)) newErrors.postalCode = "Invalid postal code (5 digits)"
+    if (!acceptedTerms) newErrors.acceptedTerms = "Debes aceptar los Términos y Condiciones y la Política de Privacidad"
     
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -202,7 +204,7 @@ export default function CheckoutPage() {
                 </div>
                 <div>
                   <h2 className="text-xl font-bold text-white">{siteConfig.checkout.purchaseOptions.title}</h2>
-                  <p className="text-sm text-gray-400">Choose how you&apos;d like to receive your figure</p>
+                  <p className="text-sm text-gray-400">Elige cómo quieres recibir tu figura</p>
                 </div>
               </div>
               <div className="space-y-3">
@@ -253,7 +255,7 @@ export default function CheckoutPage() {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-white">{siteConfig.checkout.shippingInfo}</h3>
-                  <p className="text-sm text-gray-400">We&apos;ll ship your figures safely to this address</p>
+                  <p className="text-sm text-gray-400">Enviaremos tus figuras de forma segura a esta dirección</p>
                 </div>
               </div>
               <form onSubmit={handleSubmit} className="space-y-6" noValidate>
@@ -346,11 +348,11 @@ export default function CheckoutPage() {
 
                 {/* Discount Code */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1.5 flex items-center gap-2">
-                    <span>Discount Code</span>
+                  <label className="block text-sm font-medium text-gray-300 mb-1.5 flex items_center gap-2">
+                    <span>Código de Descuento</span>
                     {discount && (
                       <span className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-2 py-0.5 rounded-full text-xs">
-                        {discount.type === "percentage" ? `${discount.value / 100}%` : `${formatPrice(discount.value)}`} applied
+                        {discount.type === "percentage" ? `${discount.value / 100}%` : `${formatPrice(discount.value)}`} aplicado
                       </span>
                     )}
                   </label>
@@ -372,14 +374,50 @@ export default function CheckoutPage() {
                   </div>
                   {discount && (
                     <p className="mt-2 text-sm text-green-400 flex items-center gap-1">
-                      Discount <strong>{discount.code}</strong> applied - {discount.type === "percentage" ? `${discount.value / 100}%` : formatPrice(discount.value)} off products
+                      Descuento <strong>{discount.code}</strong> aplicado - {discount.type === "percentage" ? `${discount.value / 100}%` : formatPrice(discount.value)} de descuento en productos
                     </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="flex items-start gap-3 text-sm text-gray-300 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={acceptedTerms}
+                      onChange={(e) => setAcceptedTerms(e.target.checked)}
+                      required
+                      className="mt-1 h-4 w-4 rounded border-gray-700 bg-gray-900 text-purple-500 focus:ring-purple-500"
+                    />
+                    <span>
+                      He leído y acepto los{" "}
+                      <a
+                        href="/terminos-y-condiciones"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-purple-400 hover:underline"
+                      >
+                        Términos y Condiciones
+                      </a>{" "}
+                      y la{" "}
+                      <a
+                        href="/politica-privacidad"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-purple-400 hover:underline"
+                      >
+                        Política de Privacidad
+                      </a>
+                      .
+                    </span>
+                  </label>
+                  {errors.acceptedTerms && (
+                    <p className="mt-1.5 text-sm text-red-400">{errors.acceptedTerms}</p>
                   )}
                 </div>
 
                 <Button
                   type="submit"
-                  disabled={loading}
+                  disabled={loading || !acceptedTerms}
                   loading={loading}
                   className="w-full h-12 text-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500"
                   variant="primary"
@@ -404,14 +442,14 @@ export default function CheckoutPage() {
                 <Truck className="h-5 w-5" aria-hidden="true" />
               </div>
               <p className="font-medium text-white">{siteConfig.checkout.shipping}</p>
-              <p className="text-xs text-gray-500">Certified mail with tracking & insurance</p>
+              <p className="text-xs text-gray-500">Correo certificado con seguimiento y seguro</p>
             </div>
             <div className="p-4 rounded-xl bg-gray-900/50 border border-gray-800/50">
               <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 text-purple-400 mb-2">
                 <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
               </div>
-              <p className="font-medium text-white">Protection</p>
-              <p className="text-xs text-gray-500">Auto-refund if we can&apos;t get it</p>
+              <p className="font-medium text-white">Protección</p>
+              <p className="text-xs text-gray-500">Reembolso automático si no la conseguimos</p>
             </div>
           </div>
         </div>
@@ -458,7 +496,7 @@ export default function CheckoutPage() {
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h10M7 17h10m-10-5v10M7 7l10 10" />
                     </svg>
-                    Discount ({discount.code})
+                    Descuento ({discount.code})
                   </span>
                   <span className="font-medium">- {formatPrice(discountAmount)}</span>
                 </div>

@@ -153,7 +153,7 @@ export default function VintedClient() {
                 </div>
 
               </div>
-              {/* Star breakdown bars */}
+              {/* Desglose de estrellas */}
               <div className="mt-6 space-y-2">
                 {starBreakdown.map((item) => (
                   <div key={item.stars} className="flex items-center gap-3">

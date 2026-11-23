@@ -134,11 +134,11 @@ export function CartDrawer() {
                   <span className="font-medium text-white">{formatPrice(subtotal)}</span>
                 </div>
                 
-                {discount && (
+{discount && (
                   <div className="flex justify-between text-sm text-green-400 flex items-center gap-2">
                     <span className="flex items-center gap-1">
                       <Tag className="h-4 w-4" aria-hidden="true" />
-                      Discount ({discount.code})
+                      Descuento ({discount.code})
                     </span>
                     <div className="flex items-center gap-2">
                       <span className="font-medium">- {formatPrice(discountAmount)}</span>
@@ -179,11 +179,11 @@ export function CartDrawer() {
         {items.length > 0 && (
           <div className="p-4 border-t border-gray-800/50 space-y-3">
             <div className="space-y-3">
-              {!discount ? (
+{!discount ? (
                 <div className="space-y-2">
                   <Input
-                    label="Discount Code"
-                    placeholder="Enter discount code"
+                    label="Código de Descuento"
+                    placeholder="Introduce código de descuento"
                     value={discountCode}
                     onChange={(e) => setDiscountCode(e.target.value.toUpperCase())}
                     className="w-full bg-gray-900/50 border-gray-700 text-white placeholder-gray-500 focus:border-purple-500 focus:ring-purple-500/20"
@@ -199,7 +199,7 @@ export function CartDrawer() {
                       const result = await applyDiscount(discountCode.trim())
                       if (result.success) {
                         setDiscountCode("")
-                        toast({ type: "success", title: "Discount applied!" })
+                        toast({ type: "success", title: "¡Descuento aplicado!" })
                       } else {
                         toast({ type: "error", title: "Error", message: result.error })
                       }
@@ -207,12 +207,12 @@ export function CartDrawer() {
                     }}
                     disabled={applyingDiscount || !discountCode.trim()}
                   >
-                    {applyingDiscount ? "Applying..." : "Apply"}
+                    {applyingDiscount ? "Aplicando..." : "Aplicar"}
                   </Button>
                 </div>
               ) : (
                 <p className="text-sm text-center text-gray-400">
-                  Discount <strong>{discount.code}</strong> applied. Remove to apply a different one.
+                  Descuento <strong>{discount.code}</strong> aplicado. Elimínalo para aplicar otro.
                 </p>
               )}
               <Button

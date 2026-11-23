@@ -100,6 +100,18 @@ export default function RequestClient() {
                   <span className="relative z-10">Solicitar Figura</span>
                   <Sparkles className="h-4 w-4 transition-transform group-hover:scale-110" aria-hidden="true" />
                 </Button>
+                <p className="text-center text-xs text-gray-500 mt-2">
+                  Al enviar esta solicitud aceptas nuestra{" "}
+                  <a
+                    href="/politica-privacidad"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-purple-400 hover:underline"
+                  >
+                    Política de Privacidad
+                  </a>
+                  .
+                </p>
               </CardContent>
             </Card>
           </div>

@@ -114,8 +114,8 @@ export function HowItWorksContent() {
       <section className="section bg-gradient-to-b from-gray-950 via-gray-900 to-black">
         <div className="container max-w-3xl">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-4">Frequently Asked Questions</h2>
-            <p className="text-gray-300">Answers to the most common questions</p>
+            <h2 className="text-3xl font-bold text-white mb-4">Preguntas Frecuentes</h2>
+            <p className="text-gray-300">Respuestas a las dudas más comunes</p>
           </div>
 
           <div className="space-y-4">

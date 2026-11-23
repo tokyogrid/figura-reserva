@@ -54,7 +54,7 @@ export function CheckoutSuccessContent({ order }: Props) {
             Your reservation has been processed. Check your email for details.
           </p>
           <Link href="/">
-            <Button variant="primary">Back to Home</Button>
+            <Button variant="primary">Volver al Inicio</Button>
           </Link>
         </div>
       </div>
@@ -73,7 +73,7 @@ export function CheckoutSuccessContent({ order }: Props) {
           </div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{siteConfig.checkoutSuccess.title}</h1>
           <p className="text-gray-600 dark:text-gray-300">
-            Hi {order.customerName}, your order <strong>#{order.id.slice(0, 8)}</strong> is confirmed.
+            Hola {order.customerName}, tu pedido <strong>#{order.id.slice(0, 8)}</strong> está confirmado.
           </p>
         </div>
 
@@ -81,7 +81,7 @@ export function CheckoutSuccessContent({ order }: Props) {
         <Card className="mb-8">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Order Status</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Estado del Pedido</h2>
               <Badge className={ORDER_STATUS_COLORS[order.status] || "bg-gray-100 text-gray-800"}>
                 {ORDER_STATUS_LABELS[order.status] || order.status}
               </Badge>
@@ -89,18 +89,18 @@ export function CheckoutSuccessContent({ order }: Props) {
             <div className="grid sm:grid-cols-3 gap-4 text-center">
               <div className="p-4 rounded-lg bg-gray-50 dark:bg-gray-800/50">
                 <Mail className="h-8 w-8 text-blue-500 mx-auto mb-2" aria-hidden="true" />
-                <p className="text-sm font-medium text-gray-900 dark:text-white">Confirmation Sent</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">To {order.email}</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-white">Confirmación Enviada</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">A {order.email}</p>
               </div>
               <div className="p-4 rounded-lg bg-gray-50 dark:bg-gray-800/50">
                 <Clock className="h-8 w-8 text-purple-500 mx-auto mb-2" aria-hidden="true" />
-                <p className="text-sm font-medium text-gray-900 dark:text-white">Next Step</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Buying in Japan (1-2 weeks)</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-white">Siguiente Paso</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Comprando en Japón (1-2 semanas)</p>
               </div>
               <div className="p-4 rounded-lg bg-gray-50 dark:bg-gray-800/50">
                 <Truck className="h-8 w-8 text-green-500 mx-auto mb-2" aria-hidden="true" />
-                <p className="text-sm font-medium text-gray-900 dark:text-white">Est. Shipping</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">2-3 weeks total</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-white">Envío Estimado</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">2-3 semanas en total</p>
               </div>
             </div>
           </CardContent>
@@ -109,7 +109,7 @@ export function CheckoutSuccessContent({ order }: Props) {
         {/* Order items */}
         <Card className="mb-8">
           <CardContent className="p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Reserved Figures</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Figuras Reservadas</h2>
             <div className="space-y-4">
               {order.items.map((item, index) => (
                 <div key={index} className="flex gap-4">
@@ -123,7 +123,7 @@ export function CheckoutSuccessContent({ order }: Props) {
                   <div className="flex-1">
                     <p className="font-medium text-gray-900 dark:text-white">{item.product.name}</p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Qty: {item.quantity} × {formatPrice(item.price)}
+                      Cant: {item.quantity} × {formatPrice(item.price)}
                     </p>
                   </div>
                   <span className="font-semibold text-gray-900 dark:text-white">
@@ -133,7 +133,7 @@ export function CheckoutSuccessContent({ order }: Props) {
               ))}
             </div>
             <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-between text-lg font-bold">
-              <span className="text-gray-900 dark:text-white">Total Paid</span>
+              <span className="text-gray-900 dark:text-white">Total Pagado</span>
               <span className="text-gray-900 dark:text-white">{formatPrice(order.total)}</span>
             </div>
           </CardContent>
@@ -155,7 +155,7 @@ export function CheckoutSuccessContent({ order }: Props) {
               ))}
             </ol>
             <p className="mt-4 text-sm text-blue-700 dark:text-blue-300">
-              We&apos;ll notify you by email at each step. Questions? Reply to the confirmation email.
+              Te notificaremos por email en cada paso. ¿Dudas? Responde al email de confirmación.
             </p>
           </CardContent>
         </Card>

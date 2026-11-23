@@ -17,9 +17,9 @@ export default function HowItWorksClient() {
             <Sparkles className="h-3 w-3" aria-hidden="true" />
             {siteConfig.hero.badge}
           </Badge>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight mb-6">
-            How <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">{siteConfig.name}</span> Works
-          </h1>
+<h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight mb-6">
+            Cómo <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">{siteConfig.name}</span> Funciona
+</h1>
           <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto">
             {siteConfig.hero.subtitle}
           </p>
@@ -116,8 +116,8 @@ export default function HowItWorksClient() {
       <section className="section bg-gradient-to-b from-gray-950 via-gray-900 to-black">
         <div className="container max-w-3xl">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-4">Frequently Asked Questions</h2>
-            <p className="text-gray-300">Answers to the most common questions</p>
+            <h2 className="text-3xl font-bold text-white mb-4">Preguntas Frecuentes</h2>
+            <p className="text-gray-300">Respuestas a las dudas más comunes</p>
           </div>
 
           <div className="space-y-4">
@@ -141,20 +141,20 @@ export default function HowItWorksClient() {
         <div className="container text-center">
           <Card className="bg-gradient-to-r from-purple-600 to-pink-600 text-white max-w-2xl mx-auto border-purple-500/30 shadow-[0_0_40px_rgba(139,92,246,0.3)]">
             <CardContent className="p-8 md:p-12">
-              <h2 className="text-3xl font-bold mb-4">Ready to Get Your Figure?</h2>
+              <h2 className="text-3xl font-bold mb-4">¿Listo para Conseguir tu Figura?</h2>
               <p className="text-pink-100 mb-8 max-w-xl mx-auto">
-                Browse the catalog or request it if you can&apos;t find it. No commitment, no risk.
+                Explora el catálogo o solicítala si no la encuentras. Sin compromiso, sin riesgo.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Link href="/catalog">
                   <Button size="lg" variant="secondary" className="gap-2 w-full sm:w-auto bg-white text-purple-600 hover:bg-pink-50">
-                    Browse Catalog <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    Ver Catálogo <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Button>
                 </Link>
                 <Link href="/request">
                   <Button size="lg" variant="secondary" className="gap-2 w-full sm:w-auto bg-white text-purple-600 hover:bg-pink-50">
                     <Search className="h-4 w-4" aria-hidden="true" />
-                    Request Figure
+                    Solicitar Figura
                   </Button>
                 </Link>
               </div>

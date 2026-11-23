@@ -263,7 +263,7 @@ export function CatalogContent() {
 {search && (
                 <Badge variant="outline" className="gap-1 bg-gray-800/50 border-gray-700 text-gray-200 hover:bg-gray-700">
                   Búsqueda: "{search}"
- "                <button
+                <button
                     type="button"
                     onClick={() => { setSearch(""); fetchProducts({ search: "", category, series, inStockOnly, sort }); }}
                     className="ml-1 hover:text-pink-400"
@@ -339,7 +339,7 @@ export function CatalogContent() {
 ) : showNoResultsForSeries ? (
           <div className="text-center py-16 animate-fade-in">
             <Package className="h-16 w-16 mx-auto text-gray-600 mb-4" aria-hidden="true" />
-            <h3 className="text-xl font-medium text-white mb-2">No se encontraron figuras para "{appliedSeries}"</h3>
+            <h3 className="text-xl font-medium text-white mb-2">No se encontrados figuras para "{appliedSeries}"</h3>
             <p className="text-gray-500 mb-6">Aún no tenemos figuras de esta serie en nuestro catálogo.</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button variant="outline" onClick={clearFilters} className="gap-2 bg-gray-800/50 border-gray-700 text-gray-200 hover:bg-gray-700">
@@ -358,7 +358,7 @@ export function CatalogContent() {
           <div className="text-center py-16 animate-fade-in">
             <Package className="h-16 w-16 mx-auto text-gray-600 mb-4" aria-hidden="true" />
             <h3 className="text-xl font-medium text-white mb-2">No hay figuras que coincidan con tu búsqueda</h3>
-            <p className="text-gray-500 mb-6">No hemos encontrado figuras que coincidan con "{search || category || (inStockOnly ? 'solo en stock' : '')}".</p>
+            <p className="text-gray-500 mb-6">No hemos encontrados figuras que coincidan con "{search || category || (inStockOnly ? 'solo en stock' : '')}".</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button variant="outline" onClick={clearFilters} className="gap-2 bg-gray-800/50 border-gray-700 text-gray-200 hover:bg-gray-700">
                 <RotateCcw className="h-4 w-4" aria-hidden="true" />

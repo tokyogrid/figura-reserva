@@ -63,7 +63,7 @@ const steps = [
   {
     number: 6,
     icon: Sparkles,
-    title: "�Enjoy!",
+    title: "�Enjoy!",
     description: "Recibes tu figura original de Japón. Si prefieres venderla, te ayudo a publicarla en Vinted al Price que quieras.",
     details: [
       "14 días para devolución si no te convence",
@@ -75,7 +75,7 @@ const steps = [
 
 const faqs = [
   {
-    q: "�Is it safe to pay upfront?",
+    q: "�Is it safe to pay upfront?",
     a: "Sí. Usamos Stripe (el mismo que usan Shopify, Amazon, etc.). Tu dinero queda retenido hasta que confirmo la compra. Si no consigo la figura, Stripe reembolsa automáticamente a tu tarjeta en 5-10 días laborables.",
   },
   {
@@ -95,7 +95,7 @@ const faqs = [
     a: "Si me lo pides, publico la figura en Vinted a tu nombre con tus fotos y descripción. Gestiono mensajes, ofertas y envío. Tú cobras directamente en tu cuenta Vinted. Yo solo me llevo una pequeña comisión por la gestión (3-5%).",
   },
   {
-    q: "�Are the figures 100% authentic??",
+    q: "�Are the figures 100% authentic??",
     a: "Sí. Compro solo en tiendas oficiales japonesas (Subuya, Suruga-ya, Mandarake, AmiAmi, etc.). Nunca compro en mercados de segunda mano dudosos. Cada figura viene con su caja original, hologramas de Authenticity y accesorios completos.",
   },
 ]
@@ -221,7 +221,7 @@ export function ComoFuncionaContent() {
       <section className="section bg-white dark:bg-gray-950">
         <div className="container max-w-3xl">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Frequently Asked Questions</h2>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Preguntas Frecuentes</h2>
             <p className="text-gray-600 dark:text-gray-300">Respuestas a las dudas más comunes</p>
           </div>
 
@@ -246,7 +246,7 @@ export function ComoFuncionaContent() {
         <div className="container text-center">
           <Card className="bg-gradient-to-r from-blue-600 to-purple-600 text-white max-w-2xl mx-auto">
             <CardContent className="p-8 md:p-12">
-              <h2 className="text-3xl font-bold mb-4">�Ready to get your figure??</h2>
+              <h2 className="text-3xl font-bold mb-4">�Ready to get your figure??</h2>
               <p className="text-blue-100 mb-8 max-w-xl mx-auto">
                 Explora el catálogo o pídemela si no la encuentras. Sin compromiso, sin riesgo.
               </p>
