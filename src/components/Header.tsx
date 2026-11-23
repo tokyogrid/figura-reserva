@@ -135,7 +135,6 @@ export function Header() {
                 onClick={() => setMobileMenuOpen(false)}
                 className="block py-3 text-lg font-medium text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 rounded-xl transition-all shadow-lg shadow-purple-500/25"
               >
-                <Sparkles className="h-5 w-5 mr-2" aria-hidden="true" />
                 Crear Cuenta
               </Link>
             </div>
@@ -286,8 +285,7 @@ export function Header() {
                     href="/register?callbackUrl=/request"
                     className="px-4 py-2 rounded-xl text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 transition-all duration-200 shadow-lg shadow-purple-500/25"
                   >
-                    <Sparkles className="h-4 w-4 mr-1" aria-hidden="true" />
-                    Empezar
+                    Crear cuenta
                   </Link>
                 </div>
               )}

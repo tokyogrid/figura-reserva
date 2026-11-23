@@ -226,14 +226,14 @@ export const ProductDetailContent = ({
             <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-6">
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="quantity" className="block text-sm font-medium text-gray-300 mb-2">Quantity</label>
+                  <label htmlFor="quantity" className="block text-sm font-medium text-gray-300 mb-2">Cantidad</label>
                   <div className="flex items-center gap-3">
                     <button
                       type="button"
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
                       disabled={quantity <= 1 || !inStock}
                       className="flex h-10 w-10 items-center justify-center border border-gray-700 rounded-lg bg-gray-900/50 hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
-                      aria-label="Decrease quantity"
+                      aria-label="Disminuir cantidad"
                     >
                       <span style={{ display: "block", width: "16px", height: "3px", backgroundColor: "#ffffff" }} />
                     </button>
@@ -252,17 +252,17 @@ export const ProductDetailContent = ({
                       onClick={() => setQuantity(Math.min(maxQty, quantity + 1))}
                       disabled={quantity >= maxQty || !inStock}
                       className="relative flex h-10 w-10 items-center justify-center border border-gray-700 rounded-lg bg-gray-900/50 hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
-                      aria-label="Increase quantity"
+                      aria-label="Aumentar cantidad"
                     >
                       <span style={{ position: "absolute", width: "16px", height: "3px", backgroundColor: "#ffffff", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }} />
                       <span style={{ position: "absolute", width: "3px", height: "16px", backgroundColor: "#ffffff", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }} />
                     </button>
                   </div>
                   {maxQty > 0 && maxQty < 5 && inStock && (
-                    <p className="text-xs text-gray-400 mt-1">Max {maxQty} unit{maxQty !== 1 ? "s" : ""} available</p>
+                    <p className="text-xs text-gray-400 mt-1">Máx. {maxQty} unidad{maxQty !== 1 ? "es" : ""} disponible{maxQty !== 1 ? "s" : ""}</p>
                   )}
                   {!inStock && (
-                    <p className="text-xs text-gray-400 mt-1">Out of stock - Pre-order available</p>
+                    <p className="text-xs text-gray-400 mt-1">Agotado - Pre-order disponible</p>
                   )}
                 </div>
 
@@ -278,7 +278,7 @@ export const ProductDetailContent = ({
                           <span className="flex items-center justify-center h-4 w-4 rounded bg-white/20">
                             <Zap className="h-4 w-4" aria-hidden="true" />
                           </span>
-                          Buy Now - Fast Shipping (1-3 days)
+                          Comprar ahora - Envío rápido (1-3 días)
                         </span>
                       </Button>
                       <Button
@@ -290,13 +290,13 @@ export const ProductDetailContent = ({
                           <span className="flex items-center justify-center h-4 w-4 rounded bg-white/20">
                             <Tag className="h-4 w-4" aria-hidden="true" />
                           </span>
-                          Buy via Vinted (50% now, 50% on Vinted)
+                          Comprar vía Vinted (50% ahora, 50% en Vinted)
                         </span>
                       </Button>
                     </>
                   ) : product.isUnpurchasable ? (
                     <div className="w-full h-12 text-lg bg-gray-800/50 border border-gray-700 rounded-xl flex items-center justify-center text-gray-400">
-                      Not available for purchase
+                      No disponible para compra
                     </div>
                   ) : (
                     <>
@@ -309,7 +309,7 @@ export const ProductDetailContent = ({
                           <span className="flex items-center justify-center h-4 w-4 rounded bg-white/20">
                             <Truck className="h-4 w-4" aria-hidden="true" />
                           </span>
-                          Buy (10-20 days)
+                          Comprar (10-20 días)
                         </span>
                       </Button>
                       <Button
@@ -321,7 +321,7 @@ export const ProductDetailContent = ({
                           <span className="flex items-center justify-center h-4 w-4 rounded bg-white/20">
                             <Package className="h-4 w-4" aria-hidden="true" />
                           </span>
-                          Buy via Vinted (50% now, 50% on Vinted)
+                          Comprar vía Vinted (50% ahora, 50% en Vinted)
                         </span>
                       </Button>
                     </>
@@ -331,15 +331,15 @@ export const ProductDetailContent = ({
                 <div className="flex items-center justify-center gap-6 text-sm text-gray-400 pt-4 border-t border-gray-800">
                   <div className="flex items-center gap-2">
                     <Truck className="h-4 w-4" aria-hidden="true" />
-                    <span>Shipping 4.99€ (free &gt;100€)</span>
+                    <span>Envío 4,99€ (gratis >100€)</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Shield className="h-4 w-4" aria-hidden="true" />
-                    <span>Secure Stripe payment</span>
+                    <span>Pago seguro con Stripe</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <RotateCcw className="h-4 w-4" aria-hidden="true" />
-                    <span>14-day returns</span>
+                    <span>Devoluciones 14 días</span>
                   </div>
                 </div>
               </div>
@@ -350,22 +350,22 @@ export const ProductDetailContent = ({
                 <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 text-purple-400 mb-2">
                   <Check className="h-5 w-5" aria-hidden="true" />
                 </div>
-                <p className="font-medium text-white">Authentic</p>
-                <p className="text-xs text-gray-500">Bought from official JP stores</p>
+                <p className="font-medium text-white">Auténtico</p>
+                <p className="text-xs text-gray-500">Comprado en tiendas oficiales JP</p>
               </div>
               <div className="p-4 rounded-xl bg-gray-900/50 border border-gray-800/50">
                 <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 text-blue-400 mb-2">
                   <Shield className="h-5 w-5" aria-hidden="true" />
                 </div>
-                <p className="font-medium text-white">Secure</p>
-                <p className="text-xs text-gray-500">Refund if we can&apos;t get the figure</p>
+                <p className="font-medium text-white">Seguro</p>
+                <p className="text-xs text-gray-500">Reembolso si no conseguimos la figura</p>
               </div>
               <div className="p-4 rounded-xl bg-gray-900/50 border border-gray-800/50">
                 <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 text-purple-400 mb-2">
                   <Truck className="h-5 w-5" aria-hidden="true" />
                 </div>
-                <p className="font-medium text-white">Fast</p>
-                <p className="text-xs text-gray-500">Shipped 24-48h after receipt</p>
+                <p className="font-medium text-white">Rápido</p>
+                <p className="text-xs text-gray-500">Enviado 24-48h tras recibirla</p>
               </div>
             </div>
           </div>

@@ -260,14 +260,14 @@ export function CatalogContent() {
 
           {hasFilters && (
             <div className="flex items-center gap-2 flex-wrap">
-              {search && (
+{search && (
                 <Badge variant="outline" className="gap-1 bg-gray-800/50 border-gray-700 text-gray-200 hover:bg-gray-700">
-                  Search: &quot;{search}&quot;
-                  <button
+                  Búsqueda: "{search}"
+ "                <button
                     type="button"
                     onClick={() => { setSearch(""); fetchProducts({ search: "", category, series, inStockOnly, sort }); }}
                     className="ml-1 hover:text-pink-400"
-                    aria-label="Clear search"
+                    aria-label="Limpiar búsqueda"
                   >
                     <X className="h-3 w-3" aria-hidden="true" />
                   </button>
@@ -275,12 +275,12 @@ export function CatalogContent() {
               )}
               {category && (
                 <Badge variant="outline" className="gap-1 bg-gray-800/50 border-gray-700 text-gray-200 hover:bg-gray-700">
-                  Category: {category}
+                  Categoría: {category}
                   <button
                     type="button"
                     onClick={() => { setCategory(""); fetchProducts({ search, category: "", series, inStockOnly, sort }); }}
                     className="ml-1 hover:text-pink-400"
-                    aria-label="Clear category"
+                    aria-label="Limpiar categoría"
                   >
                     <X className="h-3 w-3" aria-hidden="true" />
                   </button>
@@ -288,12 +288,12 @@ export function CatalogContent() {
               )}
               {series && (
                 <Badge variant="outline" className="gap-1 bg-gray-800/50 border-gray-700 text-gray-200 hover:bg-gray-700">
-                  Series: {series}
+                  Serie: {series}
                   <button
                     type="button"
                     onClick={() => { setSeries(""); fetchProducts({ search, category, series: "", inStockOnly, sort }); }}
                     className="ml-1 hover:text-pink-400"
-                    aria-label="Clear series"
+                    aria-label="Limpiar serie"
                   >
                     <X className="h-3 w-3" aria-hidden="true" />
                   </button>
@@ -318,7 +318,7 @@ export function CatalogContent() {
             onClick={() => setShowFilters(!showFilters)}
           >
             <Filter className="h-4 w-4" aria-hidden="true" />
-            Filters {hasFilters && <span className="text-purple-400">({Object.values({search, category, series, inStockOnly}).filter(Boolean).length})</span>}
+            Filtros {hasFilters && <span className="text-purple-400">({Object.values({search, category, series, inStockOnly}).filter(Boolean).length})</span>}
             <ChevronDown className={cn("h-4 w-4 transition-transform", showFilters && "rotate-180")} aria-hidden="true" />
           </Button>
         </div>
@@ -326,7 +326,7 @@ export function CatalogContent() {
         {/* Results */}
         <div className="flex items-center justify-between mb-6">
           <p className="text-gray-400">
-            {loading ? siteConfig.catalog.loading : `${products.length} figure${products.length !== 1 ? "s" : ""} found`}
+            {loading ? siteConfig.catalog.loading : `${products.length} figura${products.length !== 1 ? "s" : ""} encontrada${products.length !== 1 ? "s" : ""}`}
           </p>
         </div>
 
@@ -336,42 +336,42 @@ export function CatalogContent() {
               <ProductCardSkeleton key={i} />
             ))}
           </div>
-        ) : showNoResultsForSeries ? (
+) : showNoResultsForSeries ? (
           <div className="text-center py-16 animate-fade-in">
             <Package className="h-16 w-16 mx-auto text-gray-600 mb-4" aria-hidden="true" />
-            <h3 className="text-xl font-medium text-white mb-2">No figures found for &quot;{appliedSeries}&quot;</h3>
-            <p className="text-gray-500 mb-6">We don&apos;t have any figures from this series in our catalog yet.</p>
+            <h3 className="text-xl font-medium text-white mb-2">No se encontraron figuras para "{appliedSeries}"</h3>
+            <p className="text-gray-500 mb-6">Aún no tenemos figuras de esta serie en nuestro catálogo.</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button variant="outline" onClick={clearFilters} className="gap-2 bg-gray-800/50 border-gray-700 text-gray-200 hover:bg-gray-700">
                 <RotateCcw className="h-4 w-4" aria-hidden="true" />
-                Clear Filter
+                Limpiar filtro
               </Button>
               <Link href="/request">
                 <Button variant="primary" className="gap-2 w-full sm:w-auto" size="lg">
                   <Search className="h-4 w-4" aria-hidden="true" />
-                  Request Figure
+                  Solicitar Figura
                 </Button>
               </Link>
-            </div>
-          </div>
-        ) : showNoResultsForSearch ? (
+</div>
+        </div>
+) : showNoResultsForSearch ? (
           <div className="text-center py-16 animate-fade-in">
             <Package className="h-16 w-16 mx-auto text-gray-600 mb-4" aria-hidden="true" />
-            <h3 className="text-xl font-medium text-white mb-2">No figures match your search</h3>
-            <p className="text-gray-500 mb-6">We couldn&apos;t find any figures matching &quot;{search || category || (inStockOnly ? 'in stock only' : '')}&quot;.</p>
+            <h3 className="text-xl font-medium text-white mb-2">No hay figuras que coincidan con tu búsqueda</h3>
+            <p className="text-gray-500 mb-6">No hemos encontrado figuras que coincidan con "{search || category || (inStockOnly ? 'solo en stock' : '')}".</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button variant="outline" onClick={clearFilters} className="gap-2 bg-gray-800/50 border-gray-700 text-gray-200 hover:bg-gray-700">
                 <RotateCcw className="h-4 w-4" aria-hidden="true" />
-                Clear Filters
+                Limpiar filtros
               </Button>
               <Link href="/request" className="w-full sm:w-auto">
                 <Button variant="primary" className="gap-2 w-full sm:w-auto" size="lg">
                   <Search className="h-4 w-4" aria-hidden="true" />
-                  Request Figure
+                  Solicitar Figura
                 </Button>
               </Link>
             </div>
-          </div>
+</div>
         ) : products.length === 0 ? (
           <div className="text-center py-16 animate-fade-in">
             <Package className="h-16 w-16 mx-auto text-gray-600 mb-4" aria-hidden="true" />
@@ -431,7 +431,7 @@ export function CatalogContent() {
           </nav>
         )}
         <p className="mt-4 text-center text-sm text-gray-500">
-          Page {page} of {totalPages} &mdash; {products.length} of {products.length > 0 ? (page === totalPages ? totalPages * 20 - (totalPages * 20 - products.length) : products.length) : 0} figures
+          Página {page} de {totalPages} &mdash; {products.length} de {products.length > 0 ? (page === totalPages ? totalPages * 20 - (totalPages * 20 - products.length) : products.length) : 0} figuras
         </p>
       </div>
     </div>

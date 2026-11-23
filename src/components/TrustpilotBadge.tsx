@@ -9,7 +9,7 @@ interface TrustpilotBadgeProps {
 
 export function TrustpilotBadge({ className = "" }: TrustpilotBadgeProps) {
   const rating = 0
-  const reviewCount = 4
+  const reviewCount = 0
   const stars = 0
   const fullStars = 0
   const hasHalfStar = false

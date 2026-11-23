@@ -35,7 +35,7 @@ export default function RequestClient() {
             <div className="max-w-3xl mx-auto text-center animate-fade-in">
               <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-400 px-4 py-2 rounded-full mb-6 animate-slide-up">
                 <Search className="h-3 w-3" aria-hidden="true" />
-                <span className="font-medium">Custom Figure Search</span>
+                <span className="font-medium">Búsqueda de Figura Personalizada</span>
               </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight mb-4 animate-slide-up delay-100 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
                 {siteConfig.request.title}
@@ -50,7 +50,7 @@ export default function RequestClient() {
                 variant="primary"
               >
                 <Sparkles className="h-5 w-5 transition-transform group-hover:scale-110" aria-hidden="true" />
-                <span className="relative z-10 text-lg">Request a Figure</span>
+                <span className="relative z-10 text-lg">Solicitar Figura</span>
                 <Search className="h-5 w-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
               </Button>
             </div>
@@ -62,9 +62,9 @@ export default function RequestClient() {
           <div className="container">
             <div className="grid md:grid-cols-3 gap-6">
               {[
-                { icon: Banknote, title: "Japan Prices", desc: "We search at best price from Japanese suppliers" },
-                { icon: Sparkles, title: "Priority Access", desc: "If found, you get first dibs to reserve" },
-                { icon: MessageSquare, title: "No Commitment", desc: "Only reserve if you like the final price" },
+                { icon: Banknote, title: "Precios de Japón", desc: "Buscamos al mejor precio entre proveedores japoneses" },
+                { icon: Sparkles, title: "Acceso Prioritario", desc: "Si la encontramos, tienes prioridad para reservar" },
+                { icon: MessageSquare, title: "Sin Compromiso", desc: "Solo reservas si te convence el precio final" },
               ].map((benefit, index) => (
                 <Card key={index} className="bg-gray-900/50 border-gray-800 p-6 hover:border-purple-500/30 hover:shadow-[0_0_30px_rgba(139,92,246,0.2)] transition-all duration-500 animate-slide-up" style={{ animationDelay: `${index * 100}ms` }}>
                   <div className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 text-purple-400 mb-4">
@@ -87,9 +87,9 @@ export default function RequestClient() {
                 <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-white/10 mb-4 animate-pulse-slow">
                   <Search className="h-8 w-8" aria-hidden="true" />
                 </div>
-                <h2 className="text-3xl sm:text-4xl font-bold mb-4">Can&apos;t Find Your Figure?</h2>
+                <h2 className="text-3xl sm:text-4xl font-bold mb-4">¿No Encuentras Tu Figura?</h2>
                 <p className="text-pink-100 mb-8 max-w-xl mx-auto text-lg">
-                  Request it and we&apos;ll search our Japan suppliers. If found, you get priority to reserve.
+                  Solicítala y la buscaremos entre nuestros proveedores de Japón. Si la encontramos, tienes prioridad para reservar.
                 </p>
                 <Button 
                   onClick={() => setDrawerOpen(true)} 
@@ -97,7 +97,7 @@ export default function RequestClient() {
                   variant="secondary" 
                   className="gap-2 bg-white text-pink-600 hover:bg-pink-50 group relative overflow-hidden"
                 >
-                  <span className="relative z-10">Request Figure</span>
+                  <span className="relative z-10">Solicitar Figura</span>
                   <Sparkles className="h-4 w-4 transition-transform group-hover:scale-110" aria-hidden="true" />
                 </Button>
               </CardContent>

@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   })
 
   if (!product) {
-    return { title: "Not found - Tokyo Grid" }
+    return { title: "No encontrado - Tokyo Grid" }
   }
 
   const imageUrls = parseImagesSafe(product.images)
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `${product.name} - Tokyo Grid`,
-    description: product.description || `Reserve ${product.name} at Japan price. Shipping to Spain.`,
+    description: product.description || `Reserva ${product.name} al precio de Japón. Envío a España.`,
     alternates: {
       canonical: `/catalog/${slug}`,
     },

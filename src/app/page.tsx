@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma"
 import { siteConfig } from "@/lib/site-config"
 import { ProductCard } from "@/components/ProductCard"
 import { TrustpilotBadge } from "@/components/TrustpilotBadge"
+
 import Image from "next/image"
 import { Metadata } from "next"
 
@@ -176,6 +177,7 @@ export default async function HomePage() {
             <div className="animate-fade-in delay-500 mt-10" style={{ animationDelay: '500ms' }}>
               <TrustpilotBadge />
             </div>
+
           </div>
         </div>
       </section>
@@ -427,11 +429,11 @@ export default async function HomePage() {
               </div>
               <h2 className="text-3xl sm:text-4xl font-bold mb-4">¿No Encuentras Tu Figura?</h2>
               <p className="text-pink-100 mb-8 max-w-xl mx-auto text-lg">
-                Pídela y buscaremos entre nuestros proveedores de Japón. Si la encontramos, tienes prioridad para reservar.
+                Solicítala y la buscaremos entre nuestros proveedores de Japón. Si la encontramos, tienes prioridad para reservar.
               </p>
               <Link href="/request">
                 <Button size="lg" variant="secondary" className="gap-2 bg-white text-pink-600 hover:bg-pink-50 group relative overflow-hidden">
-                  <span className="relative z-10">Pedir Figura</span>
+                  <span className="relative z-10">Solicitar Figura</span>
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </Button>
               </Link>
